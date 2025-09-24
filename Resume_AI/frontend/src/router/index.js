@@ -1,0 +1,50 @@
+import { createRouter, createWebHistory } from 'vue-router';
+
+// Import pages
+import Home from '../pages/Home.vue';
+import CreateResume from '../pages/CreateResume.vue';
+import CompetitiveMatch from '../pages/CompetitiveMatch.vue';
+import ResumeManagement from '../pages/ResumeManagement.vue';
+import ResumeEdit from '../pages/ResumeEdit.vue';
+import UserProfile from '../pages/UserProfile.vue';
+
+const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: Home,
+  },
+  {
+    path: '/create-resume',
+    name: 'CreateResume',
+    component: CreateResume,
+  },
+  {
+    path: '/competitive-match',
+    name: 'CompetitiveMatch',
+    component: CompetitiveMatch,
+  },
+  {
+    path: '/resume-management',
+    name: 'ResumeManagement',
+    component: ResumeManagement,
+  },
+  {
+    path: '/resume/edit/:id',
+    name: 'ResumeEdit',
+    component: ResumeEdit,
+    props: true,
+  },
+  {
+    path: '/user-profile',
+    name: 'UserProfile',
+    component: UserProfile,
+  },
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+
+export default router;

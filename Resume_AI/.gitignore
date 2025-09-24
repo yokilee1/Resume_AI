@@ -65,3 +65,5 @@ coverage
 .temp
 *.swp
 *.bak
+
+.vscode/settings.json

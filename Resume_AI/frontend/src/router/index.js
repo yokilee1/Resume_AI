@@ -7,12 +7,26 @@ import CompetitiveMatch from '../pages/CompetitiveMatch.vue';
 import ResumeManagement from '../pages/ResumeManagement.vue';
 import ResumeEdit from '../pages/ResumeEdit.vue';
 import UserProfile from '../pages/UserProfile.vue';
+import Login from '../pages/Login.vue';
+import Register from '../pages/Register.vue';
 
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'Home',
     component: Home,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: { hideLayout: true }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
+    meta: { hideLayout: true }
   },
   {
     path: '/create-resume',

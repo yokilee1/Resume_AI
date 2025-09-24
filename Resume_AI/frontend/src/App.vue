@@ -44,7 +44,7 @@ html, body {
 
 .el-header {
   padding: 0;
-  height: 60px;
+  height: auto;
   border-bottom: 1px solid #e6e6e6;
 }
 

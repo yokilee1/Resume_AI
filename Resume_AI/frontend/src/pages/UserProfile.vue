@@ -535,42 +535,63 @@ const resetPasswordForm = () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .user-profile {
   min-height: 100vh;
-  background: #f8fafc;
-  padding: 20px;
+  background: var(--bg-primary);
+  padding: var(--spacing-xl);
 }
 
 .profile-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
 /* 页面标题 */
 .page-header {
   text-align: center;
-  margin-bottom: 40px;
-  color: #2c3e50;
+  margin-bottom: var(--spacing-4xl);
+  padding: var(--spacing-4xl) 0;
+  background: var(--primary-gradient);
+  border-radius: var(--radius-2xl);
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-primary-lg);
+}
+
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="20" cy="80" r="0.5" fill="white" opacity="0.1"/><circle cx="80" cy="20" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  pointer-events: none;
 }
 
 .page-header h1 {
-  font-size: 2.5rem;
-  font-weight: 300;
-  margin: 0 0 10px 0;
+  font-size: var(--text-4xl);
+  font-weight: var(--font-extrabold);
+  margin: 0 0 var(--spacing-sm) 0;
+  position: relative;
+  z-index: 1;
 }
 
 .page-header p {
-  font-size: 1.1rem;
+  font-size: var(--text-lg);
   opacity: 0.9;
   margin: 0;
+  position: relative;
+  z-index: 1;
 }
 
 /* 主要内容区域 */
 .profile-content {
   display: grid;
   grid-template-columns: 350px 1fr;
-  gap: 30px;
+  gap: var(--spacing-4xl);
   align-items: start;
 }
 
@@ -578,22 +599,40 @@ const resetPasswordForm = () => {
 .left-section {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--spacing-xl);
   height: 100%;
 }
 
 /* 用户概览卡片 */
 .user-overview-card {
-  border-radius: 20px;
+  border-radius: var(--radius-2xl);
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  border: none;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--gray-100);
   height: 100%;
+  transition: var(--transition-normal);
+}
+
+.user-overview-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
 }
 
 .user-overview {
-  padding: 30px;
+  padding: var(--spacing-4xl);
   text-align: center;
+  background: var(--white);
+  position: relative;
+}
+
+.user-overview::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--primary-gradient);
 }
 
 .avatar-section {

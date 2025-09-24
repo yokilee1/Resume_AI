@@ -1,19 +1,22 @@
 <template>
   <div class="sidebar">
-    <div class="logo">
-      <h2>RESUME AI</h2>
+    <div class="sidebar-header">
+      <div class="logo">
+        <h2>RESUME AI</h2>
+      </div>
     </div>
     
     <!-- 未登录状态的菜单 -->
     <template v-if="!authStore.isAuthenticated">
-      <el-menu
-        :default-active="activeMenu"
-        class="sidebar-menu"
-        router
-        background-color="#001529"
-        text-color="#fff"
-        active-text-color="#1890ff"
-      >
+      <div class="sidebar-menu">
+        <el-menu
+          :default-active="activeMenu"
+          class="menu-container"
+          router
+          background-color="transparent"
+          text-color="rgba(255, 255, 255, 0.7)"
+          active-text-color="#fff"
+        >
         <el-menu-item index="/home">
           <el-icon><House /></el-icon>
           <span>首页</span>
@@ -28,7 +31,8 @@
           <el-icon><UserFilled /></el-icon>
           <span>注册</span>
         </el-menu-item>
-      </el-menu>
+        </el-menu>
+      </div>
       
       <div class="login-prompt">
         <p>登录后可使用更多功能</p>
@@ -40,14 +44,15 @@
     
     <!-- 已登录状态的菜单 -->
     <template v-else>
-      <el-menu
-        :default-active="activeMenu"
-        class="sidebar-menu"
-        router
-        background-color="#001529"
-        text-color="#fff"
-        active-text-color="#1890ff"
-      >
+      <div class="sidebar-menu">
+        <el-menu
+          :default-active="activeMenu"
+          class="menu-container"
+          router
+          background-color="transparent"
+          text-color="rgba(255, 255, 255, 0.7)"
+          active-text-color="#fff"
+        >
         <el-menu-item index="/home">
           <el-icon><House /></el-icon>
           <span>首页</span>
@@ -72,7 +77,8 @@
           <el-icon><User /></el-icon>
           <span>个人资料</span>
         </el-menu-item>
-      </el-menu>
+        </el-menu>
+      </div>
       
       <!-- 用户信息区域 -->
       <div class="user-section">
@@ -171,85 +177,225 @@ const handleLogout = async () => {
 
 <style lang="scss" scoped>
 .sidebar {
+  width: 280px;
   height: 100vh;
-  background-color: #001529;
+  background: var(--gradient-primary);
+  color: var(--color-text-light);
   display: flex;
   flex-direction: column;
+  position: relative;
+  box-shadow: var(--shadow-lg);
   
-  .logo {
-    height: 64px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: 1px solid #1f1f1f;
-    flex-shrink: 0;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    z-index: 0;
+  }
+  
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .sidebar-header {
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--glass-border);
+    background: var(--glass-subtle);
+    backdrop-filter: blur(10px);
+    margin: var(--spacing-md);
+    border-radius: var(--radius-lg);
     
-    h2 {
-      color: #fff;
-      font-size: 20px;
-      font-weight: bold;
-      margin: 0;
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      color: var(--color-text-light);
+      text-decoration: none;
+      transition: var(--transition-base);
+      
+      &:hover {
+        transform: scale(1.02);
+      }
+      
+      .logo-icon {
+        width: 36px;
+        height: 36px;
+        background: var(--gradient-accent);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: var(--font-bold);
+        font-size: var(--text-lg);
+        box-shadow: var(--shadow-sm);
+      }
+      
+      .logo-text {
+        font-size: var(--text-xl);
+        font-weight: var(--font-bold);
+        background: var(--gradient-accent);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.5px;
+      }
     }
   }
   
   .sidebar-menu {
-    border: none;
     flex: 1;
+    padding: var(--spacing-lg) 0;
     
-    .el-menu-item {
-      height: 48px;
-      line-height: 48px;
+    .menu-container {
+      background: transparent !important;
+      border: none !important;
       
-      &:hover {
-        background-color: #1890ff !important;
-      }
-      
-      &.is-active {
-        background-color: #1890ff !important;
-        border-right: 3px solid #409EFF;
-      }
-      
-      .el-icon {
-        margin-right: 8px;
-        font-size: 16px;
+      :deep(.el-menu-item) {
+        display: flex;
+        align-items: center;
+        padding: 0 var(--spacing-xl);
+        color: var(--color-text-light-secondary) !important;
+        text-decoration: none;
+        transition: var(--transition-base);
+        height: 48px;
+        line-height: 48px;
+        margin: var(--spacing-xs) var(--spacing-md);
+        border-radius: var(--radius-lg);
+        font-weight: var(--font-medium);
+        position: relative;
+        background: transparent !important;
+        font-size: var(--text-md);
+        
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 3px;
+          background: var(--gradient-accent);
+          border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+          opacity: 0;
+          transition: var(--transition-base);
+        }
+        
+        &:hover {
+          background: var(--glass-hover) !important;
+          color: var(--color-text-light) !important;
+          transform: translateX(6px);
+          box-shadow: var(--shadow-sm);
+          
+          &::before {
+            opacity: 1;
+          }
+        }
+        
+        &.is-active {
+          background: var(--glass-active) !important;
+          color: var(--color-text-light) !important;
+          transform: translateX(6px);
+          box-shadow: var(--shadow-md);
+          
+          &::before {
+            opacity: 1;
+          }
+        }
+        
+        .el-icon {
+          margin-right: var(--spacing-sm);
+          font-size: var(--text-lg);
+          opacity: 0.9;
+          width: 20px;
+          display: flex;
+          justify-content: center;
+        }
+        
+        span {
+          font-size: var(--text-md);
+          font-weight: var(--font-medium);
+        }
       }
     }
+    
+
   }
   
   // 登录提示区域
   .login-prompt {
-    padding: 20px;
+    padding: var(--spacing-lg);
     text-align: center;
-    border-top: 1px solid #1f1f1f;
+    border-top: 1px solid var(--glass-border);
+    margin: var(--spacing-md);
     margin-top: auto;
+    background: var(--glass-subtle);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
     
     p {
-      color: #8c8c8c;
-      font-size: 12px;
-      margin: 0 0 12px 0;
+      color: var(--color-text-light-secondary);
+      font-size: var(--text-sm);
+      margin: 0 0 var(--spacing-md) 0;
+      line-height: 1.5;
+      font-weight: var(--font-medium);
     }
     
     .el-button {
       width: 100%;
+      background: var(--glass-hover);
+      border: 1px solid var(--glass-border);
+      color: var(--color-text-light);
+      font-weight: var(--font-semibold);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-md);
+      backdrop-filter: blur(10px);
+      transition: var(--transition-base);
+      font-size: var(--text-sm);
+      
+      &:hover {
+        background: var(--glass-active);
+        border-color: var(--color-accent);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+      }
     }
   }
   
   // 用户信息区域
   .user-section {
-    padding: 16px;
-    border-top: 1px solid #1f1f1f;
+    padding: var(--spacing-lg);
+    border-top: 1px solid var(--glass-border);
+    margin: var(--spacing-md);
     margin-top: auto;
+    background: var(--glass-subtle);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
     
     .user-info {
       display: flex;
       align-items: center;
-      margin-bottom: 12px;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
       
       .user-avatar {
-        background-color: #409EFF;
-        color: #fff;
-        font-weight: 500;
-        margin-right: 12px;
+        background: var(--gradient-accent);
+        color: white;
+        font-weight: var(--font-semibold);
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: var(--text-md);
+        flex-shrink: 0;
+        box-shadow: var(--shadow-sm);
       }
       
       .user-details {
@@ -257,9 +403,9 @@ const handleLogout = async () => {
         min-width: 0;
         
         .username {
-          color: #fff;
-          font-size: 14px;
-          font-weight: 500;
+          color: var(--color-text-light);
+          font-size: var(--text-md);
+          font-weight: var(--font-semibold);
           margin-bottom: 2px;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -267,8 +413,8 @@ const handleLogout = async () => {
         }
         
         .user-email {
-          color: #8c8c8c;
-          font-size: 12px;
+          color: var(--color-text-light-secondary);
+          font-size: var(--text-sm);
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -278,19 +424,90 @@ const handleLogout = async () => {
     
     .logout-btn {
       width: 100%;
-      color: #8c8c8c;
-      border: 1px solid #1f1f1f;
-      background-color: transparent;
+      color: var(--color-text-light-secondary);
+      border: 1px solid var(--glass-border);
+      background: var(--glass-hover);
+      font-weight: var(--font-medium);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-md);
+      backdrop-filter: blur(10px);
+      transition: var(--transition-base);
+      font-size: var(--text-sm);
       
       &:hover {
-        color: #fff;
-        border-color: #409EFF;
-        background-color: rgba(64, 158, 255, 0.1);
+        color: var(--color-text-light);
+        border-color: var(--color-accent);
+        background: var(--glass-active);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
       }
       
       .el-icon {
-        margin-right: 4px;
+        margin-right: var(--spacing-xs);
+        font-size: var(--text-md);
       }
+    }
+  }
+}
+
+// 响应式设计
+@media (max-width: 1024px) {
+  .sidebar {
+    width: 260px;
+    
+    .sidebar-header {
+      padding: var(--spacing-lg) var(--spacing-md);
+      
+      .logo {
+        font-size: var(--text-lg);
+      }
+    }
+    
+    .sidebar-menu {
+      padding: var(--spacing-xl) 0;
+      
+      :deep(.el-menu) .el-menu-item,
+      .menu-item {
+        height: 48px;
+        line-height: 48px;
+        margin: var(--spacing-xs) var(--spacing-sm);
+        padding: 0 var(--spacing-lg);
+        
+        .el-icon {
+          font-size: var(--text-md);
+          margin-right: var(--spacing-sm);
+        }
+      }
+    }
+    
+    .login-prompt,
+    .user-section {
+      padding: var(--spacing-lg) var(--spacing-md);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 240px;
+    
+    .sidebar-header .logo {
+      font-size: var(--text-md);
+    }
+    
+    .sidebar-menu {
+      :deep(.el-menu) .el-menu-item,
+      .menu-item {
+        height: 44px;
+        line-height: 44px;
+        font-size: var(--text-sm);
+      }
+    }
+    
+    .user-section .user-info .user-avatar {
+      width: 36px;
+      height: 36px;
+      font-size: var(--text-sm);
     }
   }
 }

@@ -140,7 +140,7 @@
  * 简历编辑器组件
  * 用于编辑简历的各个部分，包括基本信息、实习经历、校园经历和专业技能
  */
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 
 // 定义props
 const props = defineProps({
@@ -205,10 +205,10 @@ const toggleSection = (section) => {
 };
 
 // 使用本地响应式数据，并与props同步
-const basicInfo = ref({ ...props.basicInfo });
-const experiences = ref([...props.experiences]);
-const education = ref([...props.education]);
-const skills = ref(props.skills);
+const basicInfo = ref({});
+const experiences = ref([]);
+const education = ref([]);
+const skills = ref('');
 
 // 监听本地数据变化，发出更新事件
 watch(basicInfo, (newValue) => {
@@ -227,21 +227,37 @@ watch(skills, (newValue) => {
   emit('update:skills', newValue);
 });
 
+// 初始化数据
+onMounted(() => {
+  basicInfo.value = { ...props.basicInfo };
+  experiences.value = [...props.experiences];
+  education.value = [...props.education];
+  skills.value = props.skills;
+});
+
 // 监听props变化，更新本地数据
 watch(() => props.basicInfo, (newValue) => {
-  basicInfo.value = { ...newValue };
+  if (JSON.stringify(basicInfo.value) !== JSON.stringify(newValue)) {
+    basicInfo.value = { ...newValue };
+  }
 }, { deep: true });
 
 watch(() => props.experiences, (newValue) => {
-  experiences.value = [...newValue];
+  if (JSON.stringify(experiences.value) !== JSON.stringify(newValue)) {
+    experiences.value = [...newValue];
+  }
 }, { deep: true });
 
 watch(() => props.education, (newValue) => {
-  education.value = [...newValue];
+  if (JSON.stringify(education.value) !== JSON.stringify(newValue)) {
+    education.value = [...newValue];
+  }
 }, { deep: true });
 
 watch(() => props.skills, (newValue) => {
-  skills.value = newValue;
+  if (skills.value !== newValue) {
+    skills.value = newValue;
+  }
 });
 
 // 添加新的实习经历

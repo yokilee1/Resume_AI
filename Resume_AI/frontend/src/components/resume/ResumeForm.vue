@@ -40,13 +40,23 @@
               {{ previewVisible ? '隐藏预览' : '显示预览' }}
             </el-button>
           </div>
+          
+          <!-- 模板选择器 -->
+          <div v-show="previewVisible" class="template-selector-wrapper">
+            <TemplateSelector 
+              v-model="selectedTemplate"
+              @template-change="handleTemplateChange"
+            />
+          </div>
+          
           <div v-show="previewVisible" class="preview-content">
             <ResumePreview 
               :resume="resumeData"
               :basic-info="resumeData.content?.basicInfo" 
               :experiences="resumeData.content?.experiences"
               :education="resumeData.content?.education"
-              :skills="resumeData.content?.skills" 
+              :skills="resumeData.content?.skills"
+              :template="selectedTemplate"
             />
           </div>
         </div>
@@ -93,6 +103,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { EditPen, ArrowLeft, Check, Hide, View, DocumentAdd } from '@element-plus/icons-vue'
 import ResumeEditor from './ResumeEditor.vue'
 import ResumePreview from './ResumePreview.vue'
+import TemplateSelector from './TemplateSelector.vue'
 import { useResumeStore } from '@/stores/resumeStore'
 
 // Props
@@ -123,6 +134,7 @@ const loading = ref(false)
 const saving = ref(false)
 const previewVisible = ref(true)
 const resumeEditor = ref(null)
+const selectedTemplate = ref('modern') // 默认选择现代简约模板
 
 // 简历数据
 const resumeData = ref({
@@ -307,10 +319,19 @@ const checkForChanges = () => {
 }
 
 /**
- * 切换预览显示
+ * 切换预览显示/隐藏
  */
 const togglePreview = () => {
   previewVisible.value = !previewVisible.value
+}
+
+/**
+ * 处理模板切换
+ * @param {string} templateId - 新选择的模板ID
+ */
+const handleTemplateChange = (templateId) => {
+  console.log('切换到模板:', templateId)
+  // 这里可以添加额外的逻辑，比如保存用户的模板偏好
 }
 
 /**
@@ -452,6 +473,14 @@ defineExpose({
     font-weight: 600;
     color: #374151;
   }
+}
+
+.template-selector-wrapper {
+  margin-bottom: 16px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
 }
 
 .preview-content {

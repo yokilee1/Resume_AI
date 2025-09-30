@@ -1,6 +1,17 @@
 <template>
   <div class="resume-preview">
-    <div class="a4-paper">
+    <!-- 动态模板组件 -->
+    <component 
+      :is="currentTemplateComponent"
+      :basic-info="resumeBasicInfo"
+      :experiences="resumeExperiences"
+      :education="resumeEducation"
+      :skills="resumeSkills"
+      v-if="currentTemplateComponent"
+    />
+    
+    <!-- 默认模板（兼容旧版本） -->
+    <div v-else class="a4-paper">
       <div class="resume-header">
         <h1>{{ resumeBasicInfo.name || '姓名' }}</h1>
         <div class="contact-info">
@@ -65,9 +76,12 @@
 <script setup>
 /**
  * 简历预览组件
- * 用于实时预览简历编辑结果
+ * 用于实时预览简历编辑结果，支持动态模板切换
  */
-import { computed } from 'vue';
+import { computed } from 'vue'
+import ModernTemplate from './templates/ModernTemplate.vue'
+import BusinessTemplate from './templates/BusinessTemplate.vue'
+import CreativeTemplate from './templates/CreativeTemplate.vue'
 
 const props = defineProps({
   // 支持传入完整的简历对象
@@ -91,8 +105,26 @@ const props = defineProps({
   skills: {
     type: String,
     default: ''
+  },
+  // 新增：模板选择
+  template: {
+    type: String,
+    default: 'modern',
+    validator: (value) => ['modern', 'business', 'creative'].includes(value)
   }
-});
+})
+
+// 模板组件映射
+const templateComponents = {
+  modern: ModernTemplate,
+  business: BusinessTemplate,
+  creative: CreativeTemplate
+}
+
+// 当前模板组件
+const currentTemplateComponent = computed(() => {
+  return templateComponents[props.template] || null
+})
 
 // 计算属性，优先使用resume对象中的数据
 const resumeBasicInfo = computed(() => {

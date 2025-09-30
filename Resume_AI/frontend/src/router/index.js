@@ -6,6 +6,7 @@ import CreateResume from '../pages/CreateResume.vue';
 import CompetitiveMatch from '../pages/CompetitiveMatch.vue';
 import ResumeManagement from '../pages/ResumeManagement.vue';
 import ResumeEdit from '../pages/ResumeEdit.vue';
+import ResumeTemplates from '../pages/ResumeTemplates.vue';
 import UserProfile from '../pages/UserProfile.vue';
 import Login from '../pages/Login.vue';
 import Register from '../pages/Register.vue';
@@ -53,6 +54,11 @@ const routes = [
     path: '/user-profile',
     name: 'UserProfile',
     component: UserProfile,
+  },
+  {
+    path: '/resume-templates',
+    name: 'ResumeTemplates',
+    component: ResumeTemplates,
   },
 ];
 

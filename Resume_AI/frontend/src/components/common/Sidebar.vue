@@ -68,6 +68,11 @@
           <span>创建简历</span>
         </el-menu-item>
         
+        <el-menu-item index="/resume-templates">
+          <el-icon><Collection /></el-icon>
+          <span>模板样式</span>
+        </el-menu-item>
+        
         <el-menu-item index="/competitive-match">
           <el-icon><TrendCharts /></el-icon>
           <span>竞争力匹配</span>
@@ -121,7 +126,8 @@ import {
   Document, 
   User,
   UserFilled,
-  SwitchButton 
+  SwitchButton,
+  Collection
 } from '@element-plus/icons-vue'
 
 const route = useRoute()

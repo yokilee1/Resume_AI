@@ -11,7 +11,6 @@
             class="search-input"
             :prefix-icon="Search"
           />
-          <el-button class="filter-btn" :icon="Filter">Filter</el-button>
         </div>
         
         <!-- 职位列表 -->
@@ -148,11 +147,7 @@ const canMatch = computed(() => {
  * 匹配度颜色
  */
 const scoreColor = computed(() => {
-  if (!matchResult.value) return '';
-  const score = matchResult.value.score;
-  if (score >= 80) return '#67C23A';
-  if (score >= 60) return '#E6A23C';
-  return '#F56C6C';
+  return '#111111';
 });
 
 /**
@@ -203,76 +198,99 @@ function startMatching() {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  /* 黑白灰主题变量（页面局部覆盖） */
+  --ui-bg: #ffffff;
+  --ui-bg-alt: #f8f9fa;
+  --ui-hover-bg: #f2f3f5;
+  --ui-border: #e5e7eb;
+  --ui-text-primary: #111111;
+  --ui-text-secondary: #555555;
+  --ui-focus-outline: #111111;
+  --ui-accent: #111111;
+  background-color: #f7f7f8;
 }
 
 .match-container {
-  display: flex;
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
   gap: 20px;
   width: 100%;
   height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: row;
 }
 
 /* 左侧面板 */
 .left-panel {
   flex: 1;
-  background: white;
+  background: var(--ui-bg);
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  border: 1px solid var(--ui-border);
   overflow: hidden;
   display: flex;
   flex-direction: column;
 }
 
 .search-section {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.search-input {
-  flex: 1;
-}
-
-.filter-btn {
-  background: #f0f0f0;
-  border: 1px solid #d9d9d9;
-  color: #666;
+  flex: 0 0 auto;
+  padding: 20px;
 }
 
 .job-list {
-  flex: 1;
+  flex: 1 1 auto;
   overflow-y: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: y proximity;
+}
+
+.job-card {
+  scroll-snap-align: start;
+}
+
+.right-panel {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.filter-btn {
+  background: var(--ui-hover-bg);
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text-primary);
 }
 
 .job-card {
   padding: 16px;
-  border: 1px solid #e8e8e8;
+  border: 1px solid var(--ui-border);
   border-radius: 6px;
   margin-bottom: 12px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: white;
+  background: var(--ui-bg);
 }
 
 .job-card:hover {
-  border-color: #1890ff;
-  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
+  border-color: var(--ui-focus-outline);
+  box-shadow: none;
+  background: var(--ui-hover-bg);
 }
 
 .job-card.active {
-  border-color: #1890ff;
-  background: #f6f9ff;
+  border-color: var(--ui-focus-outline);
+  background: var(--ui-bg-alt);
+}
+
+.job-card:focus-visible {
+  outline: 2px solid var(--ui-focus-outline);
+  outline-offset: 2px;
 }
 
 .job-title {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--ui-text-primary);
   margin-bottom: 8px;
 }
 
@@ -280,33 +298,52 @@ function startMatching() {
   display: flex;
   gap: 12px;
   font-size: 14px;
-  color: #666;
+  color: var(--ui-text-secondary);
 }
 
 .job-info span {
   padding: 2px 8px;
-  background: #f5f5f5;
+  background: var(--ui-hover-bg);
   border-radius: 4px;
 }
 
-/* 右侧面板 */
 .right-panel {
   flex: 1;
-  background: white;
+  background: var(--ui-bg);
   border-radius: 8px;
   padding: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  border: 1px solid var(--ui-border);
   overflow-y: auto;
 }
 
 .match-section h2 {
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: var(--ui-text-primary);
   margin-bottom: 30px;
   text-align: center;
 }
 
+/* 响应式布局 */
+@media (max-width: 1024px) {
+  .match-container {
+    height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .match-container {
+    flex-direction: column;
+    padding: 16px;
+    gap: 12px;
+  }
+  .left-panel,
+  .right-panel {
+    width: 100%;
+    padding: 16px;
+  }
+}
 .resume-selection {
   display: flex;
   flex-direction: column;
@@ -330,7 +367,7 @@ function startMatching() {
 .match-result h3 {
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: #343a40;
   margin-bottom: 30px;
 }
 
@@ -358,15 +395,7 @@ function startMatching() {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 15px;
-  color: #333;
-}
-
-.advantages h4 {
-  color: #52c41a;
-}
-
-.disadvantages h4 {
-  color: #ff4d4f;
+  color: var(--ui-text-primary);
 }
 
 .advantages ul,
@@ -379,27 +408,24 @@ function startMatching() {
 .advantages li,
 .disadvantages li {
   padding: 8px 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #dee2e6;
   font-size: 14px;
-  color: #666;
+  color: #6c757d;
   position: relative;
   padding-left: 20px;
 }
 
-.advantages li:before {
-  content: '✓';
+.advantages li:before,
+.disadvantages li:before {
+  content: '\u2713';
   position: absolute;
   left: 0;
-  color: #52c41a;
+  color: #495057;
   font-weight: bold;
 }
 
 .disadvantages li:before {
-  content: '✗';
-  position: absolute;
-  left: 0;
-  color: #ff4d4f;
-  font-weight: bold;
+  content: '\u2717';
 }
 
 .advantages li:last-child,

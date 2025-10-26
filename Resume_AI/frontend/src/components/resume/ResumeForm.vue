@@ -381,7 +381,6 @@ defineExpose({
   border-bottom: 1px solid #e5e7eb;
   padding: 20px 0;
   margin-bottom: 24px;
-  position: sticky;
   top: 0;
   z-index: 100;
 }
@@ -439,6 +438,7 @@ defineExpose({
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 24px 40px;
+
 }
 
 .resume-container {
@@ -454,7 +454,7 @@ defineExpose({
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  position: sticky;
+  // position: sticky;
   top: 120px;
   max-height: calc(100vh - 140px);
 }

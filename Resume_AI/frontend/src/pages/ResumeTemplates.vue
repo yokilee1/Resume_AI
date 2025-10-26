@@ -149,7 +149,7 @@ const sampleResume = ref({
 <style lang="scss" scoped>
 .resume-templates {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: #f8f9fa;
   padding: 20px;
 
   .header {
@@ -159,13 +159,13 @@ const sampleResume = ref({
     h1 {
       font-size: 32px;
       font-weight: 700;
-      color: #2d3748;
+      color: #343a40;
       margin: 0 0 10px 0;
     }
     
     p {
       font-size: 16px;
-      color: #718096;
+      color: #6c757d;
       margin: 0;
     }
   }
@@ -177,16 +177,17 @@ const sampleResume = ref({
     
     .selector-tabs {
       display: flex;
-      background: white;
+      background: #ffffff;
+      border: 1px solid #dee2e6;
       border-radius: 12px;
       padding: 6px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      box-shadow: none;
       
       .tab-button {
         padding: 12px 24px;
         border: none;
         background: transparent;
-        color: #718096;
+        color: #6c757d;
         font-size: 14px;
         font-weight: 600;
         border-radius: 8px;
@@ -194,14 +195,14 @@ const sampleResume = ref({
         transition: all 0.3s ease;
         
         &:hover {
-          color: #4a5568;
-          background: rgba(0, 0, 0, 0.05);
+          color: #495057;
+          background: #e9ecef;
         }
         
         &.active {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+          background: #343a40;
+          color: #f8f9fa;
+          box-shadow: none;
         }
       }
     }
@@ -216,7 +217,8 @@ const sampleResume = ref({
       max-width: 100%;
       overflow: auto;
       border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      box-shadow: none;
+      border: 1px solid #dee2e6;
     }
   }
 
@@ -225,23 +227,24 @@ const sampleResume = ref({
     justify-content: center;
     
     .info-card {
-      background: white;
+      background: #ffffff;
       padding: 25px;
       border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      box-shadow: none;
+      border: 1px solid #dee2e6;
       max-width: 500px;
       text-align: center;
       
       h3 {
         font-size: 20px;
         font-weight: 700;
-        color: #2d3748;
+        color: #343a40;
         margin: 0 0 10px 0;
       }
       
       p {
         font-size: 14px;
-        color: #718096;
+        color: #6c757d;
         line-height: 1.6;
         margin: 0 0 20px 0;
       }
@@ -253,8 +256,8 @@ const sampleResume = ref({
         justify-content: center;
         
         .feature-tag {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
+          background: #e9ecef;
+          color: #212529;
           padding: 6px 12px;
           border-radius: 20px;
           font-size: 12px;
@@ -264,7 +267,7 @@ const sampleResume = ref({
     }
   }
 
-  // 响应式设计
+  // 响应式设计保持不变
   @media (max-width: 768px) {
     padding: 15px;
     

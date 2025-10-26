@@ -190,7 +190,7 @@ const handleSocialLogin = (provider) => {
 <style scoped>
 .login-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f8f9fa;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -200,9 +200,10 @@ const handleSocialLogin = (provider) => {
 .login-container {
   width: 100%;
   max-width: 1000px;
-  background: white;
+  background: #ffffff;
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  border: 1px solid #dee2e6;
   overflow: hidden;
   display: flex;
   min-height: 600px;
@@ -211,8 +212,8 @@ const handleSocialLogin = (provider) => {
 /* 左侧装饰区域 */
 .login-decoration {
   flex: 1;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #343a40;
+  color: #f8f9fa;
   padding: 60px 40px;
   display: flex;
   align-items: center;
@@ -227,10 +228,7 @@ const handleSocialLogin = (provider) => {
   font-size: 3rem;
   font-weight: bold;
   margin-bottom: 10px;
-  background: linear-gradient(45deg, #fff, #e0e7ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #e9ecef;
 }
 
 .brand-subtitle {
@@ -278,12 +276,12 @@ const handleSocialLogin = (provider) => {
 
 .form-header h2 {
   font-size: 2rem;
-  color: #333;
+  color: #343a40;
   margin-bottom: 8px;
 }
 
 .form-header p {
-  color: #666;
+  color: #6c757d;
   font-size: 1rem;
 }
 
@@ -338,13 +336,13 @@ const handleSocialLogin = (provider) => {
   left: 0;
   right: 0;
   height: 1px;
-  background: #e0e0e0;
+  background: #dee2e6;
 }
 
 .divider span {
-  background: white;
+  background: #ffffff;
   padding: 0 20px;
-  color: #999;
+  color: #adb5bd;
   font-size: 0.9rem;
 }
 
@@ -356,9 +354,9 @@ const handleSocialLogin = (provider) => {
 .social-button {
   flex: 1;
   height: 44px;
-  border: 1px solid #e0e0e0;
-  background: white;
-  color: #666;
+  border: 1px solid #dee2e6;
+  background: #ffffff;
+  color: #6c757d;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -368,8 +366,8 @@ const handleSocialLogin = (provider) => {
 }
 
 .social-button:hover {
-  border-color: #409eff;
-  color: #409eff;
+  border-color: #495057;
+  color: #495057;
 }
 
 /* 响应式设计 */

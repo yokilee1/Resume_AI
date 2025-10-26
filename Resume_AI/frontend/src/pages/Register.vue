@@ -258,7 +258,7 @@ const handleSocialRegister = (provider) => {
 <style scoped>
 .register-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f8f9fa;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -268,9 +268,10 @@ const handleSocialRegister = (provider) => {
 .register-container {
   width: 100%;
   max-width: 1000px;
-  background: white;
+  background: #ffffff;
   border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  border: 1px solid #dee2e6;
   overflow: hidden;
   display: flex;
   min-height: 700px;
@@ -279,8 +280,8 @@ const handleSocialRegister = (provider) => {
 /* 左侧装饰区域 */
 .register-decoration {
   flex: 1;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: #343a40;
+  color: #f8f9fa;
   padding: 60px 40px;
   display: flex;
   align-items: center;
@@ -295,16 +296,13 @@ const handleSocialRegister = (provider) => {
   font-size: 3rem;
   font-weight: bold;
   margin-bottom: 10px;
-  background: linear-gradient(45deg, #fff, #e0e7ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #e9ecef;
 }
 
 .brand-subtitle {
   font-size: 1.2rem;
   margin-bottom: 40px;
-  opacity: 0.9;
+  color: #adb5bd;
 }
 
 .benefit-list {
@@ -420,9 +418,9 @@ const handleSocialRegister = (provider) => {
 }
 
 .divider span {
-  background: white;
+  background: #ffffff;
   padding: 0 20px;
-  color: #999;
+  color: #adb5bd;
   font-size: 0.9rem;
 }
 
@@ -434,9 +432,9 @@ const handleSocialRegister = (provider) => {
 .social-button {
   flex: 1;
   height: 44px;
-  border: 1px solid #e0e0e0;
-  background: white;
-  color: #666;
+  border: 1px solid #dee2e6;
+  background: #ffffff;
+  color: #6c757d;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -446,8 +444,8 @@ const handleSocialRegister = (provider) => {
 }
 
 .social-button:hover {
-  border-color: #409eff;
-  color: #409eff;
+  border-color: #495057;
+  color: #495057;
 }
 
 /* 协议链接样式 */

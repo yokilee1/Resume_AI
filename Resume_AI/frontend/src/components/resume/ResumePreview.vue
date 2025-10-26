@@ -176,9 +176,12 @@ const formatDateRange = (dateRange) => {
   justify-content: center;
   
   .a4-paper {
-    width: 210mm;
-    height: 297mm;
-    padding: 20mm;
+    box-sizing: border-box;
+    width: min(100%, 210mm);
+    max-width: 100%;
+    height: auto;
+    min-height: 297mm;
+    padding: clamp(16px, 3vw, 24px);
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     overflow: auto;

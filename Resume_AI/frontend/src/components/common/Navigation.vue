@@ -140,17 +140,22 @@ const handleLogout = async () => {
 </script>
 
 <style lang="scss" scoped>
+/**
+ * 顶部导航样式 - FateMaster 风格
+ * 采用深色主题和东方美学设计
+ */
 .navigation {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 var(--spacing-4xl);
+  padding: 0 32px;
   height: 70px;
-  background: var(--primary-gradient);
-  border-bottom: none;
-  box-shadow: var(--shadow-primary-lg);
+  background: #ffffff;
+  border-bottom: 1px solid #dee2e6;
+  box-shadow: none;
   position: relative;
-  
+  backdrop-filter: none;
+
   &::before {
     content: '';
     position: absolute;
@@ -158,8 +163,8 @@ const handleLogout = async () => {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    background: none;
+    backdrop-filter: none;
     z-index: -1;
   }
   
@@ -171,16 +176,8 @@ const handleLogout = async () => {
     .logo {
       font-size: var(--text-2xl);
       font-weight: var(--font-extrabold);
-      background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #343a40;
       text-decoration: none;
-      transition: var(--transition-normal);
-      
-      &:hover {
-        transform: scale(1.05);
-      }
     }
   }
   
@@ -197,7 +194,7 @@ const handleLogout = async () => {
     gap: 16px;
     
     .login-btn {
-      color: rgba(255, 255, 255, 0.9);
+      color: #6c757d;
       font-size: 15px;
       font-weight: 500;
       padding: 8px 16px;
@@ -206,8 +203,8 @@ const handleLogout = async () => {
       text-decoration: none;
       
       &:hover {
-        color: white;
-        background: rgba(255, 255, 255, 0.1);
+        color: #343a40;
+        background: #e9ecef;
         transform: translateY(-1px);
       }
     }
@@ -216,18 +213,19 @@ const handleLogout = async () => {
       font-size: 15px;
       font-weight: 600;
       padding: 10px 20px;
-      background: rgba(255, 255, 255, 0.15);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      color: white;
+      background: #343a40;
+      border: 1px solid #343a40;
+      color: #f8f9fa;
       border-radius: 10px;
-      backdrop-filter: blur(10px);
+      backdrop-filter: none;
       transition: all 0.3s ease;
+      box-shadow: none;
       
       &:hover {
-        background: rgba(255, 255, 255, 0.25);
-        border-color: rgba(255, 255, 255, 0.5);
+        background: #495057;
+        border-color: #495057;
         transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        box-shadow: none;
       }
     }
   }
@@ -239,22 +237,22 @@ const handleLogout = async () => {
       cursor: pointer;
       padding: 8px 12px;
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #ffffff;
+      backdrop-filter: none;
+      border: 1px solid #dee2e6;
       transition: all 0.3s ease;
       
       &:hover {
-        background: rgba(255, 255, 255, 0.2);
-        border-color: rgba(255, 255, 255, 0.3);
+        background: #e9ecef;
+        border-color: #495057;
         transform: translateY(-1px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: none;
       }
       
       .avatar {
         margin-right: 10px;
-        background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
-        color: #fff;
+        background: #e9ecef;
+        color: #343a40;
         font-weight: 600;
         width: 36px;
         height: 36px;
@@ -263,13 +261,14 @@ const handleLogout = async () => {
         justify-content: center;
         border-radius: 50%;
         font-size: 14px;
+        box-shadow: none;
       }
       
       .username {
         margin-right: 8px;
         font-size: 15px;
         font-weight: 500;
-        color: white;
+        color: #343a40;
         max-width: 120px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -277,53 +276,52 @@ const handleLogout = async () => {
       }
       
       .dropdown-icon {
-        color: rgba(255, 255, 255, 0.8);
+        color: #6c757d;
         font-size: 14px;
         transition: all 0.3s ease;
       }
       
       &:hover .dropdown-icon {
-        color: white;
+        color: #343a40;
         transform: rotate(180deg);
       }
     }
   }
 }
 
-// 下拉菜单项样式
+// 下拉菜单黑白灰样式
 :deep(.el-dropdown-menu) {
-  background: white;
-  border: none;
+  background: #ffffff;
+  border: 1px solid #dee2e6;
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: none;
   padding: 8px;
   margin-top: 8px;
-  
-  .el-dropdown-menu__item {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 4px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-    
-    &:hover {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      transform: translateX(4px);
-    }
-    
-    .el-icon {
-      margin-right: 10px;
-      font-size: 16px;
-    }
-  }
 }
+
+:deep(.el-dropdown-menu__item) {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: #6c757d;
+}
+
+:deep(.el-dropdown-menu__item:hover) {
+  background: #e9ecef;
+  color: #343a40;
+  transform: translateX(4px);
+  box-shadow: none;
+}
+
+:deep(.el-dropdown-menu__item .el-icon) {
+  margin-right: 10px;
+  font-size: 16px;
+}
+  
 
 // 响应式设计
 @media (max-width: 768px) {

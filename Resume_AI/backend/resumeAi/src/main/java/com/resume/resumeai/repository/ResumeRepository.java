@@ -86,9 +86,52 @@ public class ResumeRepository {
         });
     }
 
+    public List<Resume> listByUser(Long userId, int offset, int limit, String status) {
+        String sql = """
+            SELECT id, user_id, title, content_json, status, created_at, updated_at
+            FROM resumes
+            WHERE user_id=:user_id AND (:status IS NULL OR status=:status)
+            ORDER BY updated_at DESC
+            LIMIT :limit OFFSET :offset
+        """;
+        Map<String, Object> p = new HashMap<>();
+        p.put("user_id", userId);
+        p.put("status", status);
+        p.put("limit", limit);
+        p.put("offset", offset);
+        return jdbc.query(sql, p, (rs, i) -> {
+            Resume r = new Resume();
+            r.setId(rs.getLong("id"));
+            r.setUserId(rs.getLong("user_id"));
+            r.setTitle(rs.getString("title"));
+            r.setContentJson(rs.getString("content_json"));
+            r.setStatus(rs.getString("status"));
+            r.setCreatedAt(rs.getTimestamp("created_at").toInstant());
+            r.setUpdatedAt(rs.getTimestamp("updated_at").toInstant());
+            return r;
+        });
+    }
+
+    /**
+     * 统计简历数量；允许 status 为 null 表示不筛选
+     */
     public int count(String status) {
         String sql = "SELECT COUNT(1) FROM resumes WHERE (:status IS NULL OR status=:status)";
-        Integer r = jdbc.queryForObject(sql, Map.of("status", status), Integer.class);
+        Map<String, Object> p = new HashMap<>();
+        p.put("status", status);
+        Integer r = jdbc.queryForObject(sql, p, Integer.class);
+        return r == null ? 0 : r;
+    }
+
+    /**
+     * 统计指定用户的简历数量；允许 status 为 null 表示不筛选
+     */
+    public int countByUser(Long userId, String status) {
+        String sql = "SELECT COUNT(1) FROM resumes WHERE user_id=:user_id AND (:status IS NULL OR status=:status)";
+        Map<String, Object> p = new HashMap<>();
+        p.put("user_id", userId);
+        p.put("status", status);
+        Integer r = jdbc.queryForObject(sql, p, Integer.class);
         return r == null ? 0 : r;
     }
 

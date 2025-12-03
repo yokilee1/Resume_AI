@@ -1,0 +1,74 @@
+{
+  "info": {
+    "name": "Resume AI API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "后端接口测试集合（使用 {{baseUrl}} 与 {{token}} 环境变量）"
+  },
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api","auth","register"]},
+        "body": {"mode": "raw", "raw": "{\n  \"email\": \"user@test.com\",\n  \"password\": \"Passw0rd!\"\n}"}
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "url": {"raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"]},
+        "body": {"mode": "raw", "raw": "{\n  \"email\": \"user@test.com\",\n  \"password\": \"Passw0rd!\"\n}"}
+      }
+    },
+    {
+      "name": "Users - Me",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+        "url": {"raw": "{{baseUrl}}/api/users/me", "host": ["{{baseUrl}}"], "path": ["api","users","me"]}
+      }
+    },
+    {
+      "name": "Resumes - List",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+        "url": {"raw": "{{baseUrl}}/api/resumes?page=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api","resumes"], "query": [{"key":"page","value":"1"},{"key":"pageSize","value":"10"}]}
+      }
+    },
+    {
+      "name": "Resumes - Create",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+        "url": {"raw": "{{baseUrl}}/api/resumes", "host": ["{{baseUrl}}"], "path": ["api","resumes"]},
+        "body": {"mode": "raw", "raw": "{\n  \"title\": \"My Resume\",\n  \"content\": \"...\"\n}"}
+      }
+    },
+    {
+      "name": "Jobs - Search",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+        "url": {"raw": "{{baseUrl}}/api/jobs/search?keywords=Java&city=Shanghai&page=1&pageSize=10", "host": ["{{baseUrl}}"], "path": ["api","jobs","search"], "query": [
+          {"key":"keywords","value":"Java"},
+          {"key":"city","value":"Shanghai"},
+          {"key":"page","value":"1"},
+          {"key":"pageSize","value":"10"}
+        ]}
+      }
+    },
+    {
+      "name": "Match - Recommendations",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+        "url": {"raw": "{{baseUrl}}/api/match/recommendations", "host": ["{{baseUrl}}"], "path": ["api","match","recommendations"]},
+        "body": {"mode": "raw", "raw": "{\n  \"text\": \"Java developer\"\n}"}
+      }
+    }
+  ]
+}

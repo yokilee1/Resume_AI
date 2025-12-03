@@ -1,0 +1,62 @@
+erDiagram
+    USERS ||--o{ RESUMES : has
+    TEMPLATES ||--o{ RESUMES : uses
+    RESUMES ||--o{ RESUME_VERSIONS : version_of
+    RESUMES ||--o{ EVALUATIONS : evaluated
+    JOBS ||--o{ EVALUATIONS : target
+
+    USERS {
+        INT user_id PK
+        VARCHAR username
+        VARCHAR password
+        VARCHAR email
+        INT type
+        DATETIME created_at
+        DATETIME updated_at
+    }
+
+    TEMPLATES {
+        INT template_id PK
+        VARCHAR name
+        TEXT layout
+        VARCHAR preview_url
+        DATETIME created_at
+    }
+
+    RESUMES {
+        INT resume_id PK
+        INT user_id FK
+        INT template_id FK
+        TEXT content
+        ENUM status
+        DATETIME created_at
+        DATETIME updated_at
+    }
+
+    RESUME_VERSIONS {
+        INT version_id PK
+        INT resume_id FK
+        TEXT content
+        VARCHAR version_note
+        DATETIME created_at
+    }
+
+    JOBS {
+        INT job_id PK
+        VARCHAR title
+        VARCHAR company
+        TEXT description
+        VARCHAR location
+        VARCHAR salary
+        VARCHAR url
+        DATETIME crawled_at
+    }
+
+    EVALUATIONS {
+        INT eval_id PK
+        INT resume_id FK
+        INT job_id FK
+        DECIMAL score
+        JSON details
+        DATETIME created_at
+    }

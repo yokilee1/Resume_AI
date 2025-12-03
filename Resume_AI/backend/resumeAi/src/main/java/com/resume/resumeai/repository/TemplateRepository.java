@@ -18,7 +18,9 @@ public class TemplateRepository {
             WHERE (:category IS NULL OR category=:category)
             ORDER BY id DESC
         """;
-        return jdbc.query(sql, Map.of("category", category), (rs, i) -> {
+        Map<String, Object> p = new HashMap<>();
+        p.put("category", category);
+        return jdbc.query(sql, p, (rs, i) -> {
             Template t = new Template();
             t.setId(rs.getLong("id"));
             t.setName(rs.getString("name"));

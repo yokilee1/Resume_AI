@@ -19,52 +19,52 @@ public class UserRepository {
 
     public void create(User u) {
         String sql = """
-            INSERT INTO users(email, password_hash, nickname, created_at)
-            VALUES(:email, :password_hash, :nickname, NOW())
+            INSERT INTO users(email, password, username, type, created_at)
+            VALUES(:email, :password, :username, :type, NOW())
         """;
         Map<String, Object> p = new HashMap<>();
         p.put("email", u.getEmail());
-        p.put("password_hash", u.getPasswordHash());
-        p.put("nickname", u.getNickname());
+        p.put("password", u.getPasswordHash());
+        p.put("username", u.getNickname());
+        p.put("type", 0);
         jdbc.update(sql, p);
-        // TODO: 查询生成的ID（依赖返回键策略或二次查询）
         u.setId(findIdByEmail(u.getEmail()));
     }
 
     public Long findIdByEmail(String email) {
-        return jdbc.queryForObject("SELECT id FROM users WHERE email=:email", Map.of("email", email), Long.class);
+        return jdbc.queryForObject("SELECT user_id FROM users WHERE email=:email", Map.of("email", email), Long.class);
     }
 
     public User findByEmail(String email) {
-        List<User> list = jdbc.query("SELECT id, email, password_hash, nickname FROM users WHERE email=:email",
+        List<User> list = jdbc.query("SELECT user_id, email, password, username FROM users WHERE email=:email",
                 Map.of("email", email),
                 (rs, i) -> {
                     User u = new User();
-                    u.setId(rs.getLong("id"));
+                    u.setId(rs.getLong("user_id"));
                     u.setEmail(rs.getString("email"));
-                    u.setPasswordHash(rs.getString("password_hash"));
-                    u.setNickname(rs.getString("nickname"));
+                    u.setPasswordHash(rs.getString("password"));
+                    u.setNickname(rs.getString("username"));
                     return u;
                 });
         return list.isEmpty() ? null : list.get(0);
     }
 
     public User findById(Long id) {
-        List<User> list = jdbc.query("SELECT id, email, password_hash, nickname FROM users WHERE id=:id",
+        List<User> list = jdbc.query("SELECT user_id, email, password, username FROM users WHERE user_id=:id",
                 Map.of("id", id),
                 (rs, i) -> {
                     User u = new User();
-                    u.setId(rs.getLong("id"));
+                    u.setId(rs.getLong("user_id"));
                     u.setEmail(rs.getString("email"));
-                    u.setPasswordHash(rs.getString("password_hash"));
-                    u.setNickname(rs.getString("nickname"));
+                    u.setPasswordHash(rs.getString("password"));
+                    u.setNickname(rs.getString("username"));
                     return u;
                 });
         return list.isEmpty() ? null : list.get(0);
     }
 
     public void updateProfile(User patch) {
-        String sql = "UPDATE users SET nickname=:nickname WHERE id=:id";
-        jdbc.update(sql, Map.of("nickname", patch.getNickname(), "id", patch.getId()));
+        String sql = "UPDATE users SET username=:username WHERE user_id=:id";
+        jdbc.update(sql, Map.of("username", patch.getNickname(), "id", patch.getId()));
     }
 }

@@ -1,28 +1,27 @@
 {
-  "name": "resume-ai-frontend",
-  "version": "1.0.0",
-  "description": "A smart resume management platform frontend built with Vue3 and Element Plus",
-  "main": "index.js",
+  "name": "copy-of-resume-ai",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node server.js"
   },
   "dependencies": {
-    "vue": "^3.4.0",
-    "element-plus": "^2.7.0",
-    "axios": "^1.6.0",
-    "vue-router": "^4.2.5",
-    "pinia": "^2.1.7",
-    "@element-plus/icons-vue": "^2.3.1",
-    "sass": "^1.69.5"
+    "@google/genai": "^1.30.0",
+    "dotenv": "^17.2.3",
+    "lucide-react": "^0.555.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-markdown": "^10.1.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
-    "vite": "^5.0.0",
-    "vue-loader": "^17.0.0",
-    "@vitejs/plugin-vue": "^5.0.0",
-    "sass-loader": "^13.3.2"
-  },
-  "author": "Yorkie",
-  "license": "MIT"
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
 }

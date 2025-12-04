@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { analyzeJobMatch, searchJobs } from '../services/geminiService';
+import React, { useState, useEffect } from 'react';
+import { analyzeJobMatch, searchJobs as searchJobsAI } from '../services/geminiService';
+import { searchJobsDB } from '../services/jobApi';
 import { JobMatchResult, ResumeData, JobSearchResult } from '../types';
-import { Search, CheckCircle, AlertCircle, Loader2, ArrowRight, Briefcase, FileText, ChevronRight, Check } from 'lucide-react';
+import { Search, CheckCircle, AlertCircle, Loader2, ArrowRight, Briefcase, FileText, ChevronRight, Check, Building2, MapPin, DollarSign } from 'lucide-react';
 
 interface JobAssistantProps {
   resumes: ResumeData[];
@@ -17,6 +18,8 @@ const getResumeAsText = (r: ResumeData) => `
   Projects: ${r.projects.map(p => `${p.name}: ${p.description}`).join('\n')}
 `;
 
+// 移除本地 Mock 数据，改为从后端/AI 服务获取
+
 type Step = 'FIND_JOB' | 'SELECT_RESUME' | 'RESULT';
 
 const JobAssistant: React.FC<JobAssistantProps> = ({ resumes }) => {
@@ -28,6 +31,7 @@ const JobAssistant: React.FC<JobAssistantProps> = ({ resumes }) => {
   const [searchResults, setSearchResults] = useState<JobSearchResult[]>([]);
   const [selectedJob, setSelectedJob] = useState<JobSearchResult | null>(null);
   const [manualJobDescription, setManualJobDescription] = useState('');
+  const [dataSource, setDataSource] = useState<'DB' | 'AI' | null>(null);
 
   // Step 2: Select Resume State
   const [selectedResumeId, setSelectedResumeId] = useState<string | null>(null);
@@ -36,18 +40,69 @@ const JobAssistant: React.FC<JobAssistantProps> = ({ resumes }) => {
   const [isMatching, setIsMatching] = useState(false);
   const [matchResult, setMatchResult] = useState<JobMatchResult | null>(null);
 
+// 初次加载：优先拉取数据库岗位，失败或为空时不阻塞界面
+useEffect(() => {
+  let mounted = true;
+  const init = async () => {
+    setIsSearching(true);
+    try {
+      const results = await searchJobsDB('');
+      if (mounted && Array.isArray(results) && results.length > 0) {
+        setSearchResults(results);
+        setDataSource('DB');
+      } else {
+        const ai = await searchJobsAI('software engineer intern');
+        if (mounted) {
+          setSearchResults(ai);
+          setDataSource('AI');
+        }
+      }
+    } catch {
+      try {
+        const ai = await searchJobsAI('software engineer intern');
+        if (mounted) {
+          setSearchResults(ai);
+          setDataSource('AI');
+        }
+      } catch {
+        if (mounted) {
+          setSearchResults([]);
+          setDataSource(null);
+        }
+      }
+    } finally {
+      if (mounted) setIsSearching(false);
+    }
+  };
+  init();
+  return () => { mounted = false; };
+}, []);
+
   // --- Handlers ---
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return;
     setIsSearching(true);
-    setSearchResults([]);
+    const query = searchQuery.trim();
     try {
-      const results = await searchJobs(searchQuery);
-      setSearchResults(results);
-    } catch (e) {
-      console.error(e);
+      const dbResults = await searchJobsDB(query);
+      if (dbResults && dbResults.length > 0) {
+        setSearchResults(dbResults);
+        setDataSource('DB');
+      } else {
+        const aiResults = await searchJobsAI(query);
+        setSearchResults(aiResults);
+        setDataSource('AI');
+      }
+    } catch {
+      try {
+        const aiResults = await searchJobsAI(query);
+        setSearchResults(aiResults);
+        setDataSource('AI');
+      } catch {
+        setSearchResults([]);
+        setDataSource(null);
+      }
     } finally {
       setIsSearching(false);
     }
@@ -81,6 +136,7 @@ const JobAssistant: React.FC<JobAssistantProps> = ({ resumes }) => {
       setMatchResult(result);
     } catch (e) {
       console.error(e);
+      alert("Analysis failed. Please try again.");
     } finally {
       setIsMatching(false);
     }
@@ -127,7 +183,7 @@ const JobAssistant: React.FC<JobAssistantProps> = ({ resumes }) => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="e.g. Frontend Developer Intern in Shanghai"
+                  placeholder="Filter jobs (e.g. Developer, Google, Shanghai)..."
                   className="flex-1 rounded-lg border border-slate-300 px-4 py-3 text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 />
                 <button
@@ -140,10 +196,17 @@ const JobAssistant: React.FC<JobAssistantProps> = ({ resumes }) => {
               </form>
 
               {/* Search Results Grid */}
-              {searchResults.length > 0 && (
-                <div className="mb-8">
-                  <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">Found Positions</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="mb-8">
+                <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">
+                  {searchResults.length > 0 ? `Available Positions (${searchResults.length})` : 'No Jobs Found'}
+                  {dataSource && (
+                    <span className={`ml-2 px-2 py-0.5 rounded-full text-[10px] font-bold ${dataSource === 'DB' ? 'bg-green-100 text-green-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                      {dataSource === 'DB' ? 'DB' : 'AI'}
+                    </span>
+                  )}
+                </h3>
+                {searchResults.length > 0 && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-2">
                     {searchResults.map((job, idx) => (
                       <div 
                         key={idx}
@@ -154,19 +217,31 @@ const JobAssistant: React.FC<JobAssistantProps> = ({ resumes }) => {
                             : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50'
                         }`}
                       >
-                        <div className="flex justify-between items-start">
-                           <div>
-                             <h4 className="font-bold text-slate-900">{job.title}</h4>
-                             <p className="text-sm text-slate-600">{job.company} • {job.location}</p>
+                        <div className="flex justify-between items-start mb-2">
+                           <div className="flex-1">
+                             <h4 className="font-bold text-slate-900 line-clamp-1" title={job.title}>{job.title}</h4>
+                             <div className="flex flex-col gap-1 mt-1">
+                               <div className="flex items-center text-xs text-slate-600 font-medium">
+                                 <Building2 size={12} className="mr-1 text-slate-400" /> {job.company}
+                               </div>
+                             <div className="flex items-center text-xs text-slate-500">
+                               <MapPin size={12} className="mr-1 text-slate-400" /> {job.location}
+                             </div>
+                              {job.salary && (
+                                <div className="flex items-center text-xs text-slate-500">
+                                  <DollarSign size={12} className="mr-1 text-slate-400" /> {job.salary}
+                                </div>
+                              )}
+                            </div>
                            </div>
-                           {selectedJob === job && <CheckCircle size={18} className="text-indigo-600" />}
+                           {selectedJob === job && <CheckCircle size={18} className="text-indigo-600 flex-shrink-0 ml-2" />}
                         </div>
-                        <p className="text-xs text-slate-500 mt-2 line-clamp-2">{job.description}</p>
+                        <p className="text-xs text-slate-500 mt-2 line-clamp-3 leading-relaxed border-t border-slate-100 pt-2">{job.description}</p>
                       </div>
                     ))}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
 
               {/* Job Description Input (Manual or Selected) */}
               <div className="pt-6 border-t border-slate-100">
@@ -174,12 +249,12 @@ const JobAssistant: React.FC<JobAssistantProps> = ({ resumes }) => {
                   Target Job Description
                 </h3>
                 <p className="text-xs text-slate-400 mb-3">
-                  {selectedJob ? 'Edit the selected job description below if needed.' : 'Or paste a job description manually.'}
+                  {selectedJob ? 'Review the selected job description below.' : 'Select a job above or paste a description here.'}
                 </p>
                 <textarea
                   value={manualJobDescription}
                   onChange={(e) => setManualJobDescription(e.target.value)}
-                  placeholder="Paste the full job description here..."
+                  placeholder="Job description will appear here..."
                   className="w-full h-40 rounded-lg border border-slate-300 px-4 py-3 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 mb-4"
                 />
                 

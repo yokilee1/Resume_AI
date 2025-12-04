@@ -62,6 +62,7 @@ export interface JobSearchResult {
   location: string;
   description: string; // Changed from snippet to description for better matching
   url?: string;
+  salary?: string;
 }
 
 export enum AppView {

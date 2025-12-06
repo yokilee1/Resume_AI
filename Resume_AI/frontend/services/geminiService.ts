@@ -1,4 +1,5 @@
 import { JobSearchResult } from "../types";
+import { polishResume } from "./aiApi";
 
 /**
  * 优化文本内容（摘要/要点/技能）
@@ -8,13 +9,8 @@ import { JobSearchResult } from "../types";
  */
 export const optimizeText = async (text: string, type: 'summary' | 'bullet' | 'skills'): Promise<string> => {
   if (!text) return "";
-  const res = await fetch(`/ai/optimizeText`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text, type })
-  });
-  const data = await res.json();
-  return String(data.text || "");
+  const resp = await polishResume({ text, language: 'zh' });
+  return String(resp.polished_text || "");
 };
 
 /**
@@ -24,7 +20,7 @@ export const optimizeText = async (text: string, type: 'summary' | 'bullet' | 's
  * @returns 包含分数、分析、缺失关键词和建议的对象
  */
 export const analyzeJobMatch = async (resumeText: string, jobDescription: string) => {
-  const res = await fetch(`/ai/analyzeJobMatch`, {
+  const res = await fetch(`/api/analyzeJobMatch`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ resumeText, jobDescription })
@@ -39,7 +35,7 @@ export const analyzeJobMatch = async (resumeText: string, jobDescription: string
  * @returns 职位搜索结果列表
  */
 export const searchJobs = async (query: string): Promise<JobSearchResult[]> => {
-  const res = await fetch(`/ai/searchJobs`, {
+  const res = await fetch(`/api/searchJobs`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ query })

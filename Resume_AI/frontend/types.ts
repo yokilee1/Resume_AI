@@ -26,7 +26,7 @@ export interface Project {
 export interface ResumeData {
   id: string;
   title: string;
-  templateId: 'modern' | 'classic' | 'minimal';
+  templateId: 'modern' | 'classic' | 'minimal' | 'elegant' | 'compact' | 'timeline' | 'twoColumn';
   lastModified: number;
   personalInfo: {
     fullName: string;
@@ -54,6 +54,9 @@ export interface JobMatchResult {
   analysis: string;
   missingKeywords: string[];
   suggestions: string[];
+  skillMatch?: number;
+  experienceRelevance?: number;
+  cultureFit?: number;
 }
 
 export interface JobSearchResult {

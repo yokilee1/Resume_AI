@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { analyzeJobMatch, searchJobs as searchJobsAI } from '../services/geminiService';
+import { searchJobs as searchJobsAI } from '../services/geminiService';
+import { analyzeJobMatchBackend } from '../services/aiApi';
 import { searchJobsDB } from '../services/jobApi';
 import { JobMatchResult, ResumeData, JobSearchResult } from '../types';
 import { Search, CheckCircle, AlertCircle, Loader2, ArrowRight, Briefcase, FileText, ChevronRight, Check, Building2, MapPin, DollarSign } from 'lucide-react';
@@ -132,8 +133,9 @@ useEffect(() => {
     
     try {
       const resumeText = getResumeAsText(resume);
-      const result = await analyzeJobMatch(resumeText, manualJobDescription);
+      const result = await analyzeJobMatchBackend(resumeText, manualJobDescription);
       setMatchResult(result);
+      console.log('Job match result', result);
     } catch (e) {
       console.error(e);
       alert("Analysis failed. Please try again.");
@@ -366,6 +368,30 @@ useEffect(() => {
                     {matchResult.analysis}
                   </p>
                 </div>
+
+                {/* Additional Dimensions */}
+                {(matchResult.skillMatch != null || matchResult.experienceRelevance != null || matchResult.cultureFit != null) && (
+                  <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {matchResult.skillMatch != null && (
+                      <div className="p-4 rounded-lg border border-slate-200 bg-white">
+                        <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Skill Match</div>
+                        <div className="text-2xl font-bold text-slate-900">{Number(matchResult.skillMatch)}%</div>
+                      </div>
+                    )}
+                    {matchResult.experienceRelevance != null && (
+                      <div className="p-4 rounded-lg border border-slate-200 bg-white">
+                        <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Experience Relevance</div>
+                        <div className="text-2xl font-bold text-slate-900">{Number(matchResult.experienceRelevance)}%</div>
+                      </div>
+                    )}
+                    {matchResult.cultureFit != null && (
+                      <div className="p-4 rounded-lg border border-slate-200 bg-white">
+                        <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">Culture Fit</div>
+                        <div className="text-2xl font-bold text-slate-900">{Number(matchResult.cultureFit)}%</div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>

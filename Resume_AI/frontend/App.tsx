@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import { ResumeData, AppView, UserProfile } from './types';
 import EditorForm from './components/EditorForm';
 import ResumePreview from './components/ResumePreview';
@@ -168,9 +169,14 @@ function App() {
     setView(AppView.EDITOR);
   };
 
-  const handlePrint = () => {
-     window.print();
-  };
+  /**
+   * 导出当前预览为 PDF（调用系统打印对话框并可选择“存储为 PDF”）
+   * 适配 react-to-print v3：通过 contentRef 指定打印节点
+   */
+  const handleExportPDF = useReactToPrint({
+    contentRef: previewRef,
+    documentTitle: currentResume ? (currentResume.title || 'Resume') : 'Resume',
+  });
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
@@ -245,9 +251,9 @@ function App() {
         <div className="flex items-center gap-4">
            {view === AppView.EDITOR && (
              <button 
-               onClick={handlePrint}
+               onClick={() => handleExportPDF(() => previewRef.current as any)}
                className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-full transition-colors hidden sm:block"
-               title="Print / Save as PDF"
+               title="导出 PDF"
              >
               <Printer size={20} />
             </button>
@@ -326,10 +332,7 @@ function App() {
            </div>
         )}
         
-        {/* Print-only container */}
-        <div className="hidden print-only absolute top-0 left-0 w-full h-full bg-white z-50">
-           {currentResume && <ResumePreview data={currentResume} />}
-        </div>
+        
 
       </main>
     </div>

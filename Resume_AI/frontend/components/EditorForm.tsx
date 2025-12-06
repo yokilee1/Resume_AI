@@ -113,7 +113,7 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
              <LayoutTemplate size={14} /> Resume Template
            </div>
            <div className="grid grid-cols-3 gap-2">
-             {['modern', 'classic', 'minimal'].map((t) => (
+             {['modern', 'classic', 'minimal', 'elegant', 'compact', 'timeline'].map((t) => (
                <button
                  key={t}
                  onClick={() => handleTemplateChange(t as any)}

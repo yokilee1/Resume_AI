@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { ResumeData, AppView, UserProfile } from './types';
+import { ResumeData, AppView, UserProfile,JobSearchResult } from './types';
 import EditorForm from './components/EditorForm';
 import ResumePreview from './components/ResumePreview';
 import JobAssistant from './components/JobAssistant';
@@ -8,7 +8,8 @@ import LandingPage from './components/LandingPage';
 import AuthPage from './components/AuthPage';
 import Dashboard from './components/Dashboard';
 import UserProfilePage from './components/UserProfile';
-import { FileText, Search, Printer, LogOut, LayoutDashboard, User } from 'lucide-react';
+import AdminDashboard from './components/AdminDashboard';
+import { FileText, Search, Printer, LogOut, LayoutDashboard, User,Shield } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { listResumes, createResume, updateResume as apiUpdateResume, deleteResume as apiDeleteResume, duplicateResume as apiDuplicateResume } from './services/resumeApi';
 
@@ -53,6 +54,12 @@ function App() {
   // State: All Resumes（从后端加载）
   const [resumes, setResumes] = useState<ResumeData[]>([]);
 
+  // State: Global Job Database (Shared between Admin and Student)
+  const [globalJobs, setGlobalJobs] = useState<JobSearchResult[]>(() => {
+    const savedJobs = localStorage.getItem('resume_ai_jobs');
+    return savedJobs ? JSON.parse(savedJobs) :"";
+  });
+
   // State: Current Active Resume ID
   const [currentResumeId, setCurrentResumeId] = useState<string | null>(null);
 
@@ -82,6 +89,10 @@ function App() {
       }
     })();
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    localStorage.setItem('resume_ai_jobs', JSON.stringify(globalJobs));
+  }, [globalJobs]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -205,6 +216,19 @@ function App() {
     );
   }
 
+    // Admin View
+  if (view === AppView.ADMIN) {
+    return (
+      <AdminDashboard 
+        onExit={() => setView(AppView.DASHBOARD)} 
+        jobs={globalJobs}
+        onUpdateJobs={setGlobalJobs}
+        userCount={1240} // Mock stat
+        resumeCount={resumes.length + 5000} // Mock stat
+      />
+    );
+  }
+
   return (
     <div className="h-screen w-full flex flex-col bg-slate-100 text-slate-900 font-sans overflow-hidden">
       {/* Navbar */}
@@ -297,7 +321,11 @@ function App() {
         {/* View: Profile */}
         {view === AppView.PROFILE && (
            <div className="w-full h-full overflow-y-auto bg-slate-50">
-             <UserProfilePage user={userProfile} onUpdate={setUserProfile} />
+             <UserProfilePage 
+              user={userProfile} 
+              onUpdate={setUserProfile} 
+              onNavigate={setView}
+            />
            </div>
         )}
 
@@ -318,7 +346,7 @@ function App() {
         {/* View: Match & Search */}
         {view === AppView.MATCH && (
           <div className="w-full h-full no-print">
-            <JobAssistant resumes={resumes} />
+            <JobAssistant resumes={resumes} availableJobs={globalJobs} />
           </div>
         )}
 

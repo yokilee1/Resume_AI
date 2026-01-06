@@ -14,6 +14,8 @@ CREATE TABLE users (
   email VARCHAR(100) NOT NULL,
   password VARCHAR(255) NOT NULL,
   username VARCHAR(100) NOT NULL,
+  role VARCHAR(20) NOT NULL DEFAULT 'User',
+  status VARCHAR(20) NOT NULL DEFAULT 'Active',
   type INT NOT NULL DEFAULT 0,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -26,7 +28,21 @@ CREATE TABLE templates (
   name VARCHAR(100) NOT NULL,
   category VARCHAR(50) NULL,
   preview_url VARCHAR(255) NULL,
-  schema_json TEXT NULL
+  schema_json TEXT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'Active',
+  usage_count INT NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- crawler_tasks (CrawlerTaskRepository)
+CREATE TABLE crawler_tasks (
+  id VARCHAR(36) PRIMARY KEY,
+  query VARCHAR(255) NOT NULL,
+  source VARCHAR(100) NOT NULL,
+  frequency VARCHAR(50) NOT NULL,
+  last_run DATETIME NULL,
+  next_run VARCHAR(50) NOT NULL, -- Display string like "Pending" or date
+  status VARCHAR(20) NOT NULL DEFAULT 'Active',
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- resumes (ResumeRepository)

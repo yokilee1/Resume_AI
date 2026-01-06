@@ -7,6 +7,7 @@ import { Search, CheckCircle, AlertCircle, Loader2, ArrowRight, Briefcase, FileT
 
 interface JobAssistantProps {
   resumes: ResumeData[];
+  availableJobs: JobSearchResult[];
 }
 
 // Helper to convert resume object to text for analysis
@@ -23,7 +24,7 @@ const getResumeAsText = (r: ResumeData) => `
 
 type Step = 'FIND_JOB' | 'SELECT_RESUME' | 'RESULT';
 
-const JobAssistant: React.FC<JobAssistantProps> = ({ resumes }) => {
+const JobAssistant: React.FC<JobAssistantProps> = ({ resumes,availableJobs }) => {
   const [currentStep, setCurrentStep] = useState<Step>('FIND_JOB');
 
   // Step 1: Find Job State
@@ -77,7 +78,7 @@ useEffect(() => {
   };
   init();
   return () => { mounted = false; };
-}, []);
+}, [availableJobs]);
 
   // --- Handlers ---
 

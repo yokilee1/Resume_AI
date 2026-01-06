@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { UserProfile } from '../types';
-import { User, Mail, Shield, Camera, Save, Loader2 } from 'lucide-react';
+import { AppView, UserProfile } from '../types';
+import { User, Mail, Shield, Camera, Save, Loader2, Lock } from 'lucide-react';
 import { getMe, updateMe } from '../services/userApi';
 
 interface UserProfileProps {
   user: UserProfile;
   onUpdate: (data: UserProfile) => void;
+  onNavigate?: (view:AppView) => void;
 }
 
 /**
  * 账户设置页面：与后端用户资料接口互联
  */
-const UserProfilePage: React.FC<UserProfileProps> = ({ user, onUpdate }) => {
+const UserProfilePage: React.FC<UserProfileProps> = ({ user, onUpdate, onNavigate}) => {
   const [formData, setFormData] = useState(user);
   const [isSaving, setIsSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -74,9 +75,22 @@ const UserProfilePage: React.FC<UserProfileProps> = ({ user, onUpdate }) => {
               <Camera size={16} />
             </button>
           </div>
-          <div className="text-center md:text-left">
+          <div className="flex-1 text-center md:text-left">
             <h2 className="text-xl font-bold text-slate-800">{formData.name}</h2>
-            <p className="text-slate-500">{formData.role}</p>
+            <div className="flex items-center justify-center md:justify-start gap-2 mt-1">
+               <span className="text-slate-500">{formData.role}</span>
+               {formData.role === 'Admin' && <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider border border-indigo-200">Staff</span>}
+            </div>
+          </div>
+          
+          {/* Admin Entry Point */}
+          <div className="mt-4 md:mt-0">
+             <button 
+               onClick={() => onNavigate && onNavigate(AppView.ADMIN)}
+               className="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-800 transition-all flex items-center shadow-lg shadow-slate-200"
+             >
+               <Lock size={16} className="mr-2" /> Admin Panel
+             </button>
           </div>
         </div>
 
@@ -128,6 +142,7 @@ const UserProfilePage: React.FC<UserProfileProps> = ({ user, onUpdate }) => {
                     <option value="Student">Student</option>
                     <option value="Graduate">Recent Graduate</option>
                     <option value="Professional">Professional</option>
+                    <option value="Admin">Administrator</option>
                   </select>
                 </div>
               </div>

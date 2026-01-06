@@ -60,12 +60,15 @@ export interface JobMatchResult {
 }
 
 export interface JobSearchResult {
+  id?: string;
   title: string;
   company: string;
   location: string;
   description: string; // Changed from snippet to description for better matching
   url?: string;
   salary?: string;
+  postedDate?: string;
+  source?: 'Manual' | 'AI Crawler';
 }
 
 export enum AppView {
@@ -75,5 +78,46 @@ export enum AppView {
   DASHBOARD = 'DASHBOARD',
   EDITOR = 'EDITOR',
   MATCH = 'MATCH',
-  PROFILE = 'PROFILE'
+  PROFILE = 'PROFILE',
+  ADMIN = 'ADMIN'
+}
+
+export interface AdminStats {
+  userCount: number;
+  resumeCount: number;
+  jobCount?: number;
+  recentActivity: Array<{
+    id: number;
+    user: string;
+    action: string;
+    time: string;
+  }>;
+}
+
+export interface AdminUser {
+  id: number;
+  email: string;
+  nickname: string;
+  role: 'User' | 'Admin';
+  status: 'Active' | 'Inactive';
+  joinedAt: string;
+}
+
+export interface CrawlerTask {
+  id: string;
+  query: string;
+  source: string;
+  frequency: string;
+  lastRun: string | null;
+  nextRun: string;
+  status: 'Active' | 'Paused';
+}
+
+export interface AdminTemplate {
+  id: number;
+  name: string;
+  category: string;
+  previewUrl: string;
+  status: 'Active' | 'Inactive';
+  usageCount: number;
 }

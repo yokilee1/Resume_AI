@@ -67,3 +67,4 @@ coverage
 *.bak
 
 .vscode/settings.json
+/backend/*/.scrapy

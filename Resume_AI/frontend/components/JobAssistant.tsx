@@ -5,10 +5,8 @@ import { searchJobsDB } from '../services/jobApi';
 import { JobMatchResult, ResumeData, JobSearchResult } from '../types';
 import { Search, CheckCircle, AlertCircle, Loader2, ArrowRight, Briefcase, FileText, ChevronRight, Check, Building2, MapPin, DollarSign } from 'lucide-react';
 
-interface JobAssistantProps {
-  resumes: ResumeData[];
-  availableJobs: JobSearchResult[];
-}
+import { useResumes } from '../context/ResumeContext';
+import { useJobs } from '../context/JobContext';
 
 // Helper to convert resume object to text for analysis
 const getResumeAsText = (r: ResumeData) => `
@@ -20,11 +18,11 @@ const getResumeAsText = (r: ResumeData) => `
   Projects: ${r.projects.map(p => `${p.name}: ${p.description}`).join('\n')}
 `;
 
-// 移除本地 Mock 数据，改为从后端/AI 服务获取
-
 type Step = 'FIND_JOB' | 'SELECT_RESUME' | 'RESULT';
 
-const JobAssistant: React.FC<JobAssistantProps> = ({ resumes, availableJobs }) => {
+const JobAssistant: React.FC = () => {
+  const { resumes } = useResumes();
+  const { globalJobs } = useJobs();
   const [currentStep, setCurrentStep] = useState<Step>('FIND_JOB');
 
   // Step 1: Find Job State
@@ -78,7 +76,7 @@ const JobAssistant: React.FC<JobAssistantProps> = ({ resumes, availableJobs }) =
     };
     init();
     return () => { mounted = false; };
-  }, [availableJobs]);
+  }, [globalJobs]);
 
   // --- Handlers ---
 

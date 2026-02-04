@@ -14,6 +14,8 @@ import {
   listJobs,
   deleteJob
 } from '../services/adminApi';
+import { useJobs } from '../context/JobContext';
+import { useResumes } from '../context/ResumeContext';
 import {
   LayoutDashboard,
   Users,
@@ -131,8 +133,12 @@ const SimplePieChart = ({ data }: { data: { label: string; value: number; color:
   );
 };
 
-const AdminDashboard: React.FC<AdminDashboardProps> = ({ jobs, onUpdateJobs, userCount: propUserCount, resumeCount: propResumeCount }) => {
+const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { globalJobs: jobs, setGlobalJobs: onUpdateJobs } = useJobs();
+  const { resumes } = useResumes();
+  const propUserCount = 1240;
+  const propResumeCount = resumes.length + 5000;
   const [activeTab, setActiveTab] = useState<Tab>('overview');
 
   // Real Data State

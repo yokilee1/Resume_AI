@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 export interface Education {
   id: string;
   school: string;
@@ -121,3 +123,22 @@ export interface AdminTemplate {
   status: 'Active' | 'Inactive';
   usageCount: number;
 }
+
+export const createEmptyResume = (): ResumeData => ({
+  id: uuidv4(),
+  title: '我的简历',
+  templateId: 'modern',
+  lastModified: Date.now(),
+  personalInfo: {
+    fullName: '',
+    email: '',
+    phone: '',
+    linkedin: '',
+    website: '',
+    summary: ''
+  },
+  education: [],
+  experience: [],
+  projects: [],
+  skills: ''
+});

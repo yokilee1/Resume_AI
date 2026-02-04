@@ -4,16 +4,11 @@ import { AppView, UserProfile } from '../types';
 import { User, Mail, Shield, Camera, Save, Loader2, Lock } from 'lucide-react';
 import { getMe, updateMe } from '../services/userApi';
 
-interface UserProfileProps {
-  user: UserProfile;
-  onUpdate: (data: UserProfile) => void;
-}
+import { useAuth } from '../context/AuthContext';
 
-/**
- * 账户设置页面：与后端用户资料接口互联
- */
-const UserProfilePage: React.FC<UserProfileProps> = ({ user, onUpdate }) => {
+const UserProfilePage: React.FC = () => {
   const navigate = useNavigate();
+  const { userProfile: user, setUserProfile: onUpdate } = useAuth();
   const [formData, setFormData] = useState(user);
   const [isSaving, setIsSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');

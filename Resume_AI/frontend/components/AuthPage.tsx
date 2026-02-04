@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppView } from '../types';
 import { Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
-import { login, register, setToken } from '../services/apiClient';
+import { login as loginApi, register, setToken } from '../services/apiClient';
 
-interface AuthPageProps {
-  initialView: AppView.LOGIN | AppView.REGISTER;
-  onLoginSuccess: () => void;
-}
-const AuthPage: React.FC<AuthPageProps> = ({ initialView, onLoginSuccess }) => {
+import { useAuth } from '../context/AuthContext';
+
+const AuthPage: React.FC<{ initialView: string }> = ({ initialView }) => {
   const navigate = useNavigate();
-  const [view, setView] = useState<AppView.LOGIN | AppView.REGISTER>(initialView);
+  const { login } = useAuth();
+  const [view, setView] = useState<AppView.LOGIN | AppView.REGISTER>(initialView as any);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -30,11 +29,13 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialView, onLoginSuccess }) => {
       if (view === AppView.REGISTER) {
         const data = await register(formData.name, formData.email, formData.password);
         setToken(data.token);
-        onLoginSuccess();
+        login();
+        navigate('/dashboard');
       } else {
-        const data = await login(formData.email, formData.password);
+        const data = await loginApi(formData.email, formData.password);
         setToken(data.token);
-        onLoginSuccess();
+        login();
+        navigate('/dashboard');
       }
     } catch (err: any) {
       setError(err?.message || '请求失败，请稍后重试');

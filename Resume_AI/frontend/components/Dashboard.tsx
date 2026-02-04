@@ -1,16 +1,53 @@
 import React from 'react';
 import { ResumeData } from '../types';
 import { Plus, FileText, MoreVertical, Copy, Trash2, Clock, Edit3 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useResumes } from '../context/ResumeContext';
+import { createResume, duplicateResume as apiDuplicateResume, deleteResume as apiDeleteResume } from '../services/resumeApi';
 
-interface DashboardProps {
-  resumes: ResumeData[];
-  onCreate: () => void;
-  onSelect: (id: string) => void;
-  onDelete: (id: string) => void;
-  onDuplicate: (id: string) => void;
-}
+const Dashboard: React.FC = () => {
+  const navigate = useNavigate();
+  const { resumes, addResume, removeResume, setCurrentResumeId } = useResumes();
 
-const Dashboard: React.FC<DashboardProps> = ({ resumes, onCreate, onSelect, onDelete, onDuplicate }) => {
+  const onCreate = async () => {
+    try {
+      const created = await createResume({
+        title: '新建简历',
+        templateId: 'modern',
+        lastModified: Date.now(),
+        personalInfo: { fullName: '', email: '', phone: '', linkedin: '', website: '', summary: '' },
+        education: [], experience: [], projects: [], skills: ''
+      } as any);
+      addResume(created);
+      navigate(`/editor/${created.id}`);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onSelect = (id: string) => {
+    setCurrentResumeId(id);
+    navigate(`/editor/${id}`);
+  };
+
+  const onDelete = async (id: string) => {
+    if (!confirm("确定删除吗？")) return;
+    try {
+      await apiDeleteResume(id);
+      removeResume(id);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const onDuplicate = async (id: string) => {
+    try {
+      const copy = await apiDuplicateResume(id);
+      addResume(copy);
+    } catch (e) {
+      console.error(e);
+    }
+  };
   const formatDate = (timestamp: number) => {
     return new Date(timestamp).toLocaleDateString('zh-CN', {
       year: 'numeric',

@@ -37,10 +37,10 @@ import {
   PieChart,
   Activity
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 interface AdminDashboardProps {
-  onExit: () => void;
   jobs: JobSearchResult[];
   onUpdateJobs: (jobs: JobSearchResult[]) => void;
   userCount?: number;
@@ -131,7 +131,8 @@ const SimplePieChart = ({ data }: { data: { label: string; value: number; color:
   );
 };
 
-const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit, jobs, onUpdateJobs, userCount: propUserCount, resumeCount: propResumeCount }) => {
+const AdminDashboard: React.FC<AdminDashboardProps> = ({ jobs, onUpdateJobs, userCount: propUserCount, resumeCount: propResumeCount }) => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>('overview');
 
   // Real Data State
@@ -356,7 +357,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit, jobs, onUpdateJ
   );
 
   return (
-    <div className="flex h-screen bg-slate-100 font-sans overflow-hidden">
+    <div className="w-full flex h-screen bg-slate-100 font-sans overflow-hidden">
       {/* Sidebar */}
       <aside className="w-64 bg-slate-900 text-white flex-shrink-0 flex flex-col">
         <div className="h-16 flex items-center gap-2 px-6 border-b border-slate-800">
@@ -375,7 +376,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onExit, jobs, onUpdateJ
 
         <div className="p-4 border-t border-slate-800">
           <button
-            onClick={onExit}
+            onClick={() => navigate('/dashboard')}
             className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-colors"
           >
             <LogOut size={18} /> 退出管理

@@ -1,14 +1,11 @@
 import React from 'react';
-import { AppView } from '../types';
+import { useNavigate } from 'react-router-dom';
 import { Sparkles, Target, Search, ArrowRight, CheckCircle2, FileText, Briefcase } from 'lucide-react';
 
-interface LandingPageProps {
-  onNavigate: (view: AppView) => void;
-}
-
-const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
+const LandingPage: React.FC = () => {
+  const navigate = useNavigate();
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans">
+    <div className="w-full min-h-screen bg-white text-slate-900 font-sans">
       {/* Navigation */}
       <nav className="fixed w-full bg-white/80 backdrop-blur-md border-b border-slate-100 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,13 +20,13 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
             </div>
             <div className="flex items-center gap-4">
               <button
-                onClick={() => onNavigate(AppView.LOGIN)}
+                onClick={() => navigate('/auth/login')}
                 className="text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors"
               >
                 登录
               </button>
               <button
-                onClick={() => onNavigate(AppView.REGISTER)}
+                onClick={() => navigate('/auth/register')}
                 className="bg-indigo-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
               >
                 注册
@@ -55,7 +52,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
-              onClick={() => onNavigate(AppView.REGISTER)}
+              onClick={() => navigate('/auth/register')}
               className="px-8 py-4 bg-indigo-600 text-white rounded-full font-bold text-lg hover:bg-indigo-700 transition-all transform hover:-translate-y-1 shadow-xl shadow-indigo-200 flex items-center gap-2 w-full sm:w-auto justify-center"
             >
               创建简历 <ArrowRight size={20} />

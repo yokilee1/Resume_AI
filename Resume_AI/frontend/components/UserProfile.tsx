@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppView, UserProfile } from '../types';
 import { User, Mail, Shield, Camera, Save, Loader2, Lock } from 'lucide-react';
 import { getMe, updateMe } from '../services/userApi';
@@ -6,13 +7,13 @@ import { getMe, updateMe } from '../services/userApi';
 interface UserProfileProps {
   user: UserProfile;
   onUpdate: (data: UserProfile) => void;
-  onNavigate?: (view: AppView) => void;
 }
 
 /**
  * 账户设置页面：与后端用户资料接口互联
  */
-const UserProfilePage: React.FC<UserProfileProps> = ({ user, onUpdate, onNavigate }) => {
+const UserProfilePage: React.FC<UserProfileProps> = ({ user, onUpdate }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState(user);
   const [isSaving, setIsSaving] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -86,7 +87,7 @@ const UserProfilePage: React.FC<UserProfileProps> = ({ user, onUpdate, onNavigat
           {/* Admin Entry Point */}
           <div className="mt-4 md:mt-0">
             <button
-              onClick={() => onNavigate && onNavigate(AppView.ADMIN)}
+              onClick={() => navigate('/admin')}
               className="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-800 transition-all flex items-center shadow-lg shadow-slate-200"
             >
               <Lock size={16} className="mr-2" /> 管理后台

@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AppView } from '../types';
 import { Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
 import { login, register, setToken } from '../services/apiClient';
 
 interface AuthPageProps {
   initialView: AppView.LOGIN | AppView.REGISTER;
-  onNavigate: (view: AppView) => void;
   onLoginSuccess: () => void;
 }
-
-/**
- * 认证页面：支持登录与注册并与后端接口互联
- */
-const AuthPage: React.FC<AuthPageProps> = ({ initialView, onNavigate, onLoginSuccess }) => {
+const AuthPage: React.FC<AuthPageProps> = ({ initialView, onLoginSuccess }) => {
+  const navigate = useNavigate();
   const [view, setView] = useState<AppView.LOGIN | AppView.REGISTER>(initialView);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -47,11 +44,13 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialView, onNavigate, onLoginSuc
   };
 
   const toggleView = () => {
-    setView(view === AppView.LOGIN ? AppView.REGISTER : AppView.LOGIN);
+    const nextView = view === AppView.LOGIN ? AppView.REGISTER : AppView.LOGIN;
+    setView(nextView);
+    navigate(nextView === AppView.LOGIN ? '/auth/login' : '/auth/register');
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans">
+    <div className="w-full min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans">
 
       {/* Left Panel - Visuals */}
       <div className="hidden md:flex md:w-1/2 bg-indigo-600 text-white p-12 flex-col justify-between relative overflow-hidden">
@@ -176,7 +175,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialView, onNavigate, onLoginSuc
           </div>
 
           <div className="text-center mt-6">
-            <button onClick={() => onNavigate(AppView.LANDING)} className="text-xs text-slate-400 hover:text-slate-600 transition-colors">
+            <button onClick={() => navigate('/')} className="text-xs text-slate-400 hover:text-slate-600 transition-colors">
               返回首页
             </button>
           </div>

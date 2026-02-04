@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+    --font-sans: 'Inter', sans-serif;
+}
+
+@layer base {
+    body {
+        @apply bg-slate-50 text-slate-900;
+        font-family: 'Inter', sans-serif;
+    }
+}
+
+@layer components {
+    .page {
+        width: 210mm;
+        min-height: 297mm;
+    }
+
+    .avoid-break {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+}
+
+@media print {
+    .no-shadow-print {
+        box-shadow: none !important;
+    }
+
+    @page {
+        margin: 0;
+    }
+
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    .print-only {
+        display: block !important;
+    }
+}

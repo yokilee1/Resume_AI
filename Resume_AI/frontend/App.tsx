@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { ResumeData, AppView, UserProfile, JobSearchResult } from './types';
 import EditorForm from './components/EditorForm';
 import ResumePreview from './components/ResumePreview';
@@ -13,10 +14,13 @@ import { FileText, Search, Printer, LogOut, LayoutDashboard, User, Shield } from
 import { v4 as uuidv4 } from 'uuid';
 import { listResumes, createResume, updateResume as apiUpdateResume, deleteResume as apiDeleteResume, duplicateResume as apiDuplicateResume } from './services/resumeApi';
 
+// Protected Route Component
+const ProtectedRoute = ({ children, isAuthenticated }: { children: React.ReactNode, isAuthenticated: boolean }) => {
+  if (!isAuthenticated) return <Navigate to="/auth/login" replace />;
+  return <>{children}</>;
+};
+
 // Helper to create empty resume
-/**
- * 创建一个空简历结构（前端模型）
- */
 const createEmptyResume = (): ResumeData => ({
   id: uuidv4(),
   title: '我的简历',
@@ -43,18 +47,17 @@ const DEFAULT_USER: UserProfile = {
 };
 
 function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return localStorage.getItem('resume_ai_auth') === 'true';
   });
 
-  const [view, setView] = useState<AppView>(() => {
-    return isAuthenticated ? AppView.DASHBOARD : AppView.LANDING;
-  });
-
-  // State: All Resumes（从后端加载）
+  // State: All Resumes
   const [resumes, setResumes] = useState<ResumeData[]>([]);
 
-  // State: Global Job Database (Shared between Admin and Student)
+  // State: Global Job Database
   const [globalJobs, setGlobalJobs] = useState<JobSearchResult[]>(() => {
     const savedJobs = localStorage.getItem('resume_ai_jobs');
     return savedJobs ? JSON.parse(savedJobs) : "";
@@ -75,7 +78,6 @@ function App() {
   const previewRef = useRef<HTMLDivElement>(null);
 
   // --- Persistence Effects ---
-  // 从后端加载简历列表
   useEffect(() => {
     if (!isAuthenticated) return;
     (async () => {
@@ -84,7 +86,6 @@ function App() {
         setResumes(list);
         if (!currentResumeId && list.length > 0) setCurrentResumeId(list[0].id);
       } catch (e) {
-        // 忽略错误，保持前端可用
         console.error(e);
       }
     })();
@@ -95,25 +96,27 @@ function App() {
   }, [globalJobs]);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      localStorage.setItem('resume_ai_auth', 'true');
-    } else {
-      localStorage.removeItem('resume_ai_auth');
-    }
+    localStorage.setItem('resume_ai_auth', isAuthenticated ? 'true' : 'false');
   }, [isAuthenticated]);
+
+  // Sync currentResumeId with URL for editor
+  useEffect(() => {
+    if (location.pathname.startsWith('/editor/')) {
+      const id = location.pathname.split('/').pop();
+      if (id && id !== currentResumeId) {
+        setCurrentResumeId(id);
+      }
+    }
+  }, [location.pathname, currentResumeId]);
 
   useEffect(() => {
     localStorage.setItem('resume_ai_profile', JSON.stringify(userProfile));
   }, [userProfile]);
 
   // --- Helpers ---
-  // 保存节流（避免每次输入都打接口）
   const saveTimerRef = useRef<any>(null);
   const pendingResumeRef = useRef<ResumeData | null>(null);
 
-  /**
-   * 更新本地状态并在短延时后自动同步到后端
-   */
   const handleUpdateResume = (updatedData: ResumeData) => {
     const newResumes = resumes.map(r =>
       r.id === updatedData.id ? { ...updatedData, lastModified: Date.now() } : r
@@ -123,9 +126,7 @@ function App() {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(async () => {
       try {
-        // 将状态标记为 draft 保存
         const saved = await apiUpdateResume(pendingResumeRef.current as ResumeData, 'draft');
-        // 用服务端回写的时间戳更新本地
         setResumes(prev => prev.map(r => r.id === saved.id ? saved : r));
       } catch (e) {
         console.error(e);
@@ -133,9 +134,6 @@ function App() {
     }, 800);
   };
 
-  /**
-   * 创建简历（后端）
-   */
   const handleCreateResume = async () => {
     const newResumeLocal = createEmptyResume();
     newResumeLocal.title = '新建简历';
@@ -143,15 +141,12 @@ function App() {
       const created = await createResume(newResumeLocal);
       setResumes([created, ...resumes]);
       setCurrentResumeId(created.id);
-      setView(AppView.EDITOR);
+      navigate(`/editor/${created.id}`);
     } catch (e) {
       console.error(e);
     }
   };
 
-  /**
-   * 删除简历（后端）
-   */
   const handleDeleteResume = async (id: string) => {
     if (!confirm("您确定要删除这份简历吗？")) return;
     try {
@@ -163,9 +158,6 @@ function App() {
     }
   };
 
-  /**
-   * 复制简历（后端）
-   */
   const handleDuplicateResume = async (id: string) => {
     try {
       const copy = await apiDuplicateResume(id);
@@ -177,13 +169,9 @@ function App() {
 
   const handleSelectResume = (id: string) => {
     setCurrentResumeId(id);
-    setView(AppView.EDITOR);
+    navigate(`/editor/${id}`);
   };
 
-  /**
-   * 导出当前预览为 PDF（调用系统打印对话框并可选择“存储为 PDF”）
-   * 适配 react-to-print v3：通过 contentRef 指定打印节点
-   */
   const handleExportPDF = useReactToPrint({
     contentRef: previewRef,
     documentTitle: currentResume ? (currentResume.title || '简历') : '简历',
@@ -191,175 +179,162 @@ function App() {
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
-    setView(AppView.DASHBOARD);
+    navigate('/dashboard');
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    setView(AppView.LANDING);
     setCurrentResumeId(null);
+    navigate('/');
   };
 
-
-  // --- Routing Logic ---
-
-  if (view === AppView.LANDING) {
-    return <LandingPage onNavigate={setView} />;
-  }
-
-  if (view === AppView.LOGIN || view === AppView.REGISTER) {
-    return (
-      <AuthPage
-        initialView={view}
-        onNavigate={setView}
-        onLoginSuccess={handleLoginSuccess}
-      />
-    );
-  }
-
-  // Admin View
-  if (view === AppView.ADMIN) {
-    return (
-      <AdminDashboard
-        onExit={() => setView(AppView.DASHBOARD)}
-        jobs={globalJobs}
-        onUpdateJobs={setGlobalJobs}
-        userCount={1240} // Mock stat
-        resumeCount={resumes.length + 5000} // Mock stat
-      />
-    );
-  }
+  // Helper to determine active tab based on path
+  const isActive = (path: string) => location.pathname === path;
+  const isEditor = location.pathname.startsWith('/editor');
 
   return (
     <div className="h-screen w-full flex flex-col bg-slate-100 text-slate-900 font-sans overflow-hidden">
-      {/* Navbar */}
-      <nav className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 z-20 no-print flex-shrink-0">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setView(AppView.DASHBOARD)}>
-          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">R</div>
-          <span className="text-xl font-bold text-slate-800 hidden md:block">Resume AI</span>
-        </div>
+      {/* Navbar - Only show if not on landing or auth pages */}
+      {!['/', '/auth/login', '/auth/register', '/admin'].includes(location.pathname) && (
+        <nav className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 z-20 no-print flex-shrink-0">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/dashboard')}>
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold">R</div>
+            <span className="text-xl font-bold text-slate-800 hidden md:block">Resume AI</span>
+          </div>
 
-        {isAuthenticated && (
           <div className="flex bg-slate-100 p-1 rounded-lg">
             <button
-              onClick={() => setView(AppView.DASHBOARD)}
-              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${view === AppView.DASHBOARD ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
-                }`}
+              onClick={() => navigate('/dashboard')}
+              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${isActive('/dashboard') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
             >
               <LayoutDashboard size={16} /> <span className="hidden sm:inline">控制面板</span>
             </button>
 
-            {/* Show Editor only if we have a current resume */}
-            {currentResume && (
+            {currentResumeId && (
               <button
-                onClick={() => setView(AppView.EDITOR)}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${view === AppView.EDITOR ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
-                  }`}
+                onClick={() => navigate(`/editor/${currentResumeId}`)}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${isEditor ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
               >
                 <FileText size={16} /> <span className="hidden sm:inline">简历编辑</span>
               </button>
             )}
 
             <button
-              onClick={() => setView(AppView.MATCH)}
-              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${view === AppView.MATCH ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
-                }`}
+              onClick={() => navigate('/match')}
+              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${isActive('/match') ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
             >
               <Search size={16} /> <span className="hidden sm:inline">职位匹配</span>
             </button>
           </div>
-        )}
 
-        <div className="flex items-center gap-4">
-          {view === AppView.EDITOR && (
+          <div className="flex items-center gap-4">
+            {isEditor && (
+              <button
+                onClick={() => handleExportPDF()}
+                className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-full transition-colors hidden sm:block"
+                title="导出 PDF"
+              >
+                <Printer size={20} />
+              </button>
+            )}
+            <div className="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
+
             <button
-              onClick={() => handleExportPDF(() => previewRef.current as any)}
-              className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-full transition-colors hidden sm:block"
-              title="导出 PDF"
+              onClick={() => navigate('/profile')}
+              className={`flex items-center gap-2 text-sm font-medium transition-colors ${isActive('/profile') ? 'text-indigo-600' : 'text-slate-600 hover:text-slate-900'}`}
+              title="个人资料"
             >
-              <Printer size={20} />
+              <User size={20} />
             </button>
-          )}
-          <div className="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
 
-          <button
-            onClick={() => setView(AppView.PROFILE)}
-            className={`flex items-center gap-2 text-sm font-medium transition-colors ${view === AppView.PROFILE ? 'text-indigo-600' : 'text-slate-600 hover:text-slate-900'}`}
-            title="个人资料"
-          >
-            <User size={20} />
-          </button>
-
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-red-600 transition-colors"
-            title="退出登录"
-          >
-            <LogOut size={20} />
-          </button>
-        </div>
-      </nav>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-red-600 transition-colors"
+              title="退出登录"
+            >
+              <LogOut size={20} />
+            </button>
+          </div>
+        </nav>
+      )}
 
       {/* Main Content Area */}
-      <main className="flex-1 flex overflow-hidden relative">
+      <main className="flex-1 w-full overflow-hidden relative">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/auth/login" element={<AuthPage initialView={AppView.LOGIN} onLoginSuccess={handleLoginSuccess} />} />
+          <Route path="/auth/register" element={<AuthPage initialView={AppView.REGISTER} onLoginSuccess={handleLoginSuccess} />} />
 
-        {/* View: Dashboard */}
-        {view === AppView.DASHBOARD && (
-          <div className="w-full h-full overflow-y-auto bg-slate-50">
-            <Dashboard
-              resumes={resumes}
-              onCreate={handleCreateResume}
-              onSelect={handleSelectResume}
-              onDelete={handleDeleteResume}
-              onDuplicate={handleDuplicateResume}
-            />
-          </div>
-        )}
+          {/* Protected Routes */}
+          <Route path="/dashboard" element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <div className="w-full h-full overflow-y-auto bg-slate-50">
+                <Dashboard
+                  resumes={resumes}
+                  onCreate={handleCreateResume}
+                  onSelect={handleSelectResume}
+                  onDelete={handleDeleteResume}
+                  onDuplicate={handleDuplicateResume}
+                />
+              </div>
+            </ProtectedRoute>
+          } />
 
-        {/* View: Profile */}
-        {view === AppView.PROFILE && (
-          <div className="w-full h-full overflow-y-auto bg-slate-50">
-            <UserProfilePage
-              user={userProfile}
-              onUpdate={setUserProfile}
-              onNavigate={setView}
-            />
-          </div>
-        )}
+          <Route path="/editor/:id" element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              {currentResume ? (
+                <div className="flex w-full h-full">
+                  <div className="w-full md:w-1/2 lg:w-5/12 h-full z-10 no-print">
+                    <EditorForm data={currentResume} onChange={handleUpdateResume} />
+                  </div>
+                  <div className="hidden md:block md:w-1/2 lg:w-7/12 h-full bg-slate-200/50">
+                    <ResumePreview data={currentResume} targetRef={previewRef} />
+                  </div>
+                </div>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-slate-50">
+                  <div className="text-center">
+                    <p className="text-slate-500 mb-4">正在加载简历...</p>
+                    <button onClick={() => navigate('/dashboard')} className="text-indigo-600 hover:underline">返回控制面板</button>
+                  </div>
+                </div>
+              )}
+            </ProtectedRoute>
+          } />
 
-        {/* View: Editor (Split View) */}
-        {view === AppView.EDITOR && currentResume && (
-          <>
-            {/* Editor Pane */}
-            <div className="w-full md:w-1/2 lg:w-5/12 h-full z-10 no-print">
-              <EditorForm data={currentResume} onChange={handleUpdateResume} />
-            </div>
-            {/* Preview Pane */}
-            <div className="hidden md:block md:w-1/2 lg:w-7/12 h-full bg-slate-200/50">
-              <ResumePreview data={currentResume} targetRef={previewRef} />
-            </div>
-          </>
-        )}
+          <Route path="/match" element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <div className="w-full h-full no-print">
+                <JobAssistant resumes={resumes} availableJobs={globalJobs} />
+              </div>
+            </ProtectedRoute>
+          } />
 
-        {/* View: Match & Search */}
-        {view === AppView.MATCH && (
-          <div className="w-full h-full no-print">
-            <JobAssistant resumes={resumes} availableJobs={globalJobs} />
-          </div>
-        )}
+          <Route path="/profile" element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <div className="w-full h-full overflow-y-auto bg-slate-50">
+                <UserProfilePage
+                  user={userProfile}
+                  onUpdate={setUserProfile}
+                />
+              </div>
+            </ProtectedRoute>
+          } />
 
-        {/* Fallback for Editor if no resume selected */}
-        {view === AppView.EDITOR && !currentResume && (
-          <div className="w-full h-full flex items-center justify-center bg-slate-50">
-            <div className="text-center">
-              <p className="text-slate-500 mb-4">未选择简历。</p>
-              <button onClick={() => setView(AppView.DASHBOARD)} className="text-indigo-600 hover:underline">返回控制面板</button>
-            </div>
-          </div>
-        )}
+          <Route path="/admin" element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <AdminDashboard
+                jobs={globalJobs}
+                onUpdateJobs={setGlobalJobs}
+                userCount={1240}
+                resumeCount={resumes.length + 5000}
+              />
+            </ProtectedRoute>
+          } />
 
-
-
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to={isAuthenticated ? "/dashboard" : "/"} replace />} />
+        </Routes>
       </main>
     </div>
   );

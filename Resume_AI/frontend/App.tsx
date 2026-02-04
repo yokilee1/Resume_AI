@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { ResumeData, AppView, UserProfile,JobSearchResult } from './types';
+import { ResumeData, AppView, UserProfile, JobSearchResult } from './types';
 import EditorForm from './components/EditorForm';
 import ResumePreview from './components/ResumePreview';
 import JobAssistant from './components/JobAssistant';
@@ -9,7 +9,7 @@ import AuthPage from './components/AuthPage';
 import Dashboard from './components/Dashboard';
 import UserProfilePage from './components/UserProfile';
 import AdminDashboard from './components/AdminDashboard';
-import { FileText, Search, Printer, LogOut, LayoutDashboard, User,Shield } from 'lucide-react';
+import { FileText, Search, Printer, LogOut, LayoutDashboard, User, Shield } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { listResumes, createResume, updateResume as apiUpdateResume, deleteResume as apiDeleteResume, duplicateResume as apiDuplicateResume } from './services/resumeApi';
 
@@ -19,7 +19,7 @@ import { listResumes, createResume, updateResume as apiUpdateResume, deleteResum
  */
 const createEmptyResume = (): ResumeData => ({
   id: uuidv4(),
-  title: 'My First Resume',
+  title: '我的简历',
   templateId: 'modern',
   lastModified: Date.now(),
   personalInfo: {
@@ -37,9 +37,9 @@ const createEmptyResume = (): ResumeData => ({
 });
 
 const DEFAULT_USER: UserProfile = {
-  name: 'Student User',
+  name: '学生用户',
   email: 'student@university.edu',
-  role: 'Student'
+  role: '学生'
 };
 
 function App() {
@@ -57,7 +57,7 @@ function App() {
   // State: Global Job Database (Shared between Admin and Student)
   const [globalJobs, setGlobalJobs] = useState<JobSearchResult[]>(() => {
     const savedJobs = localStorage.getItem('resume_ai_jobs');
-    return savedJobs ? JSON.parse(savedJobs) :"";
+    return savedJobs ? JSON.parse(savedJobs) : "";
   });
 
   // State: Current Active Resume ID
@@ -138,7 +138,7 @@ function App() {
    */
   const handleCreateResume = async () => {
     const newResumeLocal = createEmptyResume();
-    newResumeLocal.title = 'New Resume';
+    newResumeLocal.title = '新建简历';
     try {
       const created = await createResume(newResumeLocal);
       setResumes([created, ...resumes]);
@@ -153,7 +153,7 @@ function App() {
    * 删除简历（后端）
    */
   const handleDeleteResume = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this resume?")) return;
+    if (!confirm("您确定要删除这份简历吗？")) return;
     try {
       await apiDeleteResume(id);
       setResumes(resumes.filter(r => r.id !== id));
@@ -186,7 +186,7 @@ function App() {
    */
   const handleExportPDF = useReactToPrint({
     contentRef: previewRef,
-    documentTitle: currentResume ? (currentResume.title || 'Resume') : 'Resume',
+    documentTitle: currentResume ? (currentResume.title || '简历') : '简历',
   });
 
   const handleLoginSuccess = () => {
@@ -200,6 +200,7 @@ function App() {
     setCurrentResumeId(null);
   };
 
+
   // --- Routing Logic ---
 
   if (view === AppView.LANDING) {
@@ -208,19 +209,19 @@ function App() {
 
   if (view === AppView.LOGIN || view === AppView.REGISTER) {
     return (
-      <AuthPage 
-        initialView={view} 
-        onNavigate={setView} 
-        onLoginSuccess={handleLoginSuccess} 
+      <AuthPage
+        initialView={view}
+        onNavigate={setView}
+        onLoginSuccess={handleLoginSuccess}
       />
     );
   }
 
-    // Admin View
+  // Admin View
   if (view === AppView.ADMIN) {
     return (
-      <AdminDashboard 
-        onExit={() => setView(AppView.DASHBOARD)} 
+      <AdminDashboard
+        onExit={() => setView(AppView.DASHBOARD)}
         jobs={globalJobs}
         onUpdateJobs={setGlobalJobs}
         userCount={1240} // Mock stat
@@ -240,63 +241,60 @@ function App() {
 
         {isAuthenticated && (
           <div className="flex bg-slate-100 p-1 rounded-lg">
-             <button
+            <button
               onClick={() => setView(AppView.DASHBOARD)}
-              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
-                view === AppView.DASHBOARD ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
-              }`}
+              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${view === AppView.DASHBOARD ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                }`}
             >
-              <LayoutDashboard size={16} /> <span className="hidden sm:inline">Dashboard</span>
+              <LayoutDashboard size={16} /> <span className="hidden sm:inline">控制面板</span>
             </button>
-            
+
             {/* Show Editor only if we have a current resume */}
             {currentResume && (
               <button
                 onClick={() => setView(AppView.EDITOR)}
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
-                  view === AppView.EDITOR ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
-                }`}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${view === AppView.EDITOR ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                  }`}
               >
-                <FileText size={16} /> <span className="hidden sm:inline">Editor</span>
+                <FileText size={16} /> <span className="hidden sm:inline">简历编辑</span>
               </button>
             )}
 
             <button
               onClick={() => setView(AppView.MATCH)}
-              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${
-                view === AppView.MATCH ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
-              }`}
+              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all flex items-center gap-2 ${view === AppView.MATCH ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'
+                }`}
             >
-              <Search size={16} /> <span className="hidden sm:inline">Jobs & Match</span>
+              <Search size={16} /> <span className="hidden sm:inline">职位匹配</span>
             </button>
           </div>
         )}
 
         <div className="flex items-center gap-4">
-           {view === AppView.EDITOR && (
-             <button 
-               onClick={() => handleExportPDF(() => previewRef.current as any)}
-               className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-full transition-colors hidden sm:block"
-               title="导出 PDF"
-             >
+          {view === AppView.EDITOR && (
+            <button
+              onClick={() => handleExportPDF(() => previewRef.current as any)}
+              className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-full transition-colors hidden sm:block"
+              title="导出 PDF"
+            >
               <Printer size={20} />
             </button>
-           )}
-           <div className="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
-           
-           <button 
-             onClick={() => setView(AppView.PROFILE)}
-             className={`flex items-center gap-2 text-sm font-medium transition-colors ${view === AppView.PROFILE ? 'text-indigo-600' : 'text-slate-600 hover:text-slate-900'}`}
-             title="Profile"
-           >
-              <User size={20} />
-           </button>
+          )}
+          <div className="h-6 w-px bg-slate-200 mx-1 hidden sm:block"></div>
 
-           <button 
-             onClick={handleLogout}
-             className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-red-600 transition-colors"
-             title="Sign Out"
-           >
+          <button
+            onClick={() => setView(AppView.PROFILE)}
+            className={`flex items-center gap-2 text-sm font-medium transition-colors ${view === AppView.PROFILE ? 'text-indigo-600' : 'text-slate-600 hover:text-slate-900'}`}
+            title="个人资料"
+          >
+            <User size={20} />
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 text-sm font-medium text-slate-600 hover:text-red-600 transition-colors"
+            title="退出登录"
+          >
             <LogOut size={20} />
           </button>
         </div>
@@ -304,14 +302,14 @@ function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex overflow-hidden relative">
-        
+
         {/* View: Dashboard */}
         {view === AppView.DASHBOARD && (
           <div className="w-full h-full overflow-y-auto bg-slate-50">
-            <Dashboard 
-              resumes={resumes} 
-              onCreate={handleCreateResume} 
-              onSelect={handleSelectResume} 
+            <Dashboard
+              resumes={resumes}
+              onCreate={handleCreateResume}
+              onSelect={handleSelectResume}
               onDelete={handleDeleteResume}
               onDuplicate={handleDuplicateResume}
             />
@@ -320,13 +318,13 @@ function App() {
 
         {/* View: Profile */}
         {view === AppView.PROFILE && (
-           <div className="w-full h-full overflow-y-auto bg-slate-50">
-             <UserProfilePage 
-              user={userProfile} 
-              onUpdate={setUserProfile} 
+          <div className="w-full h-full overflow-y-auto bg-slate-50">
+            <UserProfilePage
+              user={userProfile}
+              onUpdate={setUserProfile}
               onNavigate={setView}
             />
-           </div>
+          </div>
         )}
 
         {/* View: Editor (Split View) */}
@@ -338,7 +336,7 @@ function App() {
             </div>
             {/* Preview Pane */}
             <div className="hidden md:block md:w-1/2 lg:w-7/12 h-full bg-slate-200/50">
-               <ResumePreview data={currentResume} targetRef={previewRef} />
+              <ResumePreview data={currentResume} targetRef={previewRef} />
             </div>
           </>
         )}
@@ -352,15 +350,15 @@ function App() {
 
         {/* Fallback for Editor if no resume selected */}
         {view === AppView.EDITOR && !currentResume && (
-           <div className="w-full h-full flex items-center justify-center bg-slate-50">
-             <div className="text-center">
-               <p className="text-slate-500 mb-4">No resume selected.</p>
-               <button onClick={() => setView(AppView.DASHBOARD)} className="text-indigo-600 hover:underline">Go to Dashboard</button>
-             </div>
-           </div>
+          <div className="w-full h-full flex items-center justify-center bg-slate-50">
+            <div className="text-center">
+              <p className="text-slate-500 mb-4">未选择简历。</p>
+              <button onClick={() => setView(AppView.DASHBOARD)} className="text-indigo-600 hover:underline">返回控制面板</button>
+            </div>
+          </div>
         )}
-        
-        
+
+
 
       </main>
     </div>

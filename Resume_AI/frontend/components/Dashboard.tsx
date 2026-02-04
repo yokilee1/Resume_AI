@@ -12,10 +12,10 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ resumes, onCreate, onSelect, onDelete, onDuplicate }) => {
   const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
+    return new Date(timestamp).toLocaleDateString('zh-CN', {
       year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   };
 
@@ -23,15 +23,15 @@ const Dashboard: React.FC<DashboardProps> = ({ resumes, onCreate, onSelect, onDe
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">My Resumes</h1>
-          <p className="text-slate-500 mt-1">Manage and organize your job applications.</p>
+          <h1 className="text-2xl font-bold text-slate-900">我的简历</h1>
+          <p className="text-slate-500 mt-1">管理并组织您的求职申请。</p>
         </div>
         <button
           onClick={onCreate}
           className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center shadow-lg shadow-indigo-200"
         >
           <Plus size={18} className="mr-2" />
-          Create New Resume
+          创建新简历
         </button>
       </div>
 
@@ -40,13 +40,13 @@ const Dashboard: React.FC<DashboardProps> = ({ resumes, onCreate, onSelect, onDe
           <div className="w-16 h-16 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4">
             <FileText size={32} />
           </div>
-          <h3 className="text-lg font-medium text-slate-900 mb-2">No resumes yet</h3>
-          <p className="text-slate-500 max-w-sm mx-auto mb-6">Create your first resume to start applying for jobs with AI-powered suggestions.</p>
+          <h3 className="text-lg font-medium text-slate-900 mb-2">暂无简历</h3>
+          <p className="text-slate-500 max-w-sm mx-auto mb-6">创建您的第一份简历，利用 AI 建议开始申请职位。</p>
           <button
             onClick={onCreate}
             className="text-indigo-600 font-medium hover:text-indigo-800"
           >
-            Create your first resume &rarr;
+            创建您的第一份简历 &rarr;
           </button>
         </div>
       ) : (
@@ -59,7 +59,7 @@ const Dashboard: React.FC<DashboardProps> = ({ resumes, onCreate, onSelect, onDe
             <div className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 group-hover:border-indigo-200 transition-colors mb-3 shadow-sm">
               <Plus size={24} />
             </div>
-            <span className="text-slate-600 font-medium group-hover:text-indigo-700">New Resume</span>
+            <span className="text-slate-600 font-medium group-hover:text-indigo-700">新简历</span>
           </button>
 
           {/* Resume Cards */}
@@ -69,7 +69,7 @@ const Dashboard: React.FC<DashboardProps> = ({ resumes, onCreate, onSelect, onDe
               className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col h-64 group relative overflow-hidden"
             >
               {/* Preview Area (Fake visual) */}
-              <div 
+              <div
                 className="flex-1 bg-slate-100 p-4 overflow-hidden relative cursor-pointer"
                 onClick={() => onSelect(resume.id)}
               >
@@ -78,7 +78,7 @@ const Dashboard: React.FC<DashboardProps> = ({ resumes, onCreate, onSelect, onDe
                   <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
                   <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
                   <div className="w-2/3 h-1 bg-slate-200 mb-3 rounded-[1px]"></div>
-                  
+
                   <div className="w-1/4 h-1.5 bg-slate-400 mb-1 rounded-[1px]"></div>
                   <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
                   <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
@@ -86,14 +86,14 @@ const Dashboard: React.FC<DashboardProps> = ({ resumes, onCreate, onSelect, onDe
                   <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
 
                   <div className="mt-2 w-1/4 h-1.5 bg-slate-400 mb-1 rounded-[1px]"></div>
-                   <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
+                  <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
                   <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
                 </div>
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-indigo-900/0 group-hover:bg-indigo-900/5 transition-colors flex items-center justify-center">
-                   <div className="bg-white/90 backdrop-blur text-indigo-600 px-4 py-2 rounded-full font-medium text-sm shadow-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
-                     Edit Resume
-                   </div>
+                  <div className="bg-white/90 backdrop-blur text-indigo-600 px-4 py-2 rounded-full font-medium text-sm shadow-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
+                    编辑简历
+                  </div>
                 </div>
               </div>
 
@@ -102,30 +102,30 @@ const Dashboard: React.FC<DashboardProps> = ({ resumes, onCreate, onSelect, onDe
                 <div className="flex justify-between items-start">
                   <div onClick={() => onSelect(resume.id)} className="cursor-pointer">
                     <h3 className="font-semibold text-slate-800 truncate pr-2" title={resume.title}>
-                      {resume.title || 'Untitled Resume'}
+                      {resume.title || '未命名简历'}
                     </h3>
                     <div className="flex items-center text-xs text-slate-500 mt-1">
                       <Clock size={12} className="mr-1" />
-                      Updated {formatDate(resume.lastModified)}
+                      更新于 {formatDate(resume.lastModified)}
                     </div>
                   </div>
-                  
+
                   {/* Actions Dropdown (Simplified as visible buttons for this demo) */}
                   <div className="flex items-center gap-1">
-                     <button 
-                        onClick={(e) => { e.stopPropagation(); onDuplicate(resume.id); }}
-                        className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-colors"
-                        title="Duplicate"
-                      >
-                        <Copy size={16} />
-                      </button>
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); onDelete(resume.id); }}
-                        className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                        title="Delete"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); onDuplicate(resume.id); }}
+                      className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-colors"
+                      title="复制"
+                    >
+                      <Copy size={16} />
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); onDelete(resume.id); }}
+                      className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                      title="删除"
+                    >
+                      <Trash2 size={16} />
+                    </button>
                   </div>
                 </div>
               </div>

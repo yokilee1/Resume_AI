@@ -18,11 +18,11 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
       personalInfo: { ...data.personalInfo, [field]: value }
     });
   };
-  
+
   const handleTitleChange = (newTitle: string) => {
     onChange({ ...data, title: newTitle });
   };
-  
+
   const handleTemplateChange = (templateId: 'modern' | 'classic' | 'minimal') => {
     onChange({ ...data, templateId });
   };
@@ -33,7 +33,7 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
       const optimized = await optimizeText(text, type);
       callback(optimized);
     } catch (e) {
-      alert("AI optimization failed. Please try again.");
+      alert("AI 优化失败。请重试。");
     } finally {
       setOptimizingId(null);
     }
@@ -93,88 +93,97 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
     onChange({ ...data, projects: data.projects.filter((_, i) => i !== index) });
   };
 
+  const templateTranslations: Record<string, string> = {
+    modern: '现代',
+    classic: '经典',
+    minimal: '极简',
+    elegant: '优雅',
+    compact: '紧凑',
+    timeline: '时间线'
+  };
+
   return (
     <div className="w-full h-full overflow-y-auto p-6 bg-white border-r border-slate-200">
       <div className="mb-8 border-b border-slate-100 pb-4">
-        <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Resume Name</label>
+        <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">简历名称</label>
         <div className="flex items-center mb-4">
-          <input 
-            type="text" 
-            value={data.title} 
+          <input
+            type="text"
+            value={data.title}
             onChange={(e) => handleTitleChange(e.target.value)}
             className="text-xl font-bold text-slate-800 bg-transparent border-none p-0 focus:ring-0 w-full placeholder-slate-300"
-            placeholder="Untitled Resume"
+            placeholder="未命名简历"
           />
           <Edit3 size={16} className="text-slate-400 ml-2 flex-shrink-0" />
         </div>
 
         <div className="bg-slate-50 p-3 rounded-lg border border-slate-100">
-           <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
-             <LayoutTemplate size={14} /> Resume Template
-           </div>
-           <div className="grid grid-cols-3 gap-2">
-             {['modern', 'classic', 'minimal', 'elegant', 'compact', 'timeline'].map((t) => (
-               <button
-                 key={t}
-                 onClick={() => handleTemplateChange(t as any)}
-                 className={`px-3 py-2 text-xs font-medium rounded-md border transition-all ${
-                   data.templateId === t 
-                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' 
-                    : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:text-indigo-600'
-                 }`}
-               >
-                 {t.charAt(0).toUpperCase() + t.slice(1)}
-               </button>
-             ))}
-           </div>
+          <div className="flex items-center gap-2 mb-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <LayoutTemplate size={14} /> 简历模板
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            {['modern', 'classic', 'minimal', 'elegant', 'compact', 'timeline'].map((t) => (
+              <button
+                key={t}
+                onClick={() => handleTemplateChange(t as any)}
+                className={`px-3 py-2 text-xs font-medium rounded-md border transition-all ${data.templateId === t
+                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:text-indigo-600'
+                  }`}
+              >
+                {templateTranslations[t] || t}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
+
       {/* Personal Info */}
       <section className="mb-8">
-        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Personal Details</h3>
+        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">个人信息</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             type="text"
-            placeholder="Full Name"
+            placeholder="姓名"
             className="input-field"
             value={data.personalInfo.fullName}
             onChange={e => handleInfoChange('fullName', e.target.value)}
           />
           <input
             type="email"
-            placeholder="Email"
+            placeholder="邮箱"
             className="input-field"
             value={data.personalInfo.email}
             onChange={e => handleInfoChange('email', e.target.value)}
           />
           <input
             type="text"
-            placeholder="Phone"
+            placeholder="电话"
             className="input-field"
             value={data.personalInfo.phone}
             onChange={e => handleInfoChange('phone', e.target.value)}
           />
           <input
             type="text"
-            placeholder="LinkedIn URL"
+            placeholder="LinkedIn 链接"
             className="input-field"
             value={data.personalInfo.linkedin}
             onChange={e => handleInfoChange('linkedin', e.target.value)}
           />
-           <input
+          <input
             type="text"
-            placeholder="Website / Portfolio"
+            placeholder="个人网站 / 作品集"
             className="input-field md:col-span-2"
             value={data.personalInfo.website}
             onChange={e => handleInfoChange('website', e.target.value)}
           />
         </div>
         <div className="mt-4 relative">
-          <label className="block text-xs font-medium text-slate-700 mb-1">Professional Summary</label>
+          <label className="block text-xs font-medium text-slate-700 mb-1">专业简介</label>
           <textarea
             className="input-field w-full h-24 pb-8"
-            placeholder="Briefly describe your career goals..."
+            placeholder="简要描述您的职业目标..."
             value={data.personalInfo.summary}
             onChange={e => handleInfoChange('summary', e.target.value)}
           />
@@ -182,10 +191,10 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
             onClick={() => handleOptimize('summary', data.personalInfo.summary, 'summary', (val) => handleInfoChange('summary', val))}
             disabled={optimizingId === 'summary' || !data.personalInfo.summary}
             className="absolute right-2 bottom-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1.5 rounded-md text-xs font-medium flex items-center transition-colors border border-indigo-200 disabled:opacity-50"
-            title="AI Polish Summary"
+            title="AI 润色简介"
           >
             {optimizingId === 'summary' ? <Loader2 className="animate-spin mr-1" size={12} /> : <Sparkles size={12} className="mr-1" />}
-            AI Polish
+            AI 润色
           </button>
         </div>
       </section>
@@ -193,9 +202,9 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
       {/* Education */}
       <section className="mb-8">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Education</h3>
+          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">教育经历</h3>
           <button onClick={addEducation} className="text-indigo-600 hover:text-indigo-800 flex items-center text-xs font-medium">
-            <Plus size={14} className="mr-1" /> Add
+            <Plus size={14} className="mr-1" /> 添加
           </button>
         </div>
         <div className="space-y-4">
@@ -206,32 +215,32 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
               </button>
               <div className="grid grid-cols-2 gap-3 mb-3">
                 <input
-                  placeholder="School / University"
+                  placeholder="学校名称"
                   className="input-field"
                   value={edu.school}
                   onChange={e => updateEducation(index, 'school', e.target.value)}
                 />
                 <input
-                  placeholder="Degree"
+                  placeholder="学位"
                   className="input-field"
                   value={edu.degree}
                   onChange={e => updateEducation(index, 'degree', e.target.value)}
                 />
                 <input
-                  placeholder="Start Date"
+                  placeholder="开始日期"
                   className="input-field"
                   value={edu.startDate}
                   onChange={e => updateEducation(index, 'startDate', e.target.value)}
                 />
                 <input
-                  placeholder="End Date"
+                  placeholder="结束日期"
                   className="input-field"
                   value={edu.endDate}
                   onChange={e => updateEducation(index, 'endDate', e.target.value)}
                 />
               </div>
               <textarea
-                placeholder="Description (Optional)"
+                placeholder="详情描述（可选）"
                 className="input-field w-full h-16 text-xs"
                 value={edu.description}
                 onChange={e => updateEducation(index, 'description', e.target.value)}
@@ -243,39 +252,39 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
 
       {/* Experience */}
       <section className="mb-8">
-         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Experience</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">工作/实习经历</h3>
           <button onClick={addExperience} className="text-indigo-600 hover:text-indigo-800 flex items-center text-xs font-medium">
-            <Plus size={14} className="mr-1" /> Add
+            <Plus size={14} className="mr-1" /> 添加
           </button>
         </div>
         <div className="space-y-4">
           {data.experience.map((exp, index) => (
             <div key={exp.id} className="p-4 bg-slate-50 rounded-lg border border-slate-100 relative group">
-               <button onClick={() => removeExperience(index)} className="absolute top-2 right-2 text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button onClick={() => removeExperience(index)} className="absolute top-2 right-2 text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Trash2 size={14} />
               </button>
               <div className="grid grid-cols-2 gap-3 mb-3">
                 <input
-                  placeholder="Company"
+                  placeholder="公司名称"
                   className="input-field"
                   value={exp.company}
                   onChange={e => updateExperience(index, 'company', e.target.value)}
                 />
                 <input
-                  placeholder="Position"
+                  placeholder="职位"
                   className="input-field"
                   value={exp.position}
                   onChange={e => updateExperience(index, 'position', e.target.value)}
                 />
                 <input
-                  placeholder="Start Date"
+                  placeholder="开始日期"
                   className="input-field"
                   value={exp.startDate}
                   onChange={e => updateExperience(index, 'startDate', e.target.value)}
                 />
                 <input
-                  placeholder="End Date"
+                  placeholder="结束日期"
                   className="input-field"
                   value={exp.endDate}
                   onChange={e => updateExperience(index, 'endDate', e.target.value)}
@@ -283,49 +292,49 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
               </div>
               <div className="relative">
                 <textarea
-                  placeholder="Describe your responsibilities and achievements..."
+                  placeholder="描述您的工作职责和成就..."
                   className="input-field w-full h-32 pb-8 text-xs"
                   value={exp.description}
                   onChange={e => updateExperience(index, 'description', e.target.value)}
                 />
-                 <button
-                    onClick={() => handleOptimize(exp.id, exp.description, 'bullet', (val) => updateExperience(index, 'description', val))}
-                    disabled={optimizingId === exp.id || !exp.description}
-                    className="absolute right-2 bottom-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1.5 rounded-md text-xs font-medium flex items-center transition-colors border border-indigo-200 disabled:opacity-50"
-                    title="AI Polish Description"
-                  >
-                    {optimizingId === exp.id ? <Loader2 className="animate-spin mr-1" size={12} /> : <Sparkles size={12} className="mr-1" />}
-                    AI Polish
-                  </button>
+                <button
+                  onClick={() => handleOptimize(exp.id, exp.description, 'bullet', (val) => updateExperience(index, 'description', val))}
+                  disabled={optimizingId === exp.id || !exp.description}
+                  className="absolute right-2 bottom-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1.5 rounded-md text-xs font-medium flex items-center transition-colors border border-indigo-200 disabled:opacity-50"
+                  title="AI 润色描述"
+                >
+                  {optimizingId === exp.id ? <Loader2 className="animate-spin mr-1" size={12} /> : <Sparkles size={12} className="mr-1" />}
+                  AI 润色
+                </button>
               </div>
             </div>
           ))}
         </div>
       </section>
-      
+
       {/* Projects */}
       <section className="mb-8">
-         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Projects</h3>
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">项目现状</h3>
           <button onClick={addProject} className="text-indigo-600 hover:text-indigo-800 flex items-center text-xs font-medium">
-            <Plus size={14} className="mr-1" /> Add
+            <Plus size={14} className="mr-1" /> 添加
           </button>
         </div>
         <div className="space-y-4">
           {data.projects.map((proj, index) => (
             <div key={proj.id} className="p-4 bg-slate-50 rounded-lg border border-slate-100 relative group">
-               <button onClick={() => removeProject(index)} className="absolute top-2 right-2 text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button onClick={() => removeProject(index)} className="absolute top-2 right-2 text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
                 <Trash2 size={14} />
               </button>
               <div className="grid grid-cols-2 gap-3 mb-3">
                 <input
-                  placeholder="Project Name"
+                  placeholder="项目名称"
                   className="input-field"
                   value={proj.name}
                   onChange={e => updateProject(index, 'name', e.target.value)}
                 />
                 <input
-                  placeholder="Your Role"
+                  placeholder="您的角色"
                   className="input-field"
                   value={proj.role}
                   onChange={e => updateProject(index, 'role', e.target.value)}
@@ -333,20 +342,20 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
               </div>
               <div className="relative">
                 <textarea
-                  placeholder="Project description..."
+                  placeholder="项目描述..."
                   className="input-field w-full h-24 pb-8 text-xs"
                   value={proj.description}
                   onChange={e => updateProject(index, 'description', e.target.value)}
                 />
-                  <button
-                    onClick={() => handleOptimize(proj.id, proj.description, 'bullet', (val) => updateProject(index, 'description', val))}
-                    disabled={optimizingId === proj.id || !proj.description}
-                    className="absolute right-2 bottom-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1.5 rounded-md text-xs font-medium flex items-center transition-colors border border-indigo-200 disabled:opacity-50"
-                    title="AI Polish Description"
-                  >
-                    {optimizingId === proj.id ? <Loader2 className="animate-spin mr-1" size={12} /> : <Sparkles size={12} className="mr-1" />}
-                    AI Polish
-                  </button>
+                <button
+                  onClick={() => handleOptimize(proj.id, proj.description, 'bullet', (val) => updateProject(index, 'description', val))}
+                  disabled={optimizingId === proj.id || !proj.description}
+                  className="absolute right-2 bottom-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1.5 rounded-md text-xs font-medium flex items-center transition-colors border border-indigo-200 disabled:opacity-50"
+                  title="AI 润色描述"
+                >
+                  {optimizingId === proj.id ? <Loader2 className="animate-spin mr-1" size={12} /> : <Sparkles size={12} className="mr-1" />}
+                  AI 润色
+                </button>
               </div>
             </div>
           ))}
@@ -355,26 +364,26 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
 
       {/* Skills */}
       <section className="mb-20">
-         <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Skills</h3>
-         <div className="relative">
-           <textarea
-              className="input-field w-full h-32 pb-8"
-              placeholder="List your skills (comma separated or loose list)..."
-              value={data.skills}
-              onChange={e => onChange({ ...data, skills: e.target.value })}
-            />
-            <button
-                onClick={() => handleOptimize('skills', data.skills, 'skills', (val) => onChange({ ...data, skills: val }))}
-                disabled={optimizingId === 'skills' || !data.skills}
-                className="absolute right-2 bottom-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1.5 rounded-md text-xs font-medium flex items-center transition-colors border border-indigo-200 disabled:opacity-50"
-                title="AI Format Skills"
-              >
-                {optimizingId === 'skills' ? <Loader2 className="animate-spin mr-1" size={12} /> : <Sparkles size={12} className="mr-1" />}
-                AI Format
-            </button>
-         </div>
+        <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">技能专长</h3>
+        <div className="relative">
+          <textarea
+            className="input-field w-full h-32 pb-8"
+            placeholder="列出您的技能（逗号分隔或列表）..."
+            value={data.skills}
+            onChange={e => onChange({ ...data, skills: e.target.value })}
+          />
+          <button
+            onClick={() => handleOptimize('skills', data.skills, 'skills', (val) => onChange({ ...data, skills: val }))}
+            disabled={optimizingId === 'skills' || !data.skills}
+            className="absolute right-2 bottom-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1.5 rounded-md text-xs font-medium flex items-center transition-colors border border-indigo-200 disabled:opacity-50"
+            title="AI 格式化技能"
+          >
+            {optimizingId === 'skills' ? <Loader2 className="animate-spin mr-1" size={12} /> : <Sparkles size={12} className="mr-1" />}
+            AI 格式化
+          </button>
+        </div>
       </section>
-      
+
       <style>{`
         .input-field {
           @apply w-full rounded border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-white placeholder:text-slate-400;

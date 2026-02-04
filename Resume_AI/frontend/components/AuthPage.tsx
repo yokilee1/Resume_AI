@@ -52,7 +52,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialView, onNavigate, onLoginSuc
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row font-sans">
-      
+
       {/* Left Panel - Visuals */}
       <div className="hidden md:flex md:w-1/2 bg-indigo-600 text-white p-12 flex-col justify-between relative overflow-hidden">
         <div className="relative z-10">
@@ -61,13 +61,13 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialView, onNavigate, onLoginSuc
             <span className="text-xl font-bold">Resume AI</span>
           </div>
           <h2 className="text-4xl font-bold mb-6 leading-tight">
-            Start your journey <br/>to the perfect career.
+            开启您的<br />完美职业生涯。
           </h2>
           <p className="text-indigo-100 text-lg max-w-md">
-            Join thousands of students using Resume AI to land top internships and jobs at world-class companies.
+            加入数千名学生的行列，使用 Resume AI 获得世界级公司的顶级实习和工作岗位。
           </p>
         </div>
-        
+
         {/* Decorative Circles */}
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
@@ -82,12 +82,12 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialView, onNavigate, onLoginSuc
         <div className="w-full max-w-md space-y-8">
           <div className="text-center md:text-left">
             <h2 className="text-3xl font-bold text-slate-900 tracking-tight">
-              {view === AppView.LOGIN ? 'Welcome back' : 'Create an account'}
+              {view === AppView.LOGIN ? '欢迎回来' : '创建账户'}
             </h2>
             <p className="mt-2 text-slate-500">
-              {view === AppView.LOGIN 
-                ? 'Enter your credentials to access your account.' 
-                : 'Get started with your free account today.'}
+              {view === AppView.LOGIN
+                ? '请输入您的凭据以访问您的帐户。'
+                : '立即开始您的免费账户之旅。'}
             </p>
           </div>
 
@@ -99,7 +99,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialView, onNavigate, onLoginSuc
             )}
             {view === AppView.REGISTER && (
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">Full Name</label>
+                <label className="text-sm font-medium text-slate-700">全名</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                     <User size={20} />
@@ -107,17 +107,17 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialView, onNavigate, onLoginSuc
                   <input
                     type="text"
                     required
-                    placeholder="John Doe"
+                    placeholder="张三"
                     className="block w-full pl-10 px-4 py-3 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                     value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   />
                 </div>
               </div>
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700">Email Address</label>
+              <label className="text-sm font-medium text-slate-700">电子邮箱</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                   <Mail size={20} />
@@ -128,13 +128,13 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialView, onNavigate, onLoginSuc
                   placeholder="name@university.edu"
                   className="block w-full pl-10 px-4 py-3 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                   value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700">Password</label>
+              <label className="text-sm font-medium text-slate-700">密码</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                   <Lock size={20} />
@@ -145,7 +145,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialView, onNavigate, onLoginSuc
                   placeholder="••••••••"
                   className="block w-full pl-10 px-4 py-3 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                   value={formData.password}
-                  onChange={(e) => setFormData({...formData, password: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
               </div>
             </div>
@@ -157,7 +157,7 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialView, onNavigate, onLoginSuc
             >
               {isLoading ? <Loader2 className="animate-spin" size={20} /> : (
                 <>
-                  {view === AppView.LOGIN ? 'Sign In' : 'Sign Up'} <ArrowRight size={18} className="ml-2" />
+                  {view === AppView.LOGIN ? '登录' : '注册'} <ArrowRight size={18} className="ml-2" />
                 </>
               )}
             </button>
@@ -165,20 +165,20 @@ const AuthPage: React.FC<AuthPageProps> = ({ initialView, onNavigate, onLoginSuc
 
           <div className="text-center text-sm">
             <span className="text-slate-500">
-              {view === AppView.LOGIN ? "Don't have an account? " : "Already have an account? "}
+              {view === AppView.LOGIN ? "没有账户？" : "已有账户？"}
             </span>
             <button
               onClick={toggleView}
               className="font-bold text-indigo-600 hover:text-indigo-500 transition-colors"
             >
-              {view === AppView.LOGIN ? 'Sign up for free' : 'Sign in'}
+              {view === AppView.LOGIN ? '免费注册' : '登录'}
             </button>
           </div>
-          
+
           <div className="text-center mt-6">
-             <button onClick={() => onNavigate(AppView.LANDING)} className="text-xs text-slate-400 hover:text-slate-600 transition-colors">
-               Back to Home
-             </button>
+            <button onClick={() => onNavigate(AppView.LANDING)} className="text-xs text-slate-400 hover:text-slate-600 transition-colors">
+              返回首页
+            </button>
           </div>
         </div>
       </div>

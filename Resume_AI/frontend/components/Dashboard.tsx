@@ -1,13 +1,22 @@
 import React from 'react';
 import { ResumeData } from '../types';
-import { Plus, FileText, MoreVertical, Copy, Trash2, Clock, Edit3 } from 'lucide-react';
+import { Plus, FileText, Copy, Trash2, Clock, Edit3, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useResumes } from '../context/ResumeContext';
 import { createResume, duplicateResume as apiDuplicateResume, deleteResume as apiDeleteResume } from '../services/resumeApi';
+import { motion } from 'framer-motion';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const { resumes, addResume, removeResume, setCurrentResumeId } = useResumes();
+
+  const formatDate = (timestamp: number) => {
+    return new Date(timestamp).toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
 
   const onCreate = async () => {
     try {
@@ -48,117 +57,162 @@ const Dashboard: React.FC = () => {
       console.error(e);
     }
   };
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.4, ease: "easeOut" as const }
+    }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">我的简历</h1>
-          <p className="text-slate-500 mt-1">管理并组织您的求职申请。</p>
-        </div>
-        <button
-          onClick={onCreate}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors flex items-center shadow-lg shadow-indigo-200"
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
+      {/* Background decoration */}
+      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div className="absolute top-0 right-0 w-[30%] h-[30%] bg-indigo-50/50 rounded-full blur-[100px]"></div>
+        <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-purple-50/30 rounded-full blur-[120px]"></div>
+      </div>
+
+      <div className="flex justify-between items-end mb-10">
+        <motion.div
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
         >
-          <Plus size={18} className="mr-2" />
-          创建新简历
-        </button>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">我的简历</h1>
+          <p className="text-slate-500 mt-2 font-medium">管理并组织您的求职申请</p>
+        </motion.div>
+        <motion.button
+          initial={{ x: 20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={onCreate}
+          className="bg-indigo-600 text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all flex items-center shadow-xl shadow-indigo-200"
+        >
+          <Plus size={20} className="mr-2" />
+          新建简历
+        </motion.button>
       </div>
 
       {resumes.length === 0 ? (
-        <div className="text-center py-20 bg-white rounded-2xl border-2 border-dashed border-slate-200">
-          <div className="w-16 h-16 bg-indigo-50 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <FileText size={32} />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center py-24 bg-white rounded-3xl border-2 border-dashed border-slate-200 shadow-sm"
+        >
+          <div className="w-20 h-20 bg-indigo-50 text-indigo-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner">
+            <FileText size={40} />
           </div>
-          <h3 className="text-lg font-medium text-slate-900 mb-2">暂无简历</h3>
-          <p className="text-slate-500 max-w-sm mx-auto mb-6">创建您的第一份简历，利用 AI 建议开始申请职位。</p>
+          <h3 className="text-xl font-bold text-slate-900 mb-3">暂无简历</h3>
+          <p className="text-slate-500 max-w-sm mx-auto mb-8 font-medium">创建您的第一份简历，利用 AI 建议开始申请职位。</p>
           <button
             onClick={onCreate}
-            className="text-indigo-600 font-medium hover:text-indigo-800"
+            className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 flex items-center gap-2 mx-auto"
           >
-            创建您的第一份简历 &rarr;
+            立即创建 <ArrowRight size={18} />
           </button>
-        </div>
+        </motion.div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
           {/* Create New Card (Visual shortcut) */}
-          <button
+          <motion.button
+            variants={itemVariants}
+            whileHover={{ y: -5, transition: { duration: 0.2 } }}
+            whileTap={{ scale: 0.98 }}
             onClick={onCreate}
-            className="group flex flex-col items-center justify-center h-64 bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl hover:border-indigo-500 hover:bg-indigo-50/50 transition-all cursor-pointer"
+            className="group flex flex-col items-center justify-center h-64 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50/50 transition-all cursor-pointer shadow-sm hover:shadow-md"
           >
-            <div className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 group-hover:border-indigo-200 transition-colors mb-3 shadow-sm">
-              <Plus size={24} />
+            <div className="w-14 h-14 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 group-hover:border-indigo-200 transition-colors mb-4 shadow-sm">
+              <Plus size={28} />
             </div>
-            <span className="text-slate-600 font-medium group-hover:text-indigo-700">新简历</span>
-          </button>
+            <span className="text-slate-600 font-bold group-hover:text-indigo-700">创建新简历</span>
+          </motion.button>
 
           {/* Resume Cards */}
           {resumes.map((resume) => (
-            <div
+            <motion.div
               key={resume.id}
-              className="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow flex flex-col h-64 group relative overflow-hidden"
+              variants={itemVariants}
+              whileHover={{ y: -5 }}
+              className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col h-64 group relative overflow-hidden"
             >
               {/* Preview Area (Fake visual) */}
               <div
-                className="flex-1 bg-slate-100 p-4 overflow-hidden relative cursor-pointer"
+                className="flex-1 bg-slate-50 p-4 overflow-hidden relative cursor-pointer"
                 onClick={() => onSelect(resume.id)}
               >
-                <div className="w-full h-[200%] bg-white shadow-sm p-3 text-[5px] text-slate-300 leading-relaxed pointer-events-none transform transition-transform group-hover:scale-105 origin-top">
-                  <div className="w-1/2 h-2 bg-slate-800 mb-2 rounded-[1px]"></div>
-                  <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
-                  <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
-                  <div className="w-2/3 h-1 bg-slate-200 mb-3 rounded-[1px]"></div>
+                <div className="w-full h-[200%] bg-white shadow-sm rounded-sm p-4 text-[5px] text-slate-300 leading-relaxed pointer-events-none transform transition-transform group-hover:scale-105 origin-top border border-slate-100">
+                  <div className="w-1/3 h-2.5 bg-slate-800 mb-3 rounded-full opacity-90"></div>
+                  <div className="flex gap-2 mb-4">
+                    <div className="w-10 h-1 bg-slate-200 rounded-full"></div>
+                    <div className="w-10 h-1 bg-slate-200 rounded-full"></div>
+                    <div className="w-10 h-1 bg-slate-200 rounded-full"></div>
+                  </div>
 
-                  <div className="w-1/4 h-1.5 bg-slate-400 mb-1 rounded-[1px]"></div>
-                  <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
-                  <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
-                  <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
-                  <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
+                  <div className="w-1/4 h-2 bg-slate-400 mb-2 rounded-full"></div>
+                  <div className="space-y-1.5 mb-4">
+                    <div className="w-full h-1 bg-slate-100 rounded-full"></div>
+                    <div className="w-full h-1 bg-slate-100 rounded-full"></div>
+                    <div className="w-5/6 h-1 bg-slate-100 rounded-full"></div>
+                  </div>
 
-                  <div className="mt-2 w-1/4 h-1.5 bg-slate-400 mb-1 rounded-[1px]"></div>
-                  <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
-                  <div className="w-full h-1 bg-slate-200 mb-1 rounded-[1px]"></div>
+                  <div className="w-1/4 h-2 bg-slate-400 mb-2 rounded-full"></div>
+                  <div className="space-y-1.5">
+                    <div className="w-full h-1 bg-slate-100 rounded-full"></div>
+                    <div className="w-full h-1 bg-slate-100 rounded-full"></div>
+                    <div className="w-4/6 h-1 bg-slate-100 rounded-full"></div>
+                  </div>
                 </div>
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-indigo-900/0 group-hover:bg-indigo-900/5 transition-colors flex items-center justify-center">
-                  <div className="bg-white/90 backdrop-blur text-indigo-600 px-4 py-2 rounded-full font-medium text-sm shadow-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
-                    编辑简历
-                  </div>
+                <div className="absolute inset-0 bg-indigo-900/0 group-hover:bg-indigo-600/5 transition-colors flex items-center justify-center">
+                  <motion.div
+                    className="bg-indigo-600 text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-xl shadow-indigo-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all flex items-center gap-2"
+                  >
+                    <Edit3 size={16} /> 编辑简历
+                  </motion.div>
                 </div>
               </div>
 
               {/* Footer Info */}
               <div className="p-4 border-t border-slate-100 bg-white z-10">
                 <div className="flex justify-between items-start">
-                  <div onClick={() => onSelect(resume.id)} className="cursor-pointer">
-                    <h3 className="font-semibold text-slate-800 truncate pr-2" title={resume.title}>
+                  <div onClick={() => onSelect(resume.id)} className="cursor-pointer flex-1 min-w-0">
+                    <h3 className="font-bold text-slate-800 truncate pr-2 group-hover:text-indigo-600 transition-colors" title={resume.title}>
                       {resume.title || '未命名简历'}
                     </h3>
-                    <div className="flex items-center text-xs text-slate-500 mt-1">
+                    <div className="flex items-center text-xs text-slate-400 mt-1.5">
                       <Clock size={12} className="mr-1" />
-                      更新于 {formatDate(resume.lastModified)}
+                      {formatDate(resume.lastModified)}
                     </div>
                   </div>
 
-                  {/* Actions Dropdown (Simplified as visible buttons for this demo) */}
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5 ml-2">
                     <button
                       onClick={(e) => { e.stopPropagation(); onDuplicate(resume.id); }}
-                      className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded transition-colors"
+                      className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
                       title="复制"
                     >
                       <Copy size={16} />
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); onDelete(resume.id); }}
-                      className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                      className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all"
                       title="删除"
                     >
                       <Trash2 size={16} />
@@ -166,9 +220,9 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   );

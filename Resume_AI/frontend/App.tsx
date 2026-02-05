@@ -126,9 +126,21 @@ function App() {
       {/* Main Content Area */}
       <main className="flex-1 w-full overflow-hidden relative">
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/auth/login" element={<AuthPage initialView={AppView.LOGIN} />} />
-          <Route path="/auth/register" element={<AuthPage initialView={AppView.REGISTER} />} />
+          <Route path="/" element={
+            <div className="w-full h-full overflow-y-auto">
+              <LandingPage />
+            </div>
+          } />
+          <Route path="/auth/login" element={
+            <div className="w-full h-full overflow-y-auto">
+              <AuthPage initialView={AppView.LOGIN} />
+            </div>
+          } />
+          <Route path="/auth/register" element={
+            <div className="w-full h-full overflow-y-auto">
+              <AuthPage initialView={AppView.REGISTER} />
+            </div>
+          } />
 
           {/* Protected Routes */}
           <Route path="/dashboard" element={

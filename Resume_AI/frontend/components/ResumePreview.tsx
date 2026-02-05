@@ -1,6 +1,7 @@
 import React from 'react';
 import { ResumeData } from '../types';
 import { Mail, Phone, Linkedin, Globe } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface ResumePreviewProps {
   data: ResumeData;
@@ -526,18 +527,31 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, targetRef }) => {
   );
 
   return (
-    <div className="w-full h-full bg-slate-100 overflow-y-auto p-4 md:p-8 flex justify-center">
-      <div
+    <div className="w-full h-full bg-slate-100 overflow-y-auto p-4 md:p-8 flex justify-center custom-scrollbar">
+      <motion.div
         ref={targetRef}
-        className="bg-white w-[210mm] min-h-[297mm] shadow-lg no-shadow-print transition-all duration-300 page"
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="bg-white w-[210mm] min-h-[297mm] shadow-lg no-shadow-print transition-all duration-300 page origin-top"
       >
-        {template === 'modern' && <ModernLayout />}
-        {template === 'classic' && <ClassicLayout />}
-        {template === 'minimal' && <MinimalLayout />}
-        {template === 'elegant' && <ElegantLayout />}
-        {template === 'compact' && <CompactLayout />}
-        {template === 'timeline' && <TimelineLayout />}
-      </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={template}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            {template === 'modern' && <ModernLayout />}
+            {template === 'classic' && <ClassicLayout />}
+            {template === 'minimal' && <MinimalLayout />}
+            {template === 'elegant' && <ElegantLayout />}
+            {template === 'compact' && <CompactLayout />}
+            {template === 'timeline' && <TimelineLayout />}
+          </motion.div>
+        </AnimatePresence>
+      </motion.div>
     </div>
   );
 };

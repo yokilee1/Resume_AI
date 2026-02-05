@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { searchJobs as searchJobsAI } from '../services/geminiService';
 import { analyzeJobMatchBackend } from '../services/aiApi';
 import { searchJobsDB } from '../services/jobApi';
+import { useReactToPrint } from 'react-to-print';
 import { JobMatchResult, ResumeData, JobSearchResult } from '../types';
-import { Search, CheckCircle, AlertCircle, Loader2, ArrowRight, Briefcase, FileText, ChevronRight, Check, Building2, MapPin, DollarSign } from 'lucide-react';
+import { Search, CheckCircle, AlertCircle, Loader2, ArrowRight, Briefcase, FileText, ChevronRight, Check, Building2, MapPin, DollarSign, Printer } from 'lucide-react';
 
 import { useResumes } from '../context/ResumeContext';
 import { useJobs } from '../context/JobContext';
@@ -39,6 +40,12 @@ const JobAssistant: React.FC = () => {
   // Step 3: Analysis State
   const [isMatching, setIsMatching] = useState(false);
   const [matchResult, setMatchResult] = useState<JobMatchResult | null>(null);
+
+  const reportRef = useRef<HTMLDivElement>(null);
+  const handleExportReport = useReactToPrint({
+    contentRef: reportRef,
+    documentTitle: `职位匹配报告 - ${selectedJob?.title || '分析'}`,
+  });
 
   // 初次加载：优先拉取数据库岗位，失败或为空时不阻塞界面
   useEffect(() => {
@@ -345,91 +352,104 @@ const JobAssistant: React.FC = () => {
                     </div>
                     <h2 className="text-2xl font-bold text-slate-900">职位匹配度</h2>
                   </div>
-                  <div className="flex items-center gap-4 mt-4 md:mt-0">
-                    <div className="text-right">
-                      <div className="text-xs text-slate-500 uppercase tracking-wider">综合评分</div>
-                      <div className={`text-4xl font-black ${matchResult.score >= 70 ? 'text-green-600' : matchResult.score >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
-                        {matchResult.score}%
+                  <div className="flex items-center gap-3 no-print">
+                    <button
+                      onClick={() => handleExportReport()}
+                      className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-full transition-colors border border-slate-200"
+                      title="导出报告"
+                    >
+                      <Printer size={20} />
+                    </button>
+                    <div className="flex items-center gap-4">
+                      <div className="text-right">
+                        <div className="text-xs text-slate-500 uppercase tracking-wider">综合评分</div>
+                        <div className={`text-4xl font-black ${matchResult.score >= 70 ? 'text-green-600' : matchResult.score >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
+                          {matchResult.score}%
+                        </div>
                       </div>
-                    </div>
-                    <div className={`w-16 h-16 rounded-full border-4 flex items-center justify-center ${matchResult.score >= 70 ? 'border-green-100 bg-green-50' : 'border-red-100 bg-red-50'}`}>
-                      {matchResult.score >= 70 ? <Check size={32} className="text-green-600" /> : <AlertCircle size={32} className="text-red-600" />}
+                      <div className={`w-16 h-16 rounded-full border-4 flex items-center justify-center ${matchResult.score >= 70 ? 'border-green-100 bg-green-50' : 'border-red-100 bg-red-50'}`}>
+                        {matchResult.score >= 70 ? <Check size={32} className="text-green-600" /> : <AlertCircle size={32} className="text-red-600" />}
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="mb-8">
-                  <h4 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
-                    <Briefcase size={18} className="text-slate-400" /> 分析摘要
-                  </h4>
-                  <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
-                    {matchResult.analysis}
-                  </p>
-                </div>
+                <div ref={reportRef} className="print-padding">
 
-                {/* Additional Dimensions */}
-                {(matchResult.skillMatch != null || matchResult.experienceRelevance != null || matchResult.cultureFit != null) && (
-                  <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {matchResult.skillMatch != null && (
-                      <div className="p-4 rounded-lg border border-slate-200 bg-white">
-                        <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">技能匹配</div>
-                        <div className="text-2xl font-bold text-slate-900">{Number(matchResult.skillMatch)}%</div>
-                      </div>
-                    )}
-                    {matchResult.experienceRelevance != null && (
-                      <div className="p-4 rounded-lg border border-slate-200 bg-white">
-                        <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">经历相关度</div>
-                        <div className="text-2xl font-bold text-slate-900">{Number(matchResult.experienceRelevance)}%</div>
-                      </div>
-                    )}
-                    {matchResult.cultureFit != null && (
-                      <div className="p-4 rounded-lg border border-slate-200 bg-white">
-                        <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">文化契合度</div>
-                        <div className="text-2xl font-bold text-slate-900">{Number(matchResult.cultureFit)}%</div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <h4 className="font-bold text-red-700 mb-4 flex items-center gap-2">
-                      <AlertCircle size={18} /> 缺失关键词
+                  <div className="mb-8">
+                    <h4 className="font-bold text-slate-900 mb-3 flex items-center gap-2">
+                      <Briefcase size={18} className="text-slate-400" /> 分析摘要
                     </h4>
-                    <div className="bg-red-50 rounded-lg p-5 border border-red-100 h-full">
-                      {matchResult.missingKeywords.length > 0 ? (
-                        <ul className="space-y-2">
-                          {matchResult.missingKeywords.map((kw, i) => (
-                            <li key={i} className="flex items-start text-sm text-red-800">
-                              <span className="mr-2 mt-1.5 w-1.5 h-1.5 bg-red-400 rounded-full flex-shrink-0"></span>
-                              {kw}
+                    <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg border border-slate-100">
+                      {matchResult.analysis}
+                    </p>
+                  </div>
+
+                  {/* Additional Dimensions */}
+                  {(matchResult.skillMatch != null || matchResult.experienceRelevance != null || matchResult.cultureFit != null) && (
+                    <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {matchResult.skillMatch != null && (
+                        <div className="p-4 rounded-lg border border-slate-200 bg-white">
+                          <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">技能匹配</div>
+                          <div className="text-2xl font-bold text-slate-900">{Number(matchResult.skillMatch)}%</div>
+                        </div>
+                      )}
+                      {matchResult.experienceRelevance != null && (
+                        <div className="p-4 rounded-lg border border-slate-200 bg-white">
+                          <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">经历相关度</div>
+                          <div className="text-2xl font-bold text-slate-900">{Number(matchResult.experienceRelevance)}%</div>
+                        </div>
+                      )}
+                      {matchResult.cultureFit != null && (
+                        <div className="p-4 rounded-lg border border-slate-200 bg-white">
+                          <div className="text-xs text-slate-500 uppercase tracking-wider mb-1">文化契合度</div>
+                          <div className="text-2xl font-bold text-slate-900">{Number(matchResult.cultureFit)}%</div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                      <h4 className="font-bold text-red-700 mb-4 flex items-center gap-2">
+                        <AlertCircle size={18} /> 缺失关键词
+                      </h4>
+                      <div className="bg-red-50 rounded-lg p-5 border border-red-100 h-full">
+                        {matchResult.missingKeywords.length > 0 ? (
+                          <ul className="space-y-2">
+                            {matchResult.missingKeywords.map((kw, i) => (
+                              <li key={i} className="flex items-start text-sm text-red-800">
+                                <span className="mr-2 mt-1.5 w-1.5 h-1.5 bg-red-400 rounded-full flex-shrink-0"></span>
+                                {kw}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className="text-sm text-red-600 italic">没有明显的关键缺失。</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="font-bold text-indigo-700 mb-4 flex items-center gap-2">
+                        <CheckCircle size={18} /> 改进建议
+                      </h4>
+                      <div className="bg-indigo-50 rounded-lg p-5 border border-indigo-100 h-full">
+                        <ul className="space-y-3">
+                          {matchResult.suggestions.map((sugg, i) => (
+                            <li key={i} className="flex items-start text-sm text-indigo-800">
+                              <span className="bg-indigo-200 text-indigo-700 rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold mr-2 flex-shrink-0 mt-0.5">{i + 1}</span>
+                              {sugg}
                             </li>
                           ))}
                         </ul>
-                      ) : (
-                        <p className="text-sm text-red-600 italic">没有明显的关键缺失。</p>
-                      )}
+                      </div>
                     </div>
                   </div>
 
-                  <div>
-                    <h4 className="font-bold text-indigo-700 mb-4 flex items-center gap-2">
-                      <CheckCircle size={18} /> 改进建议
-                    </h4>
-                    <div className="bg-indigo-50 rounded-lg p-5 border border-indigo-100 h-full">
-                      <ul className="space-y-3">
-                        {matchResult.suggestions.map((sugg, i) => (
-                          <li key={i} className="flex items-start text-sm text-indigo-800">
-                            <span className="bg-indigo-200 text-indigo-700 rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold mr-2 flex-shrink-0 mt-0.5">{i + 1}</span>
-                            {sugg}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
                 </div>
 
-                <div className="mt-10 pt-6 border-t border-slate-100 flex justify-center">
+                <div className="mt-10 pt-6 border-t border-slate-100 flex justify-center no-print">
                   <button onClick={resetFlow} className="text-slate-600 font-medium hover:text-indigo-600 flex items-center gap-2">
                     开始新的分析 <ChevronRight size={16} />
                   </button>

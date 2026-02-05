@@ -6,7 +6,7 @@
 
 @layer base {
     body {
-        @apply bg-slate-50 text-slate-900;
+        @apply bg-slate-50 text-slate-900 antialiased;
         font-family: 'Inter', sans-serif;
     }
 }
@@ -21,6 +21,38 @@
         break-inside: avoid;
         page-break-inside: avoid;
     }
+
+    .glass-card {
+        @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-xl;
+    }
+
+    .shimmer-bg {
+        background: linear-gradient(
+            -45deg,
+            var(--color-indigo-500),
+            var(--color-purple-500),
+            var(--color-indigo-600),
+            var(--color-blue-500)
+        );
+        background-size: 400% 400%;
+        animation: gradient-shift 15s ease infinite;
+    }
+}
+
+@keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-slow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.1); }
 }
 
 @media print {

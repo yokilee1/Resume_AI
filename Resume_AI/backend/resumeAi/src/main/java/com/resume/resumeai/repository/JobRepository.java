@@ -100,4 +100,29 @@ public class JobRepository {
         }
         jdbc.batchUpdate(sql, batchValues.toArray(new Map[0]));
     }
+    
+    public List<Map<String, Object>> getCrawlTrend() {
+        String sql = """
+            SELECT DATE_FORMAT(crawl_time, '%a') as date, COUNT(*) as count 
+            FROM job_positions 
+            WHERE crawl_time >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
+            GROUP BY DATE_FORMAT(crawl_time, '%a'), DATE(crawl_time)
+            ORDER BY DATE(crawl_time)
+        """;
+        return jdbc.queryForList(sql, Map.of());
+    }
+
+    public List<Map<String, Object>> getSourceDistribution() {
+        // Simplified grouping by source_url column. 
+        // If source_url contains full URL, we might want to extract domain here or in service.
+        // Assuming it stores cleaner source names based on current usage.
+        String sql = """
+            SELECT source_url as source, COUNT(*) as count 
+            FROM job_positions 
+            GROUP BY source_url
+            ORDER BY count DESC
+            LIMIT 5
+        """;
+        return jdbc.queryForList(sql, Map.of());
+    }
 }

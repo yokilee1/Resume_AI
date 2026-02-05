@@ -45,6 +45,11 @@ public class AdminService {
         stats.put("userCount", userRepository.count());
         stats.put("resumeCount", resumeRepository.count(null));
         stats.put("jobCount", jobRepository.count(null, null));
+        
+        // Real chart data from JobRepository
+        stats.put("crawlTrend", jobRepository.getCrawlTrend());
+        stats.put("sourceDistribution", jobRepository.getSourceDistribution());
+
         // Mock activity for now, can be implemented with real logs later
         stats.put("recentActivity", List.of(
             Map.of("id", 1, "user", "System", "action", "System Startup", "time", "Just now")

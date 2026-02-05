@@ -94,6 +94,8 @@ export interface AdminStats {
     action: string;
     time: string;
   }>;
+  crawlTrend?: Array<{ date: string; count: number }>;
+  sourceDistribution?: Array<{ source: string; count: number }>;
 }
 
 export interface AdminUser {

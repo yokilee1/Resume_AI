@@ -1,5 +1,5 @@
 import { JobMatchResult, JobSearchResult } from "../types";
-import { getToken } from "./apiClient";
+import { apiFetch } from "./apiClient";
 
 /**
  * 调用后端 AI：简历润色
@@ -9,18 +9,12 @@ import { getToken } from "./apiClient";
 export const polishResume = async (
   payload: { text: string; industry?: string; role?: string; language?: string }
 ): Promise<{ polished_text: string; suggestions: string[] }> => {
-  const token = (typeof window !== "undefined" && getToken()) || "";
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-
-  const res = await fetch(`/api/ai/polish`, {
+  const res = await apiFetch<any>(`/api/ai/polish`, {
     method: "POST",
-    headers,
     body: JSON.stringify(payload),
   });
 
-  const json = await res.json();
-  const data = json?.data || {};
+  const data = res?.data || {};
   return {
     polished_text: String(data?.polished_text ?? ""),
     suggestions: Array.isArray(data?.suggestions) ? data.suggestions : [],
@@ -36,26 +30,19 @@ export const analyzeJobMatchBackend = async (
   resumeText: string,
   jobDescription: string
 ): Promise<JobMatchResult> => {
-  const token = (typeof window !== "undefined" && getToken()) || "";
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-
-  const res = await fetch(`/api/ai/match-report`, {
+  const res = await apiFetch<any>(`/api/ai/match-report`, {
     method: "POST",
-    headers,
     body: JSON.stringify({ resume_text: resumeText, job_description: jobDescription }),
   });
 
-  if (!res.ok) throw new Error(`match-report failed: ${res.status}`);
-  const json = await res.json();
-  const data = json?.data || {};
+  const data = res?.data || {};
   const score = Number(data?.overall_score ?? data?.overallScore ?? data?.score ?? 0);
   const analysis = String(data?.analysis ?? "");
   const missingKeywords = Array.isArray(data?.missing_keywords)
     ? data.missing_keywords
     : Array.isArray(data?.missingKeywords)
-    ? data.missingKeywords
-    : [];
+      ? data.missingKeywords
+      : [];
   const suggestions = Array.isArray(data?.suggestions) ? data.suggestions : [];
   const skillMatchRaw = data?.skill_match ?? data?.skillMatch;
   const experienceRelevanceRaw = data?.experience_relevance ?? data?.experienceRelevance;
@@ -80,31 +67,24 @@ export const recommendJobsBackend = async (
   },
   options?: { sort?: string; minScore?: number; city?: string }
 ): Promise<JobSearchResult[]> => {
-  const token = (typeof window !== "undefined" && getToken()) || "";
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-
   const params = new URLSearchParams();
   if (options?.sort) params.set("sort", options.sort);
   if (options?.minScore != null) params.set("minScore", String(options.minScore));
   if (options?.city) params.set("city", options.city);
 
-  const res = await fetch(`/api/ai/recommend-jobs?${params.toString()}`, {
+  const res = await apiFetch<any>(`/api/ai/recommend-jobs?${params.toString()}`, {
     method: "POST",
-    headers,
     body: JSON.stringify(req),
   });
 
-  if (!res.ok) return [];
-  const json = await res.json();
-  const items = json?.data?.items ?? [];
+  const items = res?.data?.items ?? [];
   return Array.isArray(items)
     ? items.map((it: any) => ({
-        title: String(it?.title ?? ""),
-        company: String(it?.company ?? ""),
-        location: String(it?.location ?? ""),
-        description: String(it?.reason ?? ""),
-        url: undefined,
-      }))
+      title: String(it?.title ?? ""),
+      company: String(it?.company ?? ""),
+      location: String(it?.location ?? ""),
+      description: String(it?.reason ?? ""),
+      url: undefined,
+    }))
     : [];
 };

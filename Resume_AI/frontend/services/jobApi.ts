@@ -1,5 +1,5 @@
 import { JobSearchResult } from "../types";
-import { getToken } from "./apiClient";
+import { apiFetch } from "./apiClient";
 
 /**
  * 从后端数据库检索职位列表
@@ -21,31 +21,21 @@ export const searchJobsDB = async (
   params.set("page", String(page));
   params.set("pageSize", String(pageSize));
 
-  const token = (typeof window !== "undefined" && getToken()) || "";
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-
-  const res = await fetch(`/api/jobs/search?${params.toString()}`, {
+  const res = await apiFetch<any>(`/api/jobs/search?${params.toString()}`, {
     method: "GET",
-    headers,
   });
 
-  if (!res.ok) {
-    return [];
-  }
-
-  const json = await res.json();
-  const items = json?.data?.items ?? [];
+  const items = res?.data?.items ?? [];
 
   const mapped: JobSearchResult[] = Array.isArray(items)
     ? items.map((job: any) => ({
-        title: String(job?.jobTitle ?? job?.job_title ?? job?.title ?? ""),
-        company: String(job?.companyName ?? job?.company_name ?? job?.company ?? ""),
-        location: String(job?.location ?? job?.city ?? ""),
-        description: String(job?.jobDescription ?? job?.job_description ?? job?.description ?? ""),
-        url: job?.sourceUrl ?? job?.source_url ?? job?.url ?? undefined,
-        salary: job?.salary ?? job?.salary_range ?? undefined,
-      }))
+      title: String(job?.jobTitle ?? job?.job_title ?? job?.title ?? ""),
+      company: String(job?.companyName ?? job?.company_name ?? job?.company ?? ""),
+      location: String(job?.location ?? job?.city ?? ""),
+      description: String(job?.jobDescription ?? job?.job_description ?? job?.description ?? ""),
+      url: job?.sourceUrl ?? job?.source_url ?? job?.url ?? undefined,
+      salary: job?.salary ?? job?.salary_range ?? undefined,
+    }))
     : [];
 
   return mapped;

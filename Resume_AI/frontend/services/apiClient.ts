@@ -26,6 +26,11 @@ export function setToken(token: string) {
 /**
  * 基础请求封装，自动附加 Authorization 头
  */
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
+/**
+ * 基础请求封装，自动附加 Authorization 头
+ */
 export async function apiFetch<T>(input: RequestInfo, init?: RequestInit): Promise<ApiResponse<T>> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -34,7 +39,13 @@ export async function apiFetch<T>(input: RequestInfo, init?: RequestInit): Promi
   const token = getToken();
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const res = await fetch(String(input), { ...init, headers });
+  // 处理 input，如果是相对路径则加上 API_BASE_URL
+  let url = String(input);
+  if (url.startsWith('/')) {
+    url = `${API_BASE_URL}${url}`;
+  }
+
+  const res = await fetch(url, { ...init, headers });
   if (!res.ok) {
     const text = await res.text();
     throw new Error(text || 'Request failed');

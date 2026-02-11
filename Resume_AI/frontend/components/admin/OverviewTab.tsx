@@ -15,9 +15,9 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ stats, propUserCount, propRes
         <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
-                    { label: '注册用户总数', value: stats?.userCount || propUserCount, icon: Users, color: 'blue' },
-                    { label: '在线职位总数', value: stats?.jobCount || jobsCount, icon: Briefcase, color: 'purple' },
-                    { label: '生成的简历总数', value: stats?.resumeCount || propResumeCount, icon: TrendingUp, color: 'indigo' }
+                    { label: '注册用户总数', value: stats?.userCount || propUserCount, icon: Users, color: 'slate' },
+                    { label: '在线职位总数', value: stats?.jobCount || jobsCount, icon: Briefcase, color: 'slate' },
+                    { label: '生成的简历总数', value: stats?.resumeCount || propResumeCount, icon: TrendingUp, color: 'slate' }
                 ].map((stat, idx) => (
                     <motion.div
                         key={idx}
@@ -25,10 +25,10 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ stats, propUserCount, propRes
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.1 }}
                         whileHover={{ y: -5 }}
-                        className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-indigo-100 transition-all group"
+                        className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-slate-300 transition-all group"
                     >
                         <div className="flex items-center justify-between mb-4">
-                            <div className={`p-3 bg-${stat.color}-50 text-${stat.color}-600 rounded-xl group-hover:scale-110 transition-transform`}>
+                            <div className="p-3 bg-slate-100 text-slate-900 rounded-xl group-hover:scale-110 transition-transform">
                                 <stat.icon size={24} />
                             </div>
                         </div>
@@ -48,7 +48,7 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ stats, propUserCount, propRes
                 className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
             >
                 <div className="px-6 py-4 border-b border-slate-100 font-bold text-slate-900 flex items-center gap-2">
-                    <div className="w-1 h-4 bg-indigo-600 rounded-full"></div>
+                    <div className="w-1 h-4 bg-slate-900 rounded-full"></div>
                     系统活动日志
                 </div>
                 <div className="divide-y divide-slate-100">
@@ -61,8 +61,8 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ stats, propUserCount, propRes
                             className="px-6 py-4 flex items-center justify-between text-sm hover:bg-slate-50 transition-colors"
                         >
                             <div className="flex items-center gap-4">
-                                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                                <span className="text-slate-600 font-medium">{act.action} <span className="font-bold text-slate-900 underline decoration-indigo-200 underline-offset-2">{act.user}</span></span>
+                                <div className="w-2 h-2 rounded-full bg-slate-900 animate-pulse"></div>
+                                <span className="text-slate-600 font-medium">{act.action} <span className="font-bold text-slate-900 underline decoration-slate-200 underline-offset-2">{act.user}</span></span>
                             </div>
                             <span className="text-slate-400 font-bold tabular-nums">{act.time}</span>
                         </motion.div>

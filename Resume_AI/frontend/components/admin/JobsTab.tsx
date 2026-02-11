@@ -66,7 +66,7 @@ const JobsTab: React.FC<JobsTabProps> = ({
             >
                 <div className="flex items-center justify-between mb-8">
                     <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                        <Bot size={24} className="text-indigo-600" /> AI 职位爬虫配置
+                        <Bot size={24} className="text-slate-900" /> AI 职位爬虫配置
                     </h3>
                 </div>
 
@@ -82,7 +82,7 @@ const JobsTab: React.FC<JobsTabProps> = ({
                                     value={crawlQuery}
                                     onChange={(e) => setCrawlQuery(e.target.value)}
                                     placeholder="例如：软件工程师..."
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white outline-none text-sm transition-all font-medium"
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 focus:bg-white outline-none text-sm transition-all font-medium"
                                 />
                             </div>
                             <div>
@@ -93,11 +93,11 @@ const JobsTab: React.FC<JobsTabProps> = ({
                                         value={crawlSource}
                                         onChange={(e) => setCrawlSource(e.target.value)}
                                         placeholder="例如：lagou.com"
-                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white outline-none text-sm transition-all font-medium"
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 focus:bg-white outline-none text-sm transition-all font-medium"
                                     />
                                     <div className="absolute right-2 top-2 flex gap-1">
                                         {['lagou.com', 'shixiseng.com'].map(site => (
-                                            <button key={site} onClick={() => setCrawlSource(site)} className="text-[10px] bg-white border border-slate-200 hover:border-indigo-300 hover:text-indigo-600 px-2 py-1 rounded-lg text-slate-500 font-bold transition-all shadow-sm">
+                                            <button key={site} onClick={() => setCrawlSource(site)} className="text-[10px] bg-white border border-slate-200 hover:border-slate-900 hover:text-slate-900 px-2 py-1 rounded-lg text-slate-500 font-bold transition-all shadow-sm">
                                                 {site.split('.')[0]}
                                             </button>
                                         ))}
@@ -109,7 +109,7 @@ const JobsTab: React.FC<JobsTabProps> = ({
                                 <select
                                     value={newTaskFreq}
                                     onChange={(e) => setNewTaskFreq(e.target.value)}
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 focus:bg-white outline-none text-sm transition-all font-bold appearance-none cursor-pointer"
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 focus:bg-white outline-none text-sm transition-all font-bold appearance-none cursor-pointer"
                                 >
                                     <option>每 6 小时</option>
                                     <option>每 12 小时</option>
@@ -124,7 +124,7 @@ const JobsTab: React.FC<JobsTabProps> = ({
                                     whileTap={{ scale: 0.98 }}
                                     onClick={handleCrawlJobs}
                                     disabled={isCrawling || !crawlQuery}
-                                    className="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-black text-sm hover:bg-indigo-700 disabled:opacity-50 flex justify-center items-center gap-2 shadow-lg shadow-indigo-200"
+                                    className="w-full bg-slate-900 text-white py-3.5 rounded-xl font-black text-sm hover:bg-black disabled:opacity-50 flex justify-center items-center gap-2 shadow-lg shadow-slate-200"
                                 >
                                     {isCrawling ? <Loader2 className="animate-spin" size={18} /> : <Search size={18} />}
                                     立即运行爬虫
@@ -179,7 +179,7 @@ const JobsTab: React.FC<JobsTabProps> = ({
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-right flex justify-end gap-3">
-                                                <button onClick={() => toggleTaskStatus(task)} className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all" title={task.status === 'Active' ? "暂停" : "恢复"}>
+                                                <button onClick={() => toggleTaskStatus(task)} className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-all" title={task.status === 'Active' ? "暂停" : "恢复"}>
                                                     {task.status === 'Active' ? <Pause size={16} /> : <Play size={16} />}
                                                 </button>
                                                 <button onClick={() => handleDeleteTask(task.id)} className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all" title="删除">
@@ -208,7 +208,7 @@ const JobsTab: React.FC<JobsTabProps> = ({
                 className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
             >
                 <div className="px-8 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-                    <span className="font-black text-slate-900 tracking-tight">职位列表 <span className="text-indigo-600 ml-1">({totalJobs})</span></span>
+                    <span className="font-black text-slate-900 tracking-tight">职位列表 <span className="text-slate-500 ml-1">({totalJobs})</span></span>
                     <div className="flex gap-3">
                         <button className="px-4 py-2 text-xs font-black text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all shadow-sm">导出 CSV</button>
                     </div>
@@ -231,24 +231,24 @@ const JobsTab: React.FC<JobsTabProps> = ({
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: idx * 0.03 }}
-                                    className="hover:bg-indigo-50/30 transition-colors group"
+                                    className="hover:bg-slate-50 transition-colors group"
                                 >
                                     <td className="px-8 py-5 font-bold text-slate-900">
                                         <div className="flex flex-col">
                                             <span className="line-clamp-1">{job.title}</span>
-                                            {job.url && <span className="text-[10px] text-indigo-400 font-medium line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity">{job.url}</span>}
+                                            {job.url && <span className="text-[10px] text-slate-400 font-medium line-clamp-1 opacity-0 group-hover:opacity-100 transition-opacity">{job.url}</span>}
                                         </div>
                                     </td>
                                     <td className="px-8 py-5 font-medium">{job.company}</td>
                                     <td className="px-8 py-5 text-slate-500 font-medium">{job.location}</td>
                                     <td className="px-8 py-5">
-                                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-tight ${job.source === 'AI Crawler' ? 'bg-indigo-50 text-indigo-600 border border-indigo-100' : 'bg-slate-50 text-slate-500 border border-slate-200'}`}>
+                                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-tight ${job.source === 'AI Crawler' ? 'bg-slate-100 text-slate-900 border border-slate-200' : 'bg-slate-50 text-slate-500 border border-slate-200'}`}>
                                             {job.source === 'AI Crawler' ? 'AI 爬虫' : (job.source || '手动')}
                                         </span>
                                     </td>
                                     <td className="px-8 py-5 text-right flex justify-end gap-3">
                                         {job.url && (
-                                            <a href={job.url} target="_blank" rel="noreferrer" className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-white rounded-xl transition-all shadow-sm border border-transparent hover:border-slate-100" title="查看链接">
+                                            <a href={job.url} target="_blank" rel="noreferrer" className="p-2 text-slate-400 hover:text-slate-900 hover:bg-white rounded-xl transition-all shadow-sm border border-transparent hover:border-slate-100" title="查看链接">
                                                 <ExternalLink size={16} />
                                             </a>
                                         )}

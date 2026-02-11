@@ -334,7 +334,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, targetRef }) => {
           <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">项目状况</h2>
           <div className="space-y-3">
             {data.projects.map(proj => (
-              <div key={proj.id} className="border-l-2 border-indigo-400 pl-3">
+              <div key={proj.id} className="border-l-2 border-slate-900 pl-3">
                 <div className="font-medium text-slate-900">{proj.name} <span className="text-xs text-slate-500 font-normal">| {proj.role}</span></div>
                 {proj.description && <p className="text-xs text-slate-700 whitespace-pre-wrap">{proj.description}</p>}
               </div>
@@ -468,7 +468,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, targetRef }) => {
               {data.experience.map((exp, idx) => (
                 <div key={exp.id} className="grid grid-cols-[24px_1fr] gap-3">
                   <div className="relative">
-                    <div className="w-4 h-4 rounded-full bg-indigo-500 border-2 border-white shadow ring-1 ring-slate-300 translate-x-[-2px]" />
+                    <div className="w-4 h-4 rounded-full bg-slate-900 border-2 border-white shadow ring-1 ring-slate-300 translate-x-[-2px]" />
                   </div>
                   <div className="pb-2 border-b border-slate-200">
                     <div className="flex justify-between">
@@ -508,7 +508,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, targetRef }) => {
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">项目状况</h2>
           <div className="space-y-3">
             {data.projects.map(proj => (
-              <div key={proj.id} className="border-l-2 border-indigo-500 pl-3">
+              <div key={proj.id} className="border-l-2 border-slate-900 pl-3">
                 <div className="font-medium text-slate-900">{proj.name} <span className="text-xs text-slate-500 font-normal">| {proj.role}</span></div>
                 {proj.description && <p className="text-xs text-slate-700 whitespace-pre-wrap">{proj.description}</p>}
               </div>

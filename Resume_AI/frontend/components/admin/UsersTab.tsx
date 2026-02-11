@@ -18,7 +18,7 @@ const UsersTab: React.FC<UsersTabProps> = ({ users, handleUserRoleChange, handle
         >
             <div className="px-8 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <span className="font-black text-slate-900 tracking-tight text-lg">所有用户管理</span>
-                <button className="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all flex items-center gap-2">
+                <button className="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg shadow-slate-200/50 hover:bg-black transition-all flex items-center gap-2">
                     <Plus size={16} /> 添加新用户
                 </button>
             </div>
@@ -56,7 +56,7 @@ const UsersTab: React.FC<UsersTabProps> = ({ users, handleUserRoleChange, handle
                                 <td className="px-8 py-5">
                                     <button
                                         onClick={() => handleUserRoleChange(user)}
-                                        className={`inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest cursor-pointer transition-all ${user.role === 'Admin' ? 'bg-indigo-100 text-indigo-700 border border-indigo-200' : 'bg-slate-100 text-slate-600 border border-slate-200'}`}
+                                        className={`inline-flex items-center px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest cursor-pointer transition-all ${user.role === 'Admin' ? 'bg-slate-900 text-white border border-slate-900' : 'bg-slate-100 text-slate-600 border border-slate-200'}`}
                                     >
                                         {user.role === 'Admin' ? '管理员' : '普通用户'}
                                     </button>

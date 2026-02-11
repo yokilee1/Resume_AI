@@ -67,7 +67,7 @@ const UserProfilePage: React.FC = () => {
                 <User size={48} />
               )}
             </div>
-            <button className="absolute bottom-0 right-0 p-2 bg-indigo-600 text-white rounded-full shadow-md hover:bg-indigo-700 transition-colors">
+            <button className="absolute bottom-0 right-0 p-2 bg-slate-900 text-white rounded-full shadow-md hover:bg-black transition-colors">
               <Camera size={16} />
             </button>
           </div>
@@ -75,7 +75,7 @@ const UserProfilePage: React.FC = () => {
             <h2 className="text-xl font-bold text-slate-800">{formData.name}</h2>
             <div className="flex items-center justify-center md:justify-start gap-2 mt-1">
               <span className="text-slate-500">{formData.role === 'Student' ? '学生' : formData.role === 'Graduate' ? '应届生' : formData.role === 'Professional' ? '职场人士' : '管理员'}</span>
-              {formData.role === 'Admin' && <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold uppercase tracking-wider border border-indigo-200">员工</span>}
+              {formData.role === 'Admin' && <span className="text-[10px] bg-slate-900 text-white px-1.5 py-0.5 rounded font-bold uppercase tracking-wider border border-slate-900">员工</span>}
             </div>
           </div>
 
@@ -104,7 +104,7 @@ const UserProfilePage: React.FC = () => {
                     type="text"
                     value={formData.name}
                     onChange={(e) => handleChange('name', e.target.value)}
-                    className="block w-full pl-10 px-4 py-2 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="block w-full pl-10 px-4 py-2 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
                   />
                 </div>
               </div>
@@ -119,7 +119,7 @@ const UserProfilePage: React.FC = () => {
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleChange('email', e.target.value)}
-                    className="block w-full pl-10 px-4 py-2 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="block w-full pl-10 px-4 py-2 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900"
                   />
                 </div>
               </div>
@@ -133,7 +133,7 @@ const UserProfilePage: React.FC = () => {
                   <select
                     value={formData.role}
                     onChange={(e) => handleChange('role', e.target.value)}
-                    className="block w-full pl-10 px-4 py-2 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent appearance-none bg-white"
+                    className="block w-full pl-10 px-4 py-2 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-900 appearance-none bg-white"
                   >
                     <option value="Student">学生</option>
                     <option value="Graduate">应届毕业生</option>
@@ -152,7 +152,7 @@ const UserProfilePage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSaving}
-                className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 flex items-center shadow-lg shadow-indigo-200 transition-all"
+                className="bg-slate-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-black disabled:opacity-50 flex items-center shadow-lg shadow-slate-200/50 transition-all"
               >
                 {isSaving ? <Loader2 className="animate-spin" size={18} /> : (
                   <>

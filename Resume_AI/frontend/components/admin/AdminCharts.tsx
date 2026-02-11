@@ -21,8 +21,8 @@ export const SimpleLineChart = ({ data }: { data: { label: string; value: number
             <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
                 <defs>
                     <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="rgba(255, 255, 255, 1)" stopOpacity="1" />
-                        <stop offset="100%" stopColor="rgba(255, 255, 255, 1)" stopOpacity="0.8" />
+                        <stop offset="0%" stopColor="#0f172a" stopOpacity="1" />
+                        <stop offset="100%" stopColor="#334155" stopOpacity="0.8" />
                     </linearGradient>
                 </defs>
                 {/* Grid lines */}
@@ -54,7 +54,7 @@ export const SimpleLineChart = ({ data }: { data: { label: string; value: number
                             animate={{ scale: 1, opacity: 1 }}
                             transition={{ delay: 0.8 + i * 0.1 }}
                         >
-                            <circle cx={x} cy={y} r="4" fill="#fff" stroke="#4f46e5" strokeWidth="2.5" />
+                            <circle cx={x} cy={y} r="4" fill="#fff" stroke="#0f172a" strokeWidth="2.5" />
                         </motion.g>
                     );
                 })}

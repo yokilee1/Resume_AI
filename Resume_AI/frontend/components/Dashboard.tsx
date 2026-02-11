@@ -80,8 +80,8 @@ const Dashboard: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative">
       {/* Background decoration */}
       <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
-        <div className="absolute top-0 right-0 w-[30%] h-[30%] bg-indigo-50/50 rounded-full blur-[100px]"></div>
-        <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-purple-50/30 rounded-full blur-[120px]"></div>
+        <div className="absolute top-0 right-0 w-[30%] h-[30%] bg-slate-100/50 rounded-full blur-[100px]"></div>
+        <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-slate-100/30 rounded-full blur-[120px]"></div>
       </div>
 
       <div className="flex justify-between items-end mb-10">
@@ -98,7 +98,7 @@ const Dashboard: React.FC = () => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={onCreate}
-          className="bg-indigo-600 text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-indigo-700 transition-all flex items-center shadow-xl shadow-indigo-200"
+          className="bg-slate-900 text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-black transition-all flex items-center shadow-xl shadow-slate-200/50"
         >
           <Plus size={20} className="mr-2" />
           新建简历
@@ -111,14 +111,14 @@ const Dashboard: React.FC = () => {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center py-24 bg-white rounded-3xl border-2 border-dashed border-slate-200 shadow-sm"
         >
-          <div className="w-20 h-20 bg-indigo-50 text-indigo-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner">
+          <div className="w-20 h-20 bg-slate-50 text-slate-400 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-inner">
             <FileText size={40} />
           </div>
           <h3 className="text-xl font-bold text-slate-900 mb-3">暂无简历</h3>
           <p className="text-slate-500 max-w-sm mx-auto mb-8 font-medium">创建您的第一份简历，利用 AI 建议开始申请职位。</p>
           <button
             onClick={onCreate}
-            className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 flex items-center gap-2 mx-auto"
+            className="px-8 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-black transition-all shadow-lg shadow-slate-200/30 flex items-center gap-2 mx-auto"
           >
             立即创建 <ArrowRight size={18} />
           </button>
@@ -136,12 +136,12 @@ const Dashboard: React.FC = () => {
             whileHover={{ y: -5, transition: { duration: 0.2 } }}
             whileTap={{ scale: 0.98 }}
             onClick={onCreate}
-            className="group flex flex-col items-center justify-center h-64 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl hover:border-indigo-500 hover:bg-indigo-50/50 transition-all cursor-pointer shadow-sm hover:shadow-md"
+            className="group flex flex-col items-center justify-center h-64 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl hover:border-slate-400 hover:bg-slate-100/50 transition-all cursor-pointer shadow-sm hover:shadow-md"
           >
-            <div className="w-14 h-14 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 group-hover:border-indigo-200 transition-colors mb-4 shadow-sm">
+            <div className="w-14 h-14 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 group-hover:text-slate-900 group-hover:border-slate-400 transition-colors mb-4 shadow-sm">
               <Plus size={28} />
             </div>
-            <span className="text-slate-600 font-bold group-hover:text-indigo-700">创建新简历</span>
+            <span className="text-slate-600 font-bold group-hover:text-slate-900">创建新简历</span>
           </motion.button>
 
           {/* Resume Cards */}
@@ -180,9 +180,9 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-indigo-900/0 group-hover:bg-indigo-600/5 transition-colors flex items-center justify-center">
+                <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/5 transition-colors flex items-center justify-center">
                   <motion.div
-                    className="bg-indigo-600 text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-xl shadow-indigo-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all flex items-center gap-2"
+                    className="bg-slate-900 text-white px-5 py-2.5 rounded-full font-bold text-sm shadow-xl shadow-slate-900/10 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all flex items-center gap-2"
                   >
                     <Edit3 size={16} /> 编辑简历
                   </motion.div>
@@ -193,7 +193,7 @@ const Dashboard: React.FC = () => {
               <div className="p-4 border-t border-slate-100 bg-white z-10">
                 <div className="flex justify-between items-start">
                   <div onClick={() => onSelect(resume.id)} className="cursor-pointer flex-1 min-w-0">
-                    <h3 className="font-bold text-slate-800 truncate pr-2 group-hover:text-indigo-600 transition-colors" title={resume.title}>
+                    <h3 className="font-bold text-slate-800 truncate pr-2 group-hover:text-slate-900 transition-colors" title={resume.title}>
                       {resume.title || '未命名简历'}
                     </h3>
                     <div className="flex items-center text-xs text-slate-400 mt-1.5">
@@ -205,7 +205,7 @@ const Dashboard: React.FC = () => {
                   <div className="flex items-center gap-0.5 ml-2">
                     <button
                       onClick={(e) => { e.stopPropagation(); onDuplicate(resume.id); }}
-                      className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all"
+                      className="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-xl transition-all"
                       title="复制"
                     >
                       <Copy size={16} />

@@ -115,11 +115,11 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
             className="text-2xl font-black text-slate-900 bg-transparent border-none p-0 focus:ring-0 w-full placeholder-slate-200"
             placeholder="未命名简历"
           />
-          <Edit3 size={20} className="text-slate-300 group-focus-within:text-indigo-500 ml-2 flex-shrink-0 transition-colors" />
+          <Edit3 size={20} className="text-slate-300 group-focus-within:text-slate-900 ml-2 flex-shrink-0 transition-colors" />
         </div>
 
-        <div className="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100/50 shadow-sm shadow-indigo-100/20">
-          <div className="flex items-center gap-2 mb-3 text-[10px] font-bold text-indigo-400 uppercase tracking-widest">
+        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 shadow-sm shadow-slate-100/20">
+          <div className="flex items-center gap-2 mb-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
             <LayoutTemplate size={14} /> 简历模板
           </div>
           <div className="grid grid-cols-3 gap-3">
@@ -129,8 +129,8 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleTemplateChange(t as any)}
                 className={`px-3 py-2.5 text-xs font-bold rounded-xl border transition-all ${data.templateId === t
-                  ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-100'
-                  : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300 hover:text-indigo-600'
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-lg shadow-slate-200'
+                  : 'bg-white text-slate-600 border-slate-200 hover:border-slate-400 hover:text-slate-900'
                   }`}
               >
                 {templateTranslations[t] || t}
@@ -194,9 +194,9 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
             whileTap={{ scale: 0.98 }}
             onClick={() => handleOptimize('summary', data.personalInfo.summary, 'summary', (val) => handleInfoChange('summary', val))}
             disabled={optimizingId === 'summary' || !data.personalInfo.summary}
-            className="absolute right-2.5 bottom-2.5 bg-white text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-xl text-xs font-bold flex items-center transition-all border border-indigo-100 shadow-sm shadow-indigo-100/50 disabled:opacity-50"
+            className="absolute right-2.5 bottom-2.5 bg-white text-slate-900 hover:bg-slate-50 px-4 py-2 rounded-xl text-xs font-bold flex items-center transition-all border border-slate-200 shadow-sm shadow-slate-100/50 disabled:opacity-50"
           >
-            {optimizingId === 'summary' ? <Loader2 className="animate-spin mr-2" size={14} /> : <Sparkles size={14} className="mr-2 text-indigo-400" />}
+            {optimizingId === 'summary' ? <Loader2 className="animate-spin mr-2" size={14} /> : <Sparkles size={14} className="mr-2 text-slate-400" />}
             AI 润色
           </motion.button>
         </div>
@@ -210,7 +210,7 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={addEducation}
-            className="text-indigo-600 hover:text-indigo-700 flex items-center text-xs font-bold bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors"
+            className="text-slate-900 hover:text-black flex items-center text-xs font-bold bg-slate-100 px-3 py-1.5 rounded-lg transition-colors"
           >
             <Plus size={14} className="mr-1" /> 添加
           </motion.button>
@@ -221,7 +221,7 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
               key={edu.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-5 bg-slate-50/50 rounded-2xl border border-slate-100 relative group hover:border-indigo-100 hover:bg-white transition-all shadow-sm hover:shadow-md"
+              className="p-5 bg-slate-50/50 rounded-2xl border border-slate-100 relative group hover:border-slate-300 hover:bg-white transition-all shadow-sm hover:shadow-md"
             >
               <button
                 onClick={() => removeEducation(index)}
@@ -290,7 +290,7 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={addExperience}
-            className="text-indigo-600 hover:text-indigo-700 flex items-center text-xs font-bold bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors"
+            className="text-slate-900 hover:text-black flex items-center text-xs font-bold bg-slate-100 px-3 py-1.5 rounded-lg transition-colors"
           >
             <Plus size={14} className="mr-1" /> 添加
           </motion.button>
@@ -361,10 +361,10 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleOptimize(exp.id, exp.description, 'bullet', (val) => updateExperience(index, 'description', val))}
                   disabled={optimizingId === exp.id || !exp.description}
-                  className="absolute right-2.5 bottom-2.5 bg-white text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-xl text-xs font-bold flex items-center transition-all border border-indigo-100 shadow-sm shadow-indigo-100/50 disabled:opacity-50"
+                  className="absolute right-2.5 bottom-2.5 bg-white text-slate-900 hover:bg-slate-50 px-4 py-2 rounded-xl text-xs font-bold flex items-center transition-all border border-slate-200 shadow-sm shadow-slate-100/50 disabled:opacity-50"
                   title="AI 润色描述"
                 >
-                  {optimizingId === exp.id ? <Loader2 className="animate-spin mr-2" size={14} /> : <Sparkles size={14} className="mr-2 text-indigo-400" />}
+                  {optimizingId === exp.id ? <Loader2 className="animate-spin mr-2" size={14} /> : <Sparkles size={14} className="mr-2 text-slate-400" />}
                   AI 润色
                 </motion.button>
               </div>
@@ -381,7 +381,7 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={addProject}
-            className="text-indigo-600 hover:text-indigo-700 flex items-center text-xs font-bold bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors"
+            className="text-slate-900 hover:text-black flex items-center text-xs font-bold bg-slate-100 px-3 py-1.5 rounded-lg transition-colors"
           >
             <Plus size={14} className="mr-1" /> 添加
           </motion.button>
@@ -434,10 +434,10 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleOptimize(proj.id, proj.description, 'bullet', (val) => updateProject(index, 'description', val))}
                   disabled={optimizingId === proj.id || !proj.description}
-                  className="absolute right-2.5 bottom-2.5 bg-white text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-xl text-xs font-bold flex items-center transition-all border border-indigo-100 shadow-sm shadow-indigo-100/50 disabled:opacity-50"
+                  className="absolute right-2.5 bottom-2.5 bg-white text-slate-900 hover:bg-slate-50 px-4 py-2 rounded-xl text-xs font-bold flex items-center transition-all border border-slate-200 shadow-sm shadow-slate-100/50 disabled:opacity-50"
                   title="AI 润色描述"
                 >
-                  {optimizingId === proj.id ? <Loader2 className="animate-spin mr-2" size={14} /> : <Sparkles size={14} className="mr-2 text-indigo-400" />}
+                  {optimizingId === proj.id ? <Loader2 className="animate-spin mr-2" size={14} /> : <Sparkles size={14} className="mr-2 text-slate-400" />}
                   AI 润色
                 </motion.button>
               </div>
@@ -462,10 +462,10 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
             whileTap={{ scale: 0.98 }}
             onClick={() => handleOptimize('skills', data.skills, 'skills', (val) => onChange({ ...data, skills: val }))}
             disabled={optimizingId === 'skills' || !data.skills}
-            className="absolute right-2.5 bottom-2.5 bg-white text-indigo-600 hover:bg-indigo-50 px-4 py-2 rounded-xl text-xs font-bold flex items-center transition-all border border-indigo-100 shadow-sm shadow-indigo-100/50 disabled:opacity-50"
+            className="absolute right-2.5 bottom-2.5 bg-white text-slate-900 hover:bg-slate-50 px-4 py-2 rounded-xl text-xs font-bold flex items-center transition-all border border-slate-200 shadow-sm shadow-slate-100/50 disabled:opacity-50"
             title="AI 格式化技能"
           >
-            {optimizingId === 'skills' ? <Loader2 className="animate-spin mr-2" size={14} /> : <Sparkles size={14} className="mr-2 text-indigo-400" />}
+            {optimizingId === 'skills' ? <Loader2 className="animate-spin mr-2" size={14} /> : <Sparkles size={14} className="mr-2 text-slate-400" />}
             AI 格式化
           </motion.button>
         </div>
@@ -473,7 +473,7 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
 
       <style>{`
         .input-field {
-          @apply w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 bg-slate-50/50 placeholder:text-slate-400 transition-all;
+          @apply w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-400/10 bg-slate-50/50 placeholder:text-slate-400 transition-all;
         }
         .section-header {
           @apply text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2;

@@ -165,18 +165,18 @@ const JobAssistant: React.FC = () => {
 
         {/* Progress Stepper */}
         <div className="flex items-center justify-center mb-8">
-          <div className={`flex items-center gap-2 ${currentStep === 'FIND_JOB' ? 'text-indigo-600 font-bold' : 'text-slate-500'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${currentStep === 'FIND_JOB' ? 'bg-indigo-100' : 'bg-slate-200'}`}>1</div>
+          <div className={`flex items-center gap-2 ${currentStep === 'FIND_JOB' ? 'text-slate-900 font-bold' : 'text-slate-500'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${currentStep === 'FIND_JOB' ? 'bg-slate-200' : 'bg-slate-100'}`}>1</div>
             <span>查找岗位</span>
           </div>
           <div className="w-12 h-px bg-slate-300 mx-4"></div>
-          <div className={`flex items-center gap-2 ${currentStep === 'SELECT_RESUME' ? 'text-indigo-600 font-bold' : 'text-slate-500'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${currentStep === 'SELECT_RESUME' ? 'bg-indigo-100' : 'bg-slate-200'}`}>2</div>
+          <div className={`flex items-center gap-2 ${currentStep === 'SELECT_RESUME' ? 'text-slate-900 font-bold' : 'text-slate-500'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${currentStep === 'SELECT_RESUME' ? 'bg-slate-200' : 'bg-slate-100'}`}>2</div>
             <span>选择简历</span>
           </div>
           <div className="w-12 h-px bg-slate-300 mx-4"></div>
-          <div className={`flex items-center gap-2 ${currentStep === 'RESULT' ? 'text-indigo-600 font-bold' : 'text-slate-500'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${currentStep === 'RESULT' ? 'bg-indigo-100' : 'bg-slate-200'}`}>3</div>
+          <div className={`flex items-center gap-2 ${currentStep === 'RESULT' ? 'text-slate-900 font-bold' : 'text-slate-500'}`}>
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${currentStep === 'RESULT' ? 'bg-slate-200' : 'bg-slate-100'}`}>3</div>
             <span>匹配结果</span>
           </div>
         </div>
@@ -192,12 +192,12 @@ const JobAssistant: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="筛选职位 (例如：开发、字节跳动、上海)..."
-                  className="flex-1 rounded-lg border border-slate-300 px-4 py-3 text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                  className="flex-1 rounded-lg border border-slate-300 px-4 py-3 text-slate-800 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 mb-0"
                 />
                 <button
                   type="submit"
                   disabled={isSearching}
-                  className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 flex items-center"
+                  className="bg-slate-900 text-white px-6 py-2 rounded-lg font-medium hover:bg-black disabled:opacity-50 flex items-center"
                 >
                   {isSearching ? <Loader2 className="animate-spin" size={20} /> : <Search size={20} />}
                 </button>
@@ -208,7 +208,7 @@ const JobAssistant: React.FC = () => {
                 <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-3">
                   {searchResults.length > 0 ? `可用职位 (${searchResults.length})` : '未找到相关职位'}
                   {dataSource && (
-                    <span className={`ml-2 px-2 py-0.5 rounded-full text-[10px] font-bold ${dataSource === 'DB' ? 'bg-green-100 text-green-700' : 'bg-indigo-100 text-indigo-700'}`}>
+                    <span className={`ml-2 px-2 py-0.5 rounded-full text-[10px] font-bold ${dataSource === 'DB' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700'}`}>
                       {dataSource === 'DB' ? '数据库' : 'AI'}
                     </span>
                   )}
@@ -220,8 +220,8 @@ const JobAssistant: React.FC = () => {
                         key={idx}
                         onClick={() => handleSelectJob(job)}
                         className={`p-4 rounded-lg border cursor-pointer transition-all ${selectedJob === job
-                          ? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500'
-                          : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50'
+                          ? 'border-slate-900 bg-slate-50 ring-1 ring-slate-900'
+                          : 'border-slate-200 hover:border-slate-400 hover:bg-slate-50'
                           }`}
                       >
                         <div className="flex justify-between items-start mb-2">
@@ -241,7 +241,7 @@ const JobAssistant: React.FC = () => {
                               )}
                             </div>
                           </div>
-                          {selectedJob === job && <CheckCircle size={18} className="text-indigo-600 flex-shrink-0 ml-2" />}
+                          {selectedJob === job && <CheckCircle size={18} className="text-slate-900 flex-shrink-0 ml-2" />}
                         </div>
                         <p className="text-xs text-slate-500 mt-2 line-clamp-3 leading-relaxed border-t border-slate-100 pt-2">{job.description}</p>
                       </div>
@@ -262,7 +262,7 @@ const JobAssistant: React.FC = () => {
                   value={manualJobDescription}
                   onChange={(e) => setManualJobDescription(e.target.value)}
                   placeholder="职位描述将在此显示..."
-                  className="w-full h-40 rounded-lg border border-slate-300 px-4 py-3 text-sm text-slate-800 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 mb-4"
+                  className="w-full h-40 rounded-lg border border-slate-300 px-4 py-3 text-sm text-slate-800 focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 mb-4"
                 />
 
                 <div className="flex justify-end">
@@ -293,18 +293,18 @@ const JobAssistant: React.FC = () => {
                     key={resume.id}
                     onClick={() => handleResumeSelect(resume.id)}
                     className={`p-4 rounded-xl border cursor-pointer transition-all ${selectedResumeId === resume.id
-                      ? 'border-indigo-500 bg-indigo-50 ring-1 ring-indigo-500 shadow-sm'
-                      : 'border-slate-200 hover:border-indigo-300 hover:bg-slate-50'
+                      ? 'border-slate-900 bg-slate-50 ring-1 ring-slate-900 shadow-sm'
+                      : 'border-slate-200 hover:border-slate-400 hover:bg-slate-50'
                       }`}
                   >
-                    <div className={`p-3 rounded-lg ${selectedResumeId === resume.id ? 'bg-indigo-200 text-indigo-700' : 'bg-slate-100 text-slate-500'}`}>
+                    <div className={`p-3 rounded-lg ${selectedResumeId === resume.id ? 'bg-slate-200 text-slate-900' : 'bg-slate-100 text-slate-500'}`}>
                       <FileText size={24} />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-bold text-slate-900">{resume.title || '未命名'}</h4>
                       <p className="text-xs text-slate-500">更新于: {new Date(resume.lastModified).toLocaleDateString('zh-CN')}</p>
                     </div>
-                    {selectedResumeId === resume.id && <CheckCircle size={20} className="text-indigo-600" />}
+                    {selectedResumeId === resume.id && <CheckCircle size={20} className="text-slate-900" />}
                   </div>
                 ))}
 
@@ -325,7 +325,7 @@ const JobAssistant: React.FC = () => {
                 <button
                   onClick={handleAnalyze}
                   disabled={!selectedResumeId}
-                  className="bg-indigo-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-md shadow-indigo-200"
+                  className="bg-slate-900 text-white px-8 py-3 rounded-lg font-bold hover:bg-black disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-md shadow-slate-200"
                 >
                   开始匹配分析 <Briefcase size={18} className="ml-2" />
                 </button>
@@ -339,7 +339,7 @@ const JobAssistant: React.FC = () => {
           <div className="animate-in fade-in slide-in-from-right-4">
             {isMatching ? (
               <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-slate-200 shadow-sm">
-                <Loader2 size={48} className="text-indigo-600 animate-spin mb-4" />
+                <Loader2 size={48} className="text-slate-900 animate-spin mb-4" />
                 <h3 className="text-xl font-bold text-slate-800">正在分析匹配度...</h3>
                 <p className="text-slate-500 mt-2">正在将您的简历技能与职位要求进行对比。</p>
               </div>
@@ -348,14 +348,14 @@ const JobAssistant: React.FC = () => {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-8 border-b border-slate-100">
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">分析报告</span>
+                      <span className="bg-slate-100 text-slate-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">分析报告</span>
                     </div>
                     <h2 className="text-2xl font-bold text-slate-900">职位匹配度</h2>
                   </div>
                   <div className="flex items-center gap-3 no-print">
                     <button
                       onClick={() => handleExportReport()}
-                      className="p-2 text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-full transition-colors border border-slate-200"
+                      className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-full transition-colors border border-slate-200"
                       title="导出报告"
                     >
                       <Printer size={20} />
@@ -431,14 +431,14 @@ const JobAssistant: React.FC = () => {
                     </div>
 
                     <div>
-                      <h4 className="font-bold text-indigo-700 mb-4 flex items-center gap-2">
+                      <h4 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
                         <CheckCircle size={18} /> 改进建议
                       </h4>
-                      <div className="bg-indigo-50 rounded-lg p-5 border border-indigo-100 h-full">
+                      <div className="bg-slate-50 rounded-lg p-5 border border-slate-100 h-full">
                         <ul className="space-y-3">
                           {matchResult.suggestions.map((sugg, i) => (
-                            <li key={i} className="flex items-start text-sm text-indigo-800">
-                              <span className="bg-indigo-200 text-indigo-700 rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold mr-2 flex-shrink-0 mt-0.5">{i + 1}</span>
+                            <li key={i} className="flex items-start text-sm text-slate-800">
+                              <span className="bg-slate-200 text-slate-700 rounded-full w-5 h-5 flex items-center justify-center text-[10px] font-bold mr-2 flex-shrink-0 mt-0.5">{i + 1}</span>
                               {sugg}
                             </li>
                           ))}
@@ -450,7 +450,7 @@ const JobAssistant: React.FC = () => {
                 </div>
 
                 <div className="mt-10 pt-6 border-t border-slate-100 flex justify-center no-print">
-                  <button onClick={resetFlow} className="text-slate-600 font-medium hover:text-indigo-600 flex items-center gap-2">
+                  <button onClick={resetFlow} className="text-slate-600 font-medium hover:text-slate-900 flex items-center gap-2">
                     开始新的分析 <ChevronRight size={16} />
                   </button>
                 </div>

@@ -51,7 +51,7 @@ function App() {
 
   return (
     <div className="h-screen w-full flex flex-col bg-slate-100 text-slate-900 font-sans overflow-hidden">
-      <Navbar />
+      <Navbar onExport={handleExportPDF} />
 
       {/* Main Content Area */}
       <main className="flex-1 w-full overflow-hidden relative">

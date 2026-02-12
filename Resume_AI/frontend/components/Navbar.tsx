@@ -9,12 +9,17 @@ import {
     LogOut,
     Sparkles,
     Menu,
-    X
+    X,
+    Printer
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useResumes } from '../context/ResumeContext';
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+    onExport?: () => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ onExport }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { isAuthenticated, logout } = useAuth();
@@ -148,60 +153,79 @@ const Navbar: React.FC = () => {
 
     // App Mode Navbar
     return (
-        <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 no-print">
-            <motion.nav
-                initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="bg-black/80 backdrop-blur-xl border border-white/10 rounded-full px-4 md:px-6 h-14 flex items-center gap-4 md:gap-8 shadow-2xl shadow-black/20"
-            >
-                <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/dashboard')}>
-                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-black font-bold">R</div>
-                    <span className="text-lg font-bold text-white hidden lg:block tracking-tight">Resume AI</span>
-                </div>
+        <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 no-print pointer-events-none">
+            <div className="relative flex items-center">
+                <motion.nav
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    className="pointer-events-auto bg-black/80 backdrop-blur-xl border border-white/10 rounded-full px-4 md:px-6 h-14 flex items-center gap-4 md:gap-8 shadow-2xl shadow-black/20"
+                >
+                    <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/dashboard')}>
+                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-black font-bold">R</div>
+                        <span className="text-lg font-bold text-white hidden lg:block tracking-tight">Resume AI</span>
+                    </div>
 
-                <div className="flex bg-white/10 p-1 rounded-full border border-white/5">
-                    <button
-                        onClick={() => navigate('/dashboard')}
-                        className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-bold transition-all flex items-center gap-2 ${isActive('/dashboard') ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-300 hover:text-white'}`}
-                    >
-                        <LayoutDashboard size={16} /> <span className="hidden sm:inline">控制面板</span>
-                    </button>
-
-                    {currentResumeId && (
+                    <div className="flex bg-white/10 p-1 rounded-full border border-white/5">
                         <button
-                            onClick={() => navigate(`/editor/${currentResumeId}`)}
-                            className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-bold transition-all flex items-center gap-2 ${isEditor ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-300 hover:text-white'}`}
+                            onClick={() => navigate('/dashboard')}
+                            className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-bold transition-all flex items-center gap-2 ${isActive('/dashboard') ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-300 hover:text-white'}`}
                         >
-                            <FileText size={16} /> <span className="hidden sm:inline">简历编辑</span>
+                            <LayoutDashboard size={16} /> <span className="hidden sm:inline">控制面板</span>
                         </button>
-                    )}
 
-                    <button
-                        onClick={() => navigate('/match')}
-                        className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-bold transition-all flex items-center gap-2 ${isActive('/match') ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-300 hover:text-white'}`}
-                    >
-                        <Search size={16} /> <span className="hidden sm:inline">职位匹配</span>
-                    </button>
-                </div>
+                        {currentResumeId && (
+                            <button
+                                onClick={() => navigate(`/editor/${currentResumeId}`)}
+                                className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-bold transition-all flex items-center gap-2 ${isEditor ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-300 hover:text-white'}`}
+                            >
+                                <FileText size={16} /> <span className="hidden sm:inline">简历编辑</span>
+                            </button>
+                        )}
 
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={() => navigate('/profile')}
-                        className={`p-2 rounded-full transition-all ${isActive('/profile') ? 'bg-white text-slate-900' : 'text-slate-400 hover:text-white hover:bg-white/10'}`}
-                        title="个人资料"
-                    >
-                        <User size={20} />
-                    </button>
+                        <button
+                            onClick={() => navigate('/match')}
+                            className={`px-4 py-1.5 rounded-full text-xs md:text-sm font-bold transition-all flex items-center gap-2 ${isActive('/match') ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-300 hover:text-white'}`}
+                        >
+                            <Search size={16} /> <span className="hidden sm:inline">职位匹配</span>
+                        </button>
+                    </div>
 
-                    <button
-                        onClick={() => { logout(); navigate('/'); }}
-                        className="p-2 text-slate-400 hover:text-red-400 hover:bg-white/10 rounded-full transition-all"
-                        title="退出登录"
-                    >
-                        <LogOut size={20} />
-                    </button>
-                </div>
-            </motion.nav>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => navigate('/profile')}
+                            className={`p-2 rounded-full transition-all ${isActive('/profile') ? 'bg-white text-slate-900' : 'text-slate-400 hover:text-white hover:bg-white/10'}`}
+                            title="个人资料"
+                        >
+                            <User size={20} />
+                        </button>
+
+                        <button
+                            onClick={() => { logout(); navigate('/'); }}
+                            className="p-2 text-slate-400 hover:text-red-400 hover:bg-white/10 rounded-full transition-all"
+                            title="退出登录"
+                        >
+                            <LogOut size={20} />
+                        </button>
+                    </div>
+                </motion.nav>
+
+                {/* Floating Export Button for Editor - Closer to navbar */}
+                {isEditor && onExport && (
+                    <div className="absolute left-[calc(100%+0.75rem)] h-14 flex items-center">
+                        <motion.button
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={onExport}
+                            className="pointer-events-auto w-14 h-14 bg-black/80 backdrop-blur-xl border border-white/10 rounded-full flex items-center justify-center text-white hover:bg-black transition-all shadow-xl shadow-black/20"
+                            title="下载 PDF"
+                        >
+                            <Printer size={20} />
+                        </motion.button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

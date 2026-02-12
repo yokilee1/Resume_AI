@@ -143,69 +143,86 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
 
       {/* Personal Info */}
       <section className="mb-10">
-        <h3 className="section-header">个人信息</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            type="text"
-            placeholder="姓名"
-            className="input-field"
-            value={data.personalInfo.fullName}
-            onChange={e => handleInfoChange('fullName', e.target.value)}
-          />
-          <input
-            type="email"
-            placeholder="邮箱"
-            className="input-field"
-            value={data.personalInfo.email}
-            onChange={e => handleInfoChange('email', e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="电话"
-            className="input-field"
-            value={data.personalInfo.phone}
-            onChange={e => handleInfoChange('phone', e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="LinkedIn 链接"
-            className="input-field"
-            value={data.personalInfo.linkedin}
-            onChange={e => handleInfoChange('linkedin', e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="个人网站 / 作品集"
-            className="input-field md:col-span-2"
-            value={data.personalInfo.website}
-            onChange={e => handleInfoChange('website', e.target.value)}
-          />
+        <h3 className="section-header font-bold">个人信息</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+          <div className="space-y-2">
+            <label className="field-label">姓名：</label>
+            <input
+              type="text"
+              placeholder="请输入姓名"
+              className="input-field-standard"
+              value={data.personalInfo.fullName}
+              onChange={e => handleInfoChange('fullName', e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="field-label">邮箱：</label>
+            <input
+              type="email"
+              placeholder="example@mail.com"
+              className="input-field-standard"
+              value={data.personalInfo.email}
+              onChange={e => handleInfoChange('email', e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="field-label">电话：</label>
+            <input
+              type="text"
+              placeholder="请输入电话号码"
+              className="input-field-standard"
+              value={data.personalInfo.phone}
+              onChange={e => handleInfoChange('phone', e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="field-label">LinkedIn 链接：</label>
+            <input
+              type="text"
+              placeholder="linkedin.com/in/username"
+              className="input-field-standard"
+              value={data.personalInfo.linkedin}
+              onChange={e => handleInfoChange('linkedin', e.target.value)}
+            />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <label className="field-label">个人网站 / 作品集：</label>
+            <input
+              type="text"
+              placeholder="https://yourportfolio.com"
+              className="input-field-standard"
+              value={data.personalInfo.website}
+              onChange={e => handleInfoChange('website', e.target.value)}
+            />
+          </div>
         </div>
-        <div className="mt-5 relative">
-          <label className="block text-xs font-bold text-slate-500 mb-2 ml-1">专业简介</label>
-          <textarea
-            className="input-field w-full h-32 pb-10"
-            placeholder="简要描述您的职业目标..."
-            value={data.personalInfo.summary}
-            onChange={e => handleInfoChange('summary', e.target.value)}
-          />
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => handleOptimize('summary', data.personalInfo.summary, 'summary', (val) => handleInfoChange('summary', val))}
-            disabled={optimizingId === 'summary' || !data.personalInfo.summary}
-            className="absolute right-2.5 bottom-2.5 bg-white text-slate-900 hover:bg-slate-50 px-4 py-2 rounded-xl text-xs font-bold flex items-center transition-all border border-slate-200 shadow-sm shadow-slate-100/50 disabled:opacity-50"
-          >
-            {optimizingId === 'summary' ? <Loader2 className="animate-spin mr-2" size={14} /> : <Sparkles size={14} className="mr-2 text-slate-400" />}
-            AI 润色
-          </motion.button>
+        <div className="mt-8 relative space-y-2">
+          <label className="field-label">专业简介：</label>
+          <div className="relative">
+            <textarea
+              className="input-field-standard w-full h-32 pb-12 resize-none"
+              placeholder="简要描述您的职业目标和核心竞争力..."
+              value={data.personalInfo.summary}
+              onChange={e => handleInfoChange('summary', e.target.value)}
+            />
+            <motion.button
+              whileHover={{ scale: 1.02, x: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => handleOptimize('summary', data.personalInfo.summary, 'summary', (val) => handleInfoChange('summary', val))}
+              disabled={optimizingId === 'summary' || !data.personalInfo.summary}
+              className="absolute right-3 bottom-3 bg-slate-900 text-white hover:bg-black px-4 py-2 rounded-xl text-[10px] font-black flex items-center transition-all shadow-lg shadow-slate-200 disabled:opacity-50"
+            >
+              {optimizingId === 'summary' ? <Loader2 className="animate-spin mr-2" size={12} /> : <Sparkles size={12} className="mr-2" />}
+              AI 智能润色
+            </motion.button>
+          </div>
         </div>
       </section>
 
       {/* Education */}
       <section className="mb-10">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="section-header">教育经历</h3>
+          <h3 className="section-header font-bold">教育经历</h3>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -215,64 +232,66 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
             <Plus size={14} className="mr-1" /> 添加
           </motion.button>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-6">
           {data.education.map((edu, index) => (
             <motion.div
               key={edu.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-5 bg-slate-50/50 rounded-2xl border border-slate-100 relative group hover:border-slate-300 hover:bg-white transition-all shadow-sm hover:shadow-md"
+              className="p-8 bg-white rounded-[2rem] border border-slate-100 relative group hover:border-slate-300 transition-all shadow-sm hover:shadow-xl hover:shadow-slate-200/20"
             >
               <button
                 onClick={() => removeEducation(index)}
-                className="absolute top-3 right-3 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1"
+                className="absolute top-6 right-6 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-50 rounded-xl"
                 title="删除"
               >
-                <Trash2 size={16} />
+                <Trash2 size={18} />
               </button>
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">学校</label>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-8">
+                <div className="space-y-2">
+                  <label className="field-label">学校名称：</label>
                   <input
-                    placeholder="学校名称"
-                    className="input-field"
+                    placeholder="例如：北京大学"
+                    className="input-field-standard"
                     value={edu.school}
                     onChange={e => updateEducation(index, 'school', e.target.value)}
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">学位</label>
+                <div className="space-y-2">
+                  <label className="field-label">专业 ：</label>
                   <input
-                    placeholder="学位"
-                    className="input-field"
+                    placeholder="例如：计算机科学"
+                    className="input-field-standard"
                     value={edu.degree}
                     onChange={e => updateEducation(index, 'degree', e.target.value)}
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">开始日期</label>
+                <div className="space-y-2">
+                  <label className="field-label">开始日期：</label>
                   <input
-                    placeholder="YYYY-MM"
-                    className="input-field"
+                    placeholder="YYYY.MM"
+                    className="input-field-standard"
                     value={edu.startDate}
                     onChange={e => updateEducation(index, 'startDate', e.target.value)}
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">结束日期</label>
+                <div className="space-y-2">
+                  <label className="field-label">结束日期：</label>
                   <input
-                    placeholder="至今"
-                    className="input-field"
+                    placeholder="YYYY.MM 或 至今"
+                    className="input-field-standard"
                     value={edu.endDate}
                     onChange={e => updateEducation(index, 'endDate', e.target.value)}
                   />
                 </div>
               </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">描述</label>
+
+              <div className="space-y-2">
+                <label className="field-label">补充描述（可选）：</label>
                 <textarea
-                  placeholder="详情描述（可选）"
-                  className="input-field w-full h-20 text-xs"
+                  placeholder="主修课程、荣誉奖项等..."
+                  className="input-field-standard w-full h-24 resize-none"
                   value={edu.description}
                   onChange={e => updateEducation(index, 'description', e.target.value)}
                 />
@@ -285,7 +304,7 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
       {/* Experience */}
       <section className="mb-10">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="section-header">工作/实习经历</h3>
+          <h3 className="section-header font-bold">工作/实习经历：</h3>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -295,77 +314,78 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
             <Plus size={14} className="mr-1" /> 添加
           </motion.button>
         </div>
-        <div className="space-y-5">
+        <div className="space-y-6">
           {data.experience.map((exp, index) => (
             <motion.div
               key={exp.id}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-5 bg-slate-50/50 rounded-2xl border border-slate-100 relative group hover:border-indigo-100 hover:bg-white transition-all shadow-sm hover:shadow-md"
+              className="p-8 bg-white rounded-[2rem] border border-slate-100 relative group hover:border-slate-300 transition-all shadow-sm hover:shadow-xl hover:shadow-slate-200/20"
             >
               <button
                 onClick={() => removeExperience(index)}
-                className="absolute top-3 right-3 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-1"
+                className="absolute top-6 right-6 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-red-50 rounded-xl"
                 title="删除"
               >
-                <Trash2 size={16} />
+                <Trash2 size={18} />
               </button>
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">公司</label>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-8">
+                <div className="space-y-2">
+                  <label className="field-label">公司名称：</label>
                   <input
-                    placeholder="公司名称"
-                    className="input-field"
+                    placeholder="例如：腾讯科技"
+                    className="input-field-standard"
                     value={exp.company}
                     onChange={e => updateExperience(index, 'company', e.target.value)}
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">职位</label>
+                <div className="space-y-2">
+                  <label className="field-label">担任职位：</label>
                   <input
-                    placeholder="职位"
-                    className="input-field"
+                    placeholder="例如：产品经理"
+                    className="input-field-standard"
                     value={exp.position}
                     onChange={e => updateExperience(index, 'position', e.target.value)}
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">开始日期</label>
+                <div className="space-y-2">
+                  <label className="field-label">入职日期：</label>
                   <input
-                    placeholder="YYYY-MM"
-                    className="input-field"
+                    placeholder="YYYY.MM"
+                    className="input-field-standard"
                     value={exp.startDate}
                     onChange={e => updateExperience(index, 'startDate', e.target.value)}
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">结束日期</label>
+                <div className="space-y-2">
+                  <label className="field-label">离职日期：</label>
                   <input
-                    placeholder="至今"
-                    className="input-field"
+                    placeholder="YYYY.MM 或 至今"
+                    className="input-field-standard"
                     value={exp.endDate}
                     onChange={e => updateExperience(index, 'endDate', e.target.value)}
                   />
                 </div>
               </div>
-              <div className="relative space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">职责与成就</label>
+
+              <div className="relative space-y-2">
+                <label className="field-label">工作职责与核心成就：</label>
                 <textarea
-                  placeholder="描述您的工作职责和成就..."
-                  className="input-field w-full h-40 pb-10 text-xs leading-relaxed"
+                  placeholder="描述您的核心工作内容、解决的问题以及取得的可量化成果..."
+                  className="input-field-standard w-full h-48 pb-12 resize-none"
                   value={exp.description}
                   onChange={e => updateExperience(index, 'description', e.target.value)}
                 />
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, x: -2 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleOptimize(exp.id, exp.description, 'bullet', (val) => updateExperience(index, 'description', val))}
                   disabled={optimizingId === exp.id || !exp.description}
-                  className="absolute right-2.5 bottom-2.5 bg-white text-slate-900 hover:bg-slate-50 px-4 py-2 rounded-xl text-xs font-bold flex items-center transition-all border border-slate-200 shadow-sm shadow-slate-100/50 disabled:opacity-50"
-                  title="AI 润色描述"
+                  className="absolute right-3 bottom-3 bg-slate-900 text-white hover:bg-black px-4 py-2 rounded-xl text-[10px] font-black flex items-center transition-all shadow-lg shadow-slate-200 disabled:opacity-50"
                 >
-                  {optimizingId === exp.id ? <Loader2 className="animate-spin mr-2" size={14} /> : <Sparkles size={14} className="mr-2 text-slate-400" />}
-                  AI 润色
+                  {optimizingId === exp.id ? <Loader2 className="animate-spin mr-2" size={12} /> : <Sparkles size={12} className="mr-2" />}
+                  AI 智能润色
                 </motion.button>
               </div>
             </motion.div>
@@ -376,7 +396,7 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
       {/* Projects */}
       <section className="mb-10">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="section-header">项目状况</h3>
+          <h3 className="section-header font-bold">项目状况：</h3>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -401,44 +421,44 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
               >
                 <Trash2 size={16} />
               </button>
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">项目名称</label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mb-8">
+                <div className="space-y-2">
+                  <label className="field-label">项目名称：</label>
                   <input
                     placeholder="项目名称"
-                    className="input-field"
+                    className="input-field-standard"
                     value={proj.name}
                     onChange={e => updateProject(index, 'name', e.target.value)}
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">您的角色</label>
+                <div className="space-y-2">
+                  <label className="field-label">您的角色：</label>
                   <input
                     placeholder="您的角色"
-                    className="input-field"
+                    className="input-field-standard"
                     value={proj.role}
                     onChange={e => updateProject(index, 'role', e.target.value)}
                   />
                 </div>
               </div>
-              <div className="relative space-y-1">
-                <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">项目描述</label>
+              <div className="relative space-y-2">
+                <label className="field-label">项目描述：</label>
                 <textarea
                   placeholder="项目描述..."
-                  className="input-field w-full h-32 pb-10 text-xs leading-relaxed"
+                  className="input-field-standard w-full h-32 pb-12 resize-none"
                   value={proj.description}
                   onChange={e => updateProject(index, 'description', e.target.value)}
                 />
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, x: -2 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => handleOptimize(proj.id, proj.description, 'bullet', (val) => updateProject(index, 'description', val))}
                   disabled={optimizingId === proj.id || !proj.description}
-                  className="absolute right-2.5 bottom-2.5 bg-white text-slate-900 hover:bg-slate-50 px-4 py-2 rounded-xl text-xs font-bold flex items-center transition-all border border-slate-200 shadow-sm shadow-slate-100/50 disabled:opacity-50"
+                  className="absolute right-3 bottom-3 bg-slate-900 text-white hover:bg-black px-4 py-2 rounded-xl text-[10px] font-black flex items-center transition-all shadow-lg shadow-slate-200 disabled:opacity-50"
                   title="AI 润色描述"
                 >
-                  {optimizingId === proj.id ? <Loader2 className="animate-spin mr-2" size={14} /> : <Sparkles size={14} className="mr-2 text-slate-400" />}
-                  AI 润色
+                  {optimizingId === proj.id ? <Loader2 className="animate-spin mr-2" size={12} /> : <Sparkles size={12} className="mr-2" />}
+                  AI 智能润色
                 </motion.button>
               </div>
             </motion.div>
@@ -446,28 +466,28 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
         </div>
       </section>
 
-      {/* Skills */}
       <section className="mb-24">
-        <h3 className="section-header">技能专长</h3>
-        <div className="relative space-y-1">
-          <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">核心技能</label>
-          <textarea
-            className="input-field w-full h-32 pb-10 leading-relaxed"
-            placeholder="列出您的技能（逗号分隔或列表）..."
-            value={data.skills}
-            onChange={e => onChange({ ...data, skills: e.target.value })}
-          />
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => handleOptimize('skills', data.skills, 'skills', (val) => onChange({ ...data, skills: val }))}
-            disabled={optimizingId === 'skills' || !data.skills}
-            className="absolute right-2.5 bottom-2.5 bg-white text-slate-900 hover:bg-slate-50 px-4 py-2 rounded-xl text-xs font-bold flex items-center transition-all border border-slate-200 shadow-sm shadow-slate-100/50 disabled:opacity-50"
-            title="AI 格式化技能"
-          >
-            {optimizingId === 'skills' ? <Loader2 className="animate-spin mr-2" size={14} /> : <Sparkles size={14} className="mr-2 text-slate-400" />}
-            AI 格式化
-          </motion.button>
+        <h3 className="section-header font-bold">技能专长：</h3>
+        <div className="relative space-y-2">
+          <div className="relative">
+            <textarea
+              className="input-field-standard w-full h-32 pb-12 resize-none"
+              placeholder="列出您的技能（逗号分隔或列表）..."
+              value={data.skills}
+              onChange={e => onChange({ ...data, skills: e.target.value })}
+            />
+            <motion.button
+              whileHover={{ scale: 1.02, x: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => handleOptimize('skills', data.skills, 'skills', (val) => onChange({ ...data, skills: val }))}
+              disabled={optimizingId === 'skills' || !data.skills}
+              className="absolute right-3 bottom-3 bg-slate-900 text-white hover:bg-black px-4 py-2 rounded-xl text-[10px] font-black flex items-center transition-all shadow-lg shadow-slate-200 disabled:opacity-50"
+              title="AI 格式化技能"
+            >
+              {optimizingId === 'skills' ? <Loader2 className="animate-spin mr-2" size={12} /> : <Sparkles size={12} className="mr-2" />}
+              AI 智能格式化
+            </motion.button>
+          </div>
         </div>
       </section>
 
@@ -475,8 +495,14 @@ const EditorForm: React.FC<EditorFormProps> = ({ data, onChange }) => {
         .input-field {
           @apply w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-800 focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-400/10 bg-slate-50/50 placeholder:text-slate-400 transition-all;
         }
+        .input-field-standard {
+          @apply w-full rounded-[1.25rem] border-2 border-slate-100 px-5 py-4 text-sm font-bold text-slate-900 focus:border-slate-900 focus:outline-none focus:ring-0 bg-white placeholder:text-slate-300 transition-all shadow-sm focus:shadow-xl focus:shadow-slate-200/50;
+        }
         .section-header {
-          @apply text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2;
+          @apply text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-8 flex items-center gap-2;
+        }
+        .field-label {
+          @apply text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 block;
         }
       `}</style>
     </div>

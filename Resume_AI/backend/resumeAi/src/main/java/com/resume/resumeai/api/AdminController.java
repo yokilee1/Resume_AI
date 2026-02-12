@@ -112,4 +112,32 @@ public class AdminController {
         adminService.updateTemplateStatus(id, status);
         return ApiResponse.ok(true);
     }
+
+    @PostMapping("/users")
+    @Operation(summary = "创建用户", description = "新建一个系统用户")
+    public ApiResponse<Boolean> createUser(@RequestBody User user) {
+        adminService.createUser(user);
+        return ApiResponse.ok(true);
+    }
+
+    @DeleteMapping("/users/{id}")
+    @Operation(summary = "删除用户", description = "移除一个系统用户")
+    public ApiResponse<Boolean> deleteUser(@PathVariable Long id) {
+        adminService.deleteUser(id);
+        return ApiResponse.ok(true);
+    }
+
+    @PostMapping("/templates")
+    @Operation(summary = "创建模板", description = "上传一个新的简历模板")
+    public ApiResponse<Boolean> createTemplate(@RequestBody com.resume.resumeai.domain.Template template) {
+        adminService.createTemplate(template);
+        return ApiResponse.ok(true);
+    }
+
+    @DeleteMapping("/templates/{id}")
+    @Operation(summary = "删除模板", description = "移除一个简历模板")
+    public ApiResponse<Boolean> deleteTemplate(@PathVariable Long id) {
+        adminService.deleteTemplate(id);
+        return ApiResponse.ok(true);
+    }
 }

@@ -118,4 +118,25 @@ public class AdminService {
     public void updateTemplateStatus(Long id, String status) {
         templateRepository.updateStatus(id, status);
     }
+
+    @Transactional
+    public void createUser(User user) {
+        // In a real app, we should hash the password here if not already hashed
+        userRepository.create(user);
+    }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void createTemplate(com.resume.resumeai.domain.Template template) {
+        templateRepository.create(template);
+    }
+
+    @Transactional
+    public void deleteTemplate(Long id) {
+        templateRepository.deleteById(id);
+    }
 }

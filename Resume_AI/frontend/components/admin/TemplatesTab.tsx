@@ -1,14 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Palette, Activity, Plus } from 'lucide-react';
+import { Palette, Activity, Plus, X } from 'lucide-react';
 import { AdminTemplate } from '../../types';
 
 interface TemplatesTabProps {
     templates: AdminTemplate[];
     toggleTemplateStatus: (tpl: AdminTemplate) => Promise<void>;
+    onAddClick: () => void;
+    onDeleteClick: (id: number) => Promise<void>;
 }
 
-const TemplatesTab: React.FC<TemplatesTabProps> = ({ templates, toggleTemplateStatus }) => {
+const TemplatesTab: React.FC<TemplatesTabProps> = ({ templates, toggleTemplateStatus, onAddClick, onDeleteClick }) => {
     return (
         <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -41,7 +43,15 @@ const TemplatesTab: React.FC<TemplatesTabProps> = ({ templates, toggleTemplateSt
                                 <h4 className="font-black text-slate-900 text-lg tracking-tight">
                                     {t.name === 'Modern' ? '现代经典' : t.name === 'Classic' ? '传统稳重' : t.name === 'Minimal' ? '极简主义' : t.name === 'Elegant' ? '优雅别致' : t.name === 'Compact' ? '紧凑高效' : t.name === 'Timeline' ? '时序脉络' : t.name}
                                 </h4>
-                                <span className="p-1.5 bg-slate-100 text-slate-900 rounded-lg"><Palette size={14} /></span>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => onDeleteClick(t.id)}
+                                        className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100"
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                    <span className="p-1.5 bg-slate-100 text-slate-900 rounded-lg"><Palette size={14} /></span>
+                                </div>
                             </div>
                             <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 flex items-center gap-2">
                                 <Activity size={12} className="text-green-500" /> {(t.usageCount || 0).toLocaleString()} 位活跃用户
@@ -61,6 +71,7 @@ const TemplatesTab: React.FC<TemplatesTabProps> = ({ templates, toggleTemplateSt
 
                 {/* Add New Template Placeholder */}
                 <motion.button
+                    onClick={onAddClick}
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: templates.length * 0.1 }}

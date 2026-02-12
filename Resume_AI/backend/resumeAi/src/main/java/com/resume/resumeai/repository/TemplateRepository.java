@@ -53,4 +53,23 @@ public class TemplateRepository {
     public void updateStatus(Long id, String status) {
         jdbc.update("UPDATE templates SET status=:status WHERE id=:id", Map.of("status", status, "id", id));
     }
+
+    public void create(Template t) {
+        String sql = """
+            INSERT INTO templates(name, category, preview_url, schema_json, status, usage_count)
+            VALUES(:name, :category, :previewUrl, :schemaJson, :status, :usageCount)
+        """;
+        Map<String, Object> p = new HashMap<>();
+        p.put("name", t.getName());
+        p.put("category", t.getCategory());
+        p.put("previewUrl", t.getPreviewUrl());
+        p.put("schemaJson", t.getSchemaJson());
+        p.put("status", t.getStatus());
+        p.put("usageCount", t.getUsageCount() != null ? t.getUsageCount() : 0);
+        jdbc.update(sql, p);
+    }
+
+    public void deleteById(Long id) {
+        jdbc.update("DELETE FROM templates WHERE id=:id", Map.of("id", id));
+    }
 }

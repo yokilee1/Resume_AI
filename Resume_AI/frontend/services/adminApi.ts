@@ -102,3 +102,33 @@ export async function updateTemplateStatus(id: number, status: string): Promise<
   });
   return resp.data;
 }
+
+export async function createUser(user: Partial<AdminUser>): Promise<boolean> {
+  const resp = await apiFetch<boolean>('/api/admin/users', {
+    method: 'POST',
+    body: JSON.stringify(user),
+  });
+  return resp.data;
+}
+
+export async function deleteUser(id: number): Promise<boolean> {
+  const resp = await apiFetch<boolean>(`/api/admin/users/${id}`, {
+    method: 'DELETE',
+  });
+  return resp.data;
+}
+
+export async function createTemplate(template: Partial<AdminTemplate>): Promise<boolean> {
+  const resp = await apiFetch<boolean>('/api/admin/templates', {
+    method: 'POST',
+    body: JSON.stringify(template),
+  });
+  return resp.data;
+}
+
+export async function deleteTemplate(id: number): Promise<boolean> {
+  const resp = await apiFetch<boolean>(`/api/admin/templates/${id}`, {
+    method: 'DELETE',
+  });
+  return resp.data;
+}

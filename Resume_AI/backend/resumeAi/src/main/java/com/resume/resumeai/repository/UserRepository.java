@@ -104,4 +104,8 @@ public class UserRepository {
     public void updateStatus(Long userId, String status) {
         jdbc.update("UPDATE users SET status=:status WHERE user_id=:id", Map.of("status", status, "id", userId));
     }
+
+    public void deleteById(Long id) {
+        jdbc.update("DELETE FROM users WHERE user_id=:id", Map.of("id", id));
+    }
 }

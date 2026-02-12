@@ -11,7 +11,7 @@ import { JobSearchResult, AdminUser, AdminStats, CrawlerTask, AdminTemplate } fr
 import {
   getStats, listUsers, updateUserRole, updateUserStatus,
   listCrawlerTasks, createCrawlerTask, deleteCrawlerTask, updateCrawlerTaskStatus,
-  listTemplates, updateTemplateStatus, listJobs, deleteJob
+  listTemplates, updateTemplateStatus, listJobs, deleteJob, deleteTemplate
 } from '../services/adminApi';
 import { useJobs } from '../context/JobContext';
 import { useResumes } from '../context/ResumeContext';
@@ -21,6 +21,9 @@ import OverviewTab from './admin/OverviewTab';
 import JobsTab from './admin/JobsTab';
 import UsersTab from './admin/UsersTab';
 import TemplatesTab from './admin/TemplatesTab';
+import AddUserModal from './admin/AddUserModal';
+import AddTemplateModal from './admin/AddTemplateModal';
+import ConfirmModal from './admin/ConfirmModal';
 
 type Tab = 'overview' | 'jobs' | 'users' | 'templates';
 
@@ -28,8 +31,6 @@ const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { globalJobs: jobs } = useJobs();
   const { resumes } = useResumes();
-  const propUserCount = 1240;
-  const propResumeCount = resumes.length + 5000;
 
   const { tab } = useParams<{ tab: string }>();
   const activeTab = (tab || 'overview') as Tab;
@@ -44,6 +45,36 @@ const AdminDashboard: React.FC = () => {
   const [totalJobs, setTotalJobs] = useState(0);
   const [page, setPage] = useState(1);
   const pageSize = 20;
+
+  // --- Modal State ---
+  const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
+  const [isAddTemplateModalOpen, setIsAddTemplateModalOpen] = useState(false);
+  const [confirmState, setConfirmState] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: 'danger' | 'warning' | 'info';
+    onConfirm: () => void;
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'warning',
+    onConfirm: () => { },
+  });
+
+  const showConfirm = (title: string, message: string, onConfirm: () => void, type: 'danger' | 'warning' | 'info' = 'warning') => {
+    setConfirmState({
+      isOpen: true,
+      title,
+      message,
+      type,
+      onConfirm: () => {
+        onConfirm();
+        setConfirmState(prev => ({ ...prev, isOpen: false }));
+      }
+    });
+  };
 
   // --- Job Manager State ---
   const [crawlQuery, setCrawlQuery] = useState('');
@@ -110,11 +141,6 @@ const AdminDashboard: React.FC = () => {
         frequency: 'Instant',
         status: 'Active'
       });
-      // Update stats if needed (re-fetch or optimistic update)
-      // For now, we rely on the next loadData or we can optimistically update chartLineData if we move it to state
-      // Update stats if needed (re-fetch or optimistic update)
-      // For now, we rely on the next loadData or we can optimistically update chartLineData if we move it to state
-      // setLineData(prev => prev.map(p => p.label === today ? { ...p, value: p.value + 1 } : p));
       window.alert(`Crawler triggered for "${crawlQuery}".`);
       setCrawlQuery('');
       setTimeout(async () => {
@@ -158,19 +184,21 @@ const AdminDashboard: React.FC = () => {
   };
 
   const handleDeleteTask = async (id: string) => {
-    if (!confirm("Delete this task?")) return;
-    try {
-      await deleteCrawlerTask(id);
-      setTasks(tasks.filter(t => t.id !== id));
-    } catch (e) { console.error(e); }
+    showConfirm("删除任务", "确定要永久移除此爬虫任务吗？", async () => {
+      try {
+        await deleteCrawlerTask(id);
+        setTasks(tasks.filter(t => t.id !== id));
+      } catch (e) { console.error(e); }
+    }, 'danger');
   };
 
   const handleDeleteJob = async (id: string | number) => {
-    if (!confirm("Delete this job?")) return;
-    try {
-      await deleteJob(id.toString());
-      setDbJobs(dbJobs.filter(j => j.id !== id));
-    } catch (e) { console.error(e); }
+    showConfirm("删除职位", "确定要从数据库中移除此职位信息吗？", async () => {
+      try {
+        await deleteJob(id.toString());
+        setDbJobs(dbJobs.filter(j => j.id !== id));
+      } catch (e) { console.error(e); }
+    }, 'danger');
   };
 
   const toggleTemplateStatus = async (tpl: AdminTemplate) => {
@@ -183,20 +211,76 @@ const AdminDashboard: React.FC = () => {
 
   const handleUserRoleChange = async (user: AdminUser) => {
     const newRole = user.role === 'Admin' ? 'User' : 'Admin';
-    if (!confirm(`Change role to ${newRole}?`)) return;
-    try {
-      await updateUserRole(user.id, newRole);
-      setUsers(users.map(u => u.id === user.id ? { ...u, role: newRole } : u));
-    } catch (e) { console.error(e); }
+    showConfirm(
+      "变更权限",
+      `确定将用户 "${user.nickname}" 的权限修改为 ${newRole === 'Admin' ? '管理员' : '普通用户'} 吗？`,
+      async () => {
+        try {
+          await updateUserRole(user.id, newRole);
+          setUsers(users.map(u => u.id === user.id ? { ...u, role: newRole } : u));
+        } catch (e) { console.error(e); }
+      }
+    );
   };
 
   const handleUserStatusChange = async (user: AdminUser) => {
     const newStatus = user.status === 'Active' ? 'Inactive' : 'Active';
-    if (!confirm(`${newStatus === 'Active' ? 'Activate' : 'Deactivate'} user?`)) return;
+    showConfirm(
+      newStatus === 'Active' ? "激活用户" : "禁用用户",
+      `确定要${newStatus === 'Active' ? '激活' : '禁用'}用户 "${user.nickname}" 吗？`,
+      async () => {
+        try {
+          await updateUserStatus(user.id, newStatus);
+          setUsers(users.map(u => u.id === user.id ? { ...u, status: newStatus } : u));
+        } catch (e) { console.error(e); }
+      }
+    );
+  };
+
+  const handleAddUser = async (user: Partial<AdminUser>) => {
     try {
-      await updateUserStatus(user.id, newStatus);
-      setUsers(users.map(u => u.id === user.id ? { ...u, status: newStatus } : u));
-    } catch (e) { console.error(e); }
+      await import('../services/adminApi').then(api => api.createUser(user));
+      const u = await listUsers();
+      setUsers(u);
+    } catch (e) {
+      console.error(e);
+      alert("Failed to add user");
+    }
+  };
+
+  const handleDeleteUser = async (id: number) => {
+    showConfirm("彻底删除用户", "确定要永久删除该用户吗？此操作将无法撤销，其关联数据可能会受到影响。", async () => {
+      try {
+        await import('../services/adminApi').then(api => api.deleteUser(id));
+        setUsers(users.filter(u => u.id !== id));
+      } catch (e) {
+        console.error(e);
+        alert("Failed to delete user");
+      }
+    }, 'danger');
+  };
+
+  const handleAddTemplate = async (template: Partial<AdminTemplate>) => {
+    try {
+      await import('../services/adminApi').then(api => api.createTemplate(template));
+      const t = await listTemplates();
+      setTemplates(t);
+    } catch (e) {
+      console.error(e);
+      alert("Failed to add template");
+    }
+  };
+
+  const handleDeleteTemplate = async (id: number) => {
+    showConfirm("删除模板", "确定要移除此简历模板吗？", async () => {
+      try {
+        await deleteTemplate(id);
+        setTemplates(templates.filter(t => t.id !== id));
+      } catch (e) {
+        console.error(e);
+        alert("Failed to delete template");
+      }
+    }, 'danger');
   };
 
 
@@ -231,9 +315,9 @@ const AdminDashboard: React.FC = () => {
               {activeTab === 'overview' && (
                 <OverviewTab
                   stats={stats}
-                  propUserCount={propUserCount}
-                  propResumeCount={propResumeCount}
-                  jobsCount={jobs.length}
+                  propUserCount={0}
+                  propResumeCount={0}
+                  jobsCount={0}
                 />
               )}
               {activeTab === 'jobs' && (
@@ -255,18 +339,43 @@ const AdminDashboard: React.FC = () => {
                   users={users}
                   handleUserRoleChange={handleUserRoleChange}
                   handleUserStatusChange={handleUserStatusChange}
+                  onAddClick={() => setIsAddUserModalOpen(true)}
+                  onDeleteClick={handleDeleteUser}
                 />
               )}
               {activeTab === 'templates' && (
                 <TemplatesTab
                   templates={templates}
                   toggleTemplateStatus={toggleTemplateStatus}
+                  onAddClick={() => setIsAddTemplateModalOpen(true)}
+                  onDeleteClick={handleDeleteTemplate}
                 />
               )}
             </motion.div>
           )}
         </AnimatePresence>
       </div>
+
+      <AddUserModal
+        isOpen={isAddUserModalOpen}
+        onClose={() => setIsAddUserModalOpen(false)}
+        onAdd={handleAddUser}
+      />
+
+      <AddTemplateModal
+        isOpen={isAddTemplateModalOpen}
+        onClose={() => setIsAddTemplateModalOpen(false)}
+        onAdd={handleAddTemplate}
+      />
+
+      <ConfirmModal
+        isOpen={confirmState.isOpen}
+        title={confirmState.title}
+        message={confirmState.message}
+        type={confirmState.type}
+        onConfirm={confirmState.onConfirm}
+        onCancel={() => setConfirmState(prev => ({ ...prev, isOpen: false }))}
+      />
     </div>
   );
 };

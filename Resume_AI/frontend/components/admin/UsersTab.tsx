@@ -7,9 +7,11 @@ interface UsersTabProps {
     users: AdminUser[];
     handleUserRoleChange: (user: AdminUser) => Promise<void>;
     handleUserStatusChange: (user: AdminUser) => Promise<void>;
+    onAddClick: () => void;
+    onDeleteClick: (id: number) => Promise<void>;
 }
 
-const UsersTab: React.FC<UsersTabProps> = ({ users, handleUserRoleChange, handleUserStatusChange }) => {
+const UsersTab: React.FC<UsersTabProps> = ({ users, handleUserRoleChange, handleUserStatusChange, onAddClick, onDeleteClick }) => {
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.99 }}
@@ -18,7 +20,10 @@ const UsersTab: React.FC<UsersTabProps> = ({ users, handleUserRoleChange, handle
         >
             <div className="px-8 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
                 <span className="font-black text-slate-900 tracking-tight text-lg">所有用户管理</span>
-                <button className="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg shadow-slate-200/50 hover:bg-black transition-all flex items-center gap-2">
+                <button
+                    onClick={onAddClick}
+                    className="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg shadow-slate-200/50 hover:bg-black transition-all flex items-center gap-2"
+                >
                     <Plus size={16} /> 添加新用户
                 </button>
             </div>
@@ -72,7 +77,10 @@ const UsersTab: React.FC<UsersTabProps> = ({ users, handleUserRoleChange, handle
                                 </td>
                                 <td className="px-8 py-5 text-slate-500 font-bold tabular-nums">{user.joinedAt?.split('T')[0]}</td>
                                 <td className="px-8 py-5 text-right">
-                                    <button className="p-2 text-slate-400 hover:text-slate-900 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-all shadow-sm">
+                                    <button
+                                        onClick={() => onDeleteClick(user.id)}
+                                        className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl border border-transparent hover:border-red-100 transition-all shadow-sm"
+                                    >
                                         <MoreHorizontal size={18} />
                                     </button>
                                 </td>

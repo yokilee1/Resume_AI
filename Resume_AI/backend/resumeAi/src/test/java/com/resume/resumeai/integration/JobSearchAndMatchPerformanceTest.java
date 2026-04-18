@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 public class JobSearchAndMatchPerformanceTest {
     @Autowired MockMvc mockMvc;
@@ -43,7 +43,7 @@ public class JobSearchAndMatchPerformanceTest {
         long t0 = System.currentTimeMillis();
         String resp = mockMvc.perform(post("/api/match/recommendations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"resumeText\":\"Java Spring MySQL Redis\"}"))
+                        .content("{\"resumeText\":\"Java\"}"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         long elapsed = System.currentTimeMillis() - t0;

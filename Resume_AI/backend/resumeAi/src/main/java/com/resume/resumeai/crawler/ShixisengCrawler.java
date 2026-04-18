@@ -34,24 +34,19 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 @Component("shixisengCrawler")
 public class ShixisengCrawler implements BaseCrawler {
 
-    // 参考 Bilibili 专栏提供的映射字典
-    // https://www.bilibili.com/opus/890390821212258353
+    private final WebDriverProvider driverProvider;
+    private final FontLoader fontLoader;
     private static final String PLAIN_TEXTS = "0123456789一师X会四计财场DHLPT聘招工d周|端p年hx设程二五天tCG前KO网SWcgkosw广市月个BF告NRVZ作bfjnrvz三互生人政AJEI件M行QUYaeim软qU银y联";
+
+    public ShixisengCrawler(WebDriverProvider driverProvider, FontLoader fontLoader) {
+        this.driverProvider = driverProvider;
+        this.fontLoader = fontLoader;
+    }
 
     @Override
     public List<JobPosition> crawl(String keyword, String city) {
         List<JobPosition> jobs = new ArrayList<>();
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless"); // 无头模式
-        options.addArguments("--disable-gpu");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        // 设置中文环境，有助于避免部分编码问题
-        options.addArguments("--lang=zh-CN");
-        options.addArguments("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
-
-        WebDriver driver = new ChromeDriver(options);
+        WebDriver driver = driverProvider.createDriver();
         try {
             // 实习僧搜索URL构造
             String url = "https://www.shixiseng.com/interns?keyword=" + keyword + "&city=" + city;
@@ -167,32 +162,9 @@ public class ShixisengCrawler implements BaseCrawler {
         }
 
         try {
-            URL url = new URL(fontUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            // 设置关键请求头，防止 403 Forbidden
-            connection.setRequestMethod("GET");
-            // 使用与 Selenium 设置一致的 User-Agent
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
-            connection.setRequestProperty("Referer", "https://www.shixiseng.com/");
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
-
-            // 检查响应码
-            int responseCode = connection.getResponseCode();
-            if (responseCode != HttpURLConnection.HTTP_OK) {
-                System.err.println("Failed to download font. Response code: " + responseCode + ", URL: " + fontUrl);
+            byte[] fontData = fontLoader.downloadFont(fontUrl);
+            if (fontData == null) {
                 return map;
-            }
-
-            byte[] fontData;
-            try (InputStream is = connection.getInputStream()) {
-                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                 int nRead;
-                 byte[] data = new byte[1024];
-                 while ((nRead = is.read(data, 0, data.length)) != -1) {
-                     buffer.write(data, 0, nRead);
-                 }
-                 fontData = buffer.toByteArray();
             }
             
             // 尝试转换 WOFF -> TTF

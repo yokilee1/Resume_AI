@@ -16,17 +16,13 @@ import java.util.List;
 @Component("lagouCrawler")
 public class LagouCrawler implements BaseCrawler {
 
+    private final WebDriverProvider driverProvider;
+    public LagouCrawler(WebDriverProvider driverProvider) { this.driverProvider = driverProvider; }
+
     @Override
     public List<JobPosition> crawl(String keyword, String city) {
         List<JobPosition> jobs = new ArrayList<>();
-        WebDriverManager.chromedriver().setup();
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        options.addArguments("--disable-gpu");
-        options.addArguments("--no-sandbox");
-        options.addArguments("user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
-
-        WebDriver driver = new ChromeDriver(options);
+        WebDriver driver = driverProvider.createDriver();
         try {
             // 拉勾搜索URL (拉勾反爬较严，可能需要登录Cookie，这里尝试公开搜索页)
             String url = "https://www.lagou.com/jobs/list_" + keyword + "?city=" + city;

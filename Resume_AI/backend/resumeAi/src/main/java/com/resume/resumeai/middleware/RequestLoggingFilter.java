@@ -7,7 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class RequestLoggingFilter extends OncePerRequestFilter {
@@ -20,18 +23,32 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         String traceId = UUID.randomUUID().toString().substring(0, 8);
         MDC.put("traceId", traceId);
         long start = System.currentTimeMillis();
+
+        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(request);
+        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
+
         try {
             String url = request.getRequestURI();
             String method = request.getMethod();
             String ip = getClientIp(request);
-            String ua = request.getHeader("User-Agent");
-            log.info("[REQ START] {} {} IP={} UA={}", method, url, ip, ua);
+            log.info("[REQ START] {} {} IP={}", method, url, ip);
 
-            chain.doFilter(request, response);
+            chain.doFilter(requestWrapper, responseWrapper);
 
             long cost = System.currentTimeMillis() - start;
             int status = response.getStatus();
+
+            // 记录请求与响应报文
+            String reqBody = getPayload(requestWrapper.getContentAsByteArray(), request.getContentType());
+            String respBody = getPayload(responseWrapper.getContentAsByteArray(), response.getContentType());
+            
+            if (reqBody != null && !reqBody.isBlank()) log.info("[BODY REQ] {}", reqBody);
+            if (respBody != null && !respBody.isBlank()) log.info("[BODY RESP] {}", respBody);
+
             log.info("[REQ END] {} {} -> {} ({}ms)", method, url, status, cost);
+            
+            // 关键：将缓存的内容复制回原始响应流
+            responseWrapper.copyBodyToResponse();
         } catch (Exception e) {
             long cost = System.currentTimeMillis() - start;
             log.error("[REQ ERROR] {} {} -> 500 ({}ms)", request.getMethod(), request.getRequestURI(), cost, e);
@@ -42,6 +59,14 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         } finally {
             MDC.clear();
         }
+    }
+
+    private String getPayload(byte[] buf, String contentType) {
+        if (buf == null || buf.length == 0) return null;
+        if (contentType != null && (contentType.contains("json") || contentType.contains("text") || contentType.contains("xml"))) {
+            return new String(buf, 0, Math.min(buf.length, 4096), StandardCharsets.UTF_8);
+        }
+        return "[Binary or Non-Text Content]";
     }
 
     private String getClientIp(HttpServletRequest request) {

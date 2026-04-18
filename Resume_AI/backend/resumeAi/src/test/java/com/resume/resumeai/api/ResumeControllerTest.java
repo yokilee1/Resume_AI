@@ -42,7 +42,7 @@ class ResumeControllerTest {
         r.setTitle("My Resume");
         when(resumeService.create(any(ResumeCreateRequest.class))).thenReturn(r);
 
-        String body = "{\"userId\":1,\"title\":\"My Resume\",\"content\":\"...\"}";
+        String body = "{\"user_id\":1,\"title\":\"My Resume\",\"content_json\":\"...\"}";
         mockMvc.perform(post("/api/resumes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))

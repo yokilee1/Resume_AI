@@ -35,9 +35,8 @@ public class AuthAndResumeFlowTest {
                         .content("{\"email\":\"" + email + "\",\"password\":\"" + password + "\",\"nickname\":\"" + nickname + "\"}"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-
         JsonNode regNode = objectMapper.readTree(regResp);
-        assertThat(regNode.get("success").asBoolean()).isTrue();
+        assertThat(regNode.get("code").asText()).isEqualTo("OK");
 
         // 登录
         String loginResp = mockMvc.perform(post("/api/auth/login")
@@ -47,7 +46,7 @@ public class AuthAndResumeFlowTest {
                 .andReturn().getResponse().getContentAsString();
 
         JsonNode loginNode = objectMapper.readTree(loginResp);
-        String token = loginNode.get("data").get("accessToken").asText();
+        String token = loginNode.get("data").get("token").asText();
         assertThat(token).isNotBlank();
 
         // 创建简历

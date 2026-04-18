@@ -125,11 +125,20 @@ public class AiService {
      * 岗位匹配度报告
      */
     public MatchReportResponse matchReport(MatchReportRequest req) {
-        String sys = "你是 HR 招聘顾问，请对候选人的简历与岗位 JD 进行细致匹配分析并给出可执行建议。";
-        String instruction = "严格输出 JSON（无注释、无额外文本）：{\n  overall_score:number,\n  skill_match:number,\n  experience_relevance:number,\n  culture_fit:number,\n  analysis:string,\n  suggestions:string[],\n  missing_keywords:string[]\n}";
-        String content = "简历：\n" + req.getResumeText() + "\n岗位：\n" + req.getJobDescription() +
-                (req.getCompanyCulture() != null ? ("\n文化偏好：\n" + req.getCompanyCulture()) : "") +
-                "\n" + instruction;
+        String sys = "你是 HR 招聘顾问，请对候选人的简历与岗位 JD 进行细致匹配分析并给出建议。所有评分范围为 0-100，分数越高表示越匹配。";
+        String instruction = "请严格输出标准的 JSON 格式（无注释、无多余文本）：\n" +
+                "{\n" +
+                "  \"overall_score\": number,\n" +
+                "  \"skill_match\": number,\n" +
+                "  \"experience_relevance\": number,\n" +
+                "  \"culture_fit\": number,\n" +
+                "  \"analysis\": \"string\",\n" +
+                "  \"suggestions\": [\"string\"],\n" +
+                "  \"missing_keywords\": [\"string\"]\n" +
+                "}";
+        String content = "简历内容：\n" + req.getResumeText() + "\n\n岗位描述：\n" + req.getJobDescription() +
+                (req.getCompanyCulture() != null ? ("\n\n公司文化/要求：\n" + req.getCompanyCulture()) : "") +
+                "\n\n请严格按此格式返回报告：" + instruction;
 
         String json = chatClient
                 .prompt()
@@ -141,10 +150,17 @@ public class AiService {
         log.debug("match-report response: {}", json);
         try {
             JsonNode root = mapper.readTree(json);
-            Double overallScore = pickNumber(root, "overall_score", "overallScore", "score");
             Double skillMatch = pickNumber(root, "skill_match", "skillMatch");
             Double experienceRelevance = pickNumber(root, "experience_relevance", "experienceRelevance");
             Double cultureFit = pickNumber(root, "culture_fit", "cultureFit");
+            Double overallScore = pickNumber(root, "overall_score", "overallScore", "score");
+
+            // 兜底逻辑：如果 AI 漏掉了总分，根据分项进行加权计算 (技能50%, 经验40%, 文化10%)
+            if (overallScore == null && skillMatch != null && experienceRelevance != null) {
+                double cf = cultureFit != null ? cultureFit : 70.0;
+                overallScore = Math.round((skillMatch * 0.5 + experienceRelevance * 0.4 + cf * 0.1) * 10.0) / 10.0;
+            }
+
             String analysis = pickString(root, "analysis");
             List<String> suggestions = pickStringArray(root, "suggestions");
             List<String> missingKeywords = pickStringArray(root, "missing_keywords", "missingKeywords");
@@ -168,9 +184,8 @@ public class AiService {
                 fallback.setSuggestions(pickStringArray(root, "suggestions"));
                 fallback.setMissingKeywords(pickStringArray(root, "missing_keywords", "missingKeywords"));
             } catch (Exception ignored) {
-                fallback.setAnalysis(json);
-                fallback.setSuggestions(List.of("输出非结构化，已返回原始文本"));
-                fallback.setMissingKeywords(List.of());
+                fallback.setAnalysis("AI 解析异常，原始返回：" + json);
+                fallback.setSuggestions(List.of("系统解析失败，请尝试刷新重试"));
             }
             return fallback;
         }

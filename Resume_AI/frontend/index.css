@@ -17,6 +17,21 @@
         min-height: 297mm;
     }
 
+    .resume-paper-dynamic {
+        width: 210mm;
+        min-height: 297mm;
+        background-color: white;
+        background-image: repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent calc(297mm - 1px),
+            #e2e8f0 calc(297mm - 1px),
+            #e2e8f0 297mm
+        );
+        background-size: 100% 297mm;
+        position: relative;
+    }
+
     .avoid-break {
         break-inside: avoid;
         page-break-inside: avoid;

@@ -14,7 +14,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, targetRef }) => {
   // --- RENDERERS ---
 
   const ModernLayout = () => (
-    <div className="h-full p-[15mm] text-sm text-slate-800 leading-normal" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <div className="p-[15mm] pb-[20mm] text-sm text-slate-800 leading-normal" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Header */}
       <header className="border-b-2 border-slate-800 pb-4 mb-6">
         <h1 className="text-3xl font-bold uppercase tracking-wide text-slate-900 mb-2">
@@ -100,7 +100,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, targetRef }) => {
   );
 
   const ClassicLayout = () => (
-    <div className="h-full p-[15mm] text-sm text-slate-800 leading-normal" style={{ fontFamily: "Georgia, 'Times New Roman', Times, serif" }}>
+    <div className="p-[15mm] pb-[20mm] text-sm text-slate-800 leading-normal" style={{ fontFamily: "Georgia, 'Times New Roman', Times, serif" }}>
       {/* Header */}
       <header className="text-center mb-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-3 tracking-wide">{data.personalInfo.fullName || "您的姓名"}</h1>
@@ -184,7 +184,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, targetRef }) => {
   );
 
   const MinimalLayout = () => (
-    <div className="h-full p-[15mm] text-sm text-slate-900 leading-snug" style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
+    <div className="p-[15mm] pb-[20mm] text-sm text-slate-900 leading-snug" style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
       {/* Header */}
       <header className="mb-10">
         <h1 className="text-5xl font-extrabold text-slate-900 mb-4 tracking-tighter">
@@ -273,7 +273,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, targetRef }) => {
    * 渲染优雅风格的简历版式：精致分隔线与更柔和的层次
    */
   const ElegantLayout = () => (
-    <div className="h-full p-[15mm] text-sm leading-relaxed text-slate-800" style={{ fontFamily: "'Inter', ui-sans-serif, system-ui" }}>
+    <div className="p-[15mm] pb-[20mm] text-sm leading-relaxed text-slate-800" style={{ fontFamily: "'Inter', ui-sans-serif, system-ui" }}>
       <header className="mb-6">
         <h1 className="text-4xl font-semibold tracking-wide text-slate-900">{data.personalInfo.fullName || '您的姓名'}</h1>
         <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600">
@@ -359,7 +359,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, targetRef }) => {
    * 渲染紧凑风格的简历版式：更小字号与更紧密的间距，适合单页
    */
   const CompactLayout = () => (
-    <div className="h-full p-[12mm] text-[12px] leading-tight text-slate-900" style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
+    <div className="p-[12mm] pb-[20mm] text-[12px] leading-tight text-slate-900" style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
       <header className="mb-3">
         <h1 className="text-2xl font-bold tracking-wide">{data.personalInfo.fullName || '您的姓名'}</h1>
         <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-slate-600">
@@ -441,7 +441,7 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, targetRef }) => {
    * 渲染时间线风格的简历版式：左侧时间轴、右侧详情卡片
    */
   const TimelineLayout = () => (
-    <div className="h-full p-[15mm] text-sm leading-normal text-slate-900" style={{ fontFamily: "'Inter', ui-sans-serif, system-ui" }}>
+    <div className="p-[15mm] pb-[20mm] text-sm leading-normal text-slate-900" style={{ fontFamily: "'Inter', ui-sans-serif, system-ui" }}>
       <header className="mb-6">
         <h1 className="text-3xl font-bold tracking-wide">{data.personalInfo.fullName || '您的姓名'}</h1>
         <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-600">
@@ -527,13 +527,13 @@ const ResumePreview: React.FC<ResumePreviewProps> = ({ data, targetRef }) => {
   );
 
   return (
-    <div className="w-full h-full bg-slate-100 overflow-y-auto p-4 md:p-8 flex justify-center custom-scrollbar">
+    <div className="w-full h-full bg-slate-100 overflow-y-auto p-4 md:p-12 flex justify-center items-start custom-scrollbar">
       <motion.div
         ref={targetRef}
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="bg-white w-[210mm] min-h-[297mm] shadow-lg no-shadow-print transition-all duration-300 page origin-top"
+        className="resume-paper-dynamic shadow-2xl no-shadow-print origin-top"
       >
         <AnimatePresence mode="wait">
           <motion.div
